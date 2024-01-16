@@ -1,0 +1,8 @@
+[webservers]
+10.10.1.33 ansible_connection=ssh ansible_user=ubuntu
+
+[dbservers]
+10.10.1.45 ansible_connection=ssh ansible_user=ubuntu
+
+[redisservers]
+10.10.1.52 ansible_connection=ssh ansible_user=ubuntu

@@ -1,0 +1,29 @@
+---
+- hosts: your_vm_group
+  become: yes
+  vars:
+    users:
+      - name: user1
+        ssh_key: files/ssh_keys/user1.pub
+      - name: user2
+        ssh_key: files/ssh_keys/user2.pub
+  tasks:
+    - name: Ensure users exist
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        state: present
+      loop: "{{ users }}"
+
+    - name: Allow users to use sudo without password
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers
+        line: "{{ item.name }} ALL=(ALL) NOPASSWD: ALL"
+        validate: 'visudo -cf %s'
+      loop: "{{ users }}"
+
+    - name: Set authorized key taken from file
+      ansible.builtin.authorized_key:
+        user: "{{ item.name }}"
+        state: present
+        key: "{{ lookup('file', item.ssh_key) }}"
+      loop: "{{ users }}"
