@@ -1,12 +1,12 @@
 ---
-- hosts: your_vm_group
+- hosts: all
   become: yes
   vars:
     users:
       - name: user1
-        ssh_key: files/ssh_keys/user1.pub
+        ssh_key: "{{ playbook_dir }}/../files/ssh_keys/user1.pub"
       - name: user2
-        ssh_key: files/ssh_keys/user2.pub
+        ssh_key: "{{ playbook_dir }}/../files/ssh_keys/user2.pub"
   tasks:
     - name: Ensure users exist
       ansible.builtin.user:
