@@ -1,0 +1,67 @@
+---
+- hosts: pythonwebservers
+  become: yes
+  become_user: "{{ user_name }}"
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - make
+          - build-essential
+          - libssl-dev
+          - zlib1g-dev
+          - libbz2-dev
+          - libreadline-dev
+          - libsqlite3-dev
+          - wget
+          - curl
+          - llvm
+          - libncurses5-dev
+          - libncursesw5-dev
+          - xz-utils
+          - tk-dev
+          - libffi-dev
+          - liblzma-dev
+          - python3-openssl
+        state: present
+
+    - name: Check if pyenv is installed
+      stat:
+        path: /home/{{ user_name }}/.pyenv
+      register: pyenv_installed
+
+    - name: Clone pyenv repository
+      git:
+        repo: https://github.com/pyenv/pyenv.git
+        dest: /home/{{ user_name }}/.pyenv
+        update: no
+      when: not pyenv_installed.stat.exists
+
+    - name: Set environment variables for pyenv
+      lineinfile:
+        path: /home/{{ user_name }}/.bashrc
+        line: 'export {{ item }}'
+        insertafter: EOF
+      with_items:
+        - "PYENV_ROOT=\"/home/{{ user_name }}/.pyenv\""
+        - "PATH=\"$PYENV_ROOT/bin:$PATH\""
+        - 'eval "$(pyenv init -)"'
+
+    - name: Change ownership of pyenv directory
+      become: yes
+      become_user: root 
+      file:
+        path: /home/{{ user_name }}/.pyenv
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        recurse: yes
+
+    - name: Install Python version with pyenv
+      command: /home/{{ user_name }}/.pyenv/bin/pyenv install {{ python_version }}
+      environment:
+        CONFIGURE_OPTS: --enable-shared
+      args:
+        creates: /home/{{ user_name }}/.pyenv/versions/{{ python_version }}
+
+    - name: Create a virtual environment
+      command: /home/{{ user_name }}/.pyenv/versions/{{ python_version }}/bin/python -m venv "/var/opt/{{ project_name }}/venv"

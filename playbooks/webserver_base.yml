@@ -1,0 +1,76 @@
+---
+- name: Print variable
+  hosts: all
+  tasks:
+    - debug:
+        var: user_name
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+
+    - name: Create a new group
+      group:
+        name: "{{ user_name }}"
+        state: present
+
+    - name: Add a new user
+      user:
+        name: "{{ user_name }}"
+        group: "{{ user_name }}"
+        system: yes
+        create_home: yes
+        shell: /bin/bash
+        append: yes
+        groups: sudo
+      register: new_user
+
+    - name: Allow new user to sudo without password
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%{{ user_name }}'
+        line: '%{{ user_name }} ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Create a directory structure
+      file:
+        path: "/var/opt/{{ project_name }}"
+        state: directory
+        owner: "{{ user_name }}"
+        group: "{{ user_name }}"
+        mode: '0755'
+
+    - name: Create a new systemd service
+      template:
+        src: "{{ playbook_dir }}/../templates/systemd.service.j2"
+        dest: "/etc/systemd/system/{{ project_name }}.service"
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        service_description: "{{ project_name }}"
+        service_user: "{{ user_name }}"
+        service_group: "{{ user_name }}"
+        service_exec_start: "{{ start_command }}"
+        service_working_directory: "/var/opt/{{ project_name }}"
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable the systemd service
+      systemd:
+        name: "{{ project_name }}"
+        enabled: yes
+
+    - name: Start the systemd service
+      systemd:
+        name: "{{ project_name }}"
+        state: started
