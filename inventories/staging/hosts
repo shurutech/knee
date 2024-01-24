@@ -1,11 +1,11 @@
 [webservers]
 192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
 
-[dbservers]
-10.10.1.45 ansible_connection=ssh ansible_user=ubuntu
+[postgresmainserver]
+192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
 
 [redisservers]
-10.10.1.52 ansible_connection=ssh ansible_user=ubuntu
+192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
 
 [pythonwebservers]
 192.168.181.128  ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key

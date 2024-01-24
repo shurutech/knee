@@ -1,0 +1,5 @@
+postgres_database_name: myproject
+postgres_database_user: myuser
+postgres_database_password: dummy_password
+postgres_database_cidr_address: 10.10.5.0/24
+postgres_version: 16

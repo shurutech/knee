@@ -1,0 +1,90 @@
+---
+- hosts: postgresmainserver
+  become: yes
+  tasks:
+    - name: Install psycopg2 for Python 3
+      ansible.builtin.apt:
+        update_cache: yes
+        name: python3-psycopg2
+        state: present
+      when: ansible_os_family == 'Debian'
+    - name: Import the repository signing key
+      ansible.builtin.apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+
+    - name: Add PostgreSQL Global Development Group repository
+      ansible.builtin.apt_repository:
+        repo: deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
+        state: present
+
+    - name: Install PostgreSQL
+      ansible.builtin.apt:
+        update_cache: yes
+        name: "postgresql-{{ postgres_version }}"
+        state: present
+
+    - name: Configure PostgreSQL pg_hba for postgres user
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: local
+        databases: all
+        users: postgres
+        method: trust
+        state: present
+        create: no
+        backup: yes
+
+    - name: Configure PostgreSQL pg_hba for local connections
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: local
+        databases: all
+        users: all
+        method: trust
+
+    - name: Configure PostgreSQL pg_hba for remote connections
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: host
+        databases: all
+        users: all
+        address: "{{ postgres_database_cidr_address }}"
+        method: password
+
+    - name: Restart PostgreSQL to apply changes
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted
+
+    - name: Set listen_addresses to all interfaces
+      community.postgresql.postgresql_set:
+        name: listen_addresses
+        value: "*"
+
+    - name: Restart PostgreSQL to apply changes
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted
+
+    - name: Create a new user with superuser privileges
+      community.postgresql.postgresql_user:
+        name: "{{ postgres_database_user }}"
+        password: "{{ postgres_database_password }}"
+        role_attr_flags: 'SUPERUSER'
+        state: present
+
+    - name: Create a new database
+      community.postgresql.postgresql_db:
+        name: "{{ postgres_database_name }}"
+        owner: "{{ postgres_database_user }}"
+        state: present
+    
+    - name: Grant privileges to the user on the database
+      community.postgresql.postgresql_privs:
+        db: "{{ postgres_database_name }}"
+        role: "{{ postgres_database_user }}"
+        objs: ALL_IN_SCHEMA
+        privs: ALL
+        type: table
+        state: present
