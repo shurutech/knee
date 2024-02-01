@@ -8,6 +8,7 @@
         name: python3-psycopg2
         state: present
       when: ansible_os_family == 'Debian'
+      
     - name: Import the repository signing key
       ansible.builtin.apt_key:
         url: https://www.postgresql.org/media/keys/ACCC4CF8.asc

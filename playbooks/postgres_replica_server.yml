@@ -1,0 +1,162 @@
+---
+- hosts: postgresmainserver
+  become: yes
+  vars:
+    replica_host: "{{ hostvars[groups['postgresreplicaservers'][0]]['ansible_host'] }}"
+  tasks:
+    - name: Add replication user
+      community.postgresql.postgresql_user:
+        name: "{{ postgres_replication_user }}"
+        password: "{{ postgres_replication_user_password }}"
+        role_attr_flags: LOGIN,REPLICATION
+        state: present
+
+    - name: Set wal_level to replica on the primary server
+      community.postgresql.postgresql_set:
+        name: wal_level
+        value: replica
+
+    - name: Set wal_keep_segments on the primary server
+      community.postgresql.postgresql_set:
+        name: wal_keep_size
+        value: "1024MB"
+      become: yes
+      become_user: postgres
+
+    - name: Set max_wal_senders on the primary server
+      community.postgresql.postgresql_set:
+        name: max_wal_senders
+        value: 3
+      become: yes
+      become_user: postgres
+
+    - name: Allow replication connections from replicator user
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: host
+        databases: replication
+        users: "{{ postgres_replication_user }}"
+        address: "{{ replica_host }}/32"
+        method: md5
+        
+    - name: Restart PostgreSQL on primary to apply wal_level change
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted
+    
+- hosts: postgresreplicaservers
+  become: yes
+  vars:
+    master_host: "{{ hostvars[groups['postgresmainserver'][0]]['ansible_host'] }}"
+    postgres_data_directory: /var/lib/postgresql/{{ postgres_version }}/main
+  tasks:
+    - name: Install psycopg2 for Python 3
+      ansible.builtin.apt:
+        update_cache: yes
+        name: python3-psycopg2
+        state: present
+      when: ansible_os_family == 'Debian'
+      
+    - name: Import the repository signing key
+      ansible.builtin.apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+
+    - name: Add PostgreSQL Global Development Group repository
+      ansible.builtin.apt_repository:
+        repo: deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
+        state: present
+
+    - name: Install PostgreSQL
+      ansible.builtin.apt:
+        update_cache: yes
+        name: "postgresql-{{ postgres_version }}"
+        state: present
+
+    - name: Ensure PostgreSQL is running
+      ansible.builtin.service:
+        name: postgresql
+        state: started
+      register: postgresql_service
+
+    - name: Configure PostgreSQL pg_hba for replication user
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: host
+        databases: replication
+        users: "{{ postgres_replication_user }}"
+        address: "{{ postgres_database_cidr_address }}"
+        method: md5
+
+    - name: Configure PostgreSQL pg_hba for postgres user
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: local
+        databases: all
+        users: postgres
+        method: trust
+        state: present
+        create: no
+        backup: yes
+
+    - name: Configure PostgreSQL pg_hba for local connections
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: local
+        databases: all
+        users: all
+        method: trust
+
+    - name: Configure PostgreSQL pg_hba for remote connections
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        contype: host
+        databases: all
+        users: all
+        address: "{{ postgres_database_cidr_address }}"
+        method: password
+
+    - name: Set listen_addresses to all interfaces
+      community.postgresql.postgresql_set:
+        name: listen_addresses
+        value: "*"
+      when: postgresql_service.changed
+
+    - name: Restart PostgreSQL to apply pg_hba changes
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted
+      when: postgresql_service.changed
+
+    - name: Stop PostgreSQL service on replica
+      ansible.builtin.service:
+        name: postgresql
+        state: stopped
+
+    - name: Remove data directory on replica
+      ansible.builtin.file:
+        path: "{{ postgres_data_directory }}"
+        state: absent
+      become: yes
+      become_user: postgres
+
+    - name: Run pg_basebackup to initialize replica
+      ansible.builtin.command:
+        cmd: "pg_basebackup -d 'host={{ master_host }} user={{ postgres_replication_user }} sslmode=disable' -D {{ postgres_data_directory }} -P -X stream -R --write-recovery-conf"
+        creates: "{{ postgres_data_directory }}/base"
+      environment:
+        PGPASSWORD: "{{ postgres_replication_user_password }}"
+      become: yes
+      become_user: postgres
+
+    - name: Create standby.signal file
+      ansible.builtin.file:
+        path: "{{ postgres_data_directory }}/standby.signal"
+        state: touch
+        owner: postgres
+        group: postgres
+
+    - name: Restart PostgreSQL after replication setup
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted

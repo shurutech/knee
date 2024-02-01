@@ -1,11 +1,14 @@
 [webservers]
-192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
+webserver1 ansible_host=192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm1/vmware_fusion/private_key
 
 [postgresmainserver]
-192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
+mainserver ansible_host=192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm1/vmware_fusion/private_key
+
+[postgresreplicaservers]
+replica1 ansible_host=192.168.181.129 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm2/vmware_fusion/private_key
 
 [redisservers]
-192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
+redisserver1 ansible_host=192.168.181.128 ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm1/vmware_fusion/private_key
 
 [pythonwebservers]
-192.168.181.128  ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/default/vmware_fusion/private_key
+server1 ansible_host=192.168.181.128  ansible_port=22 ansible_connection=ssh ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/vm1/vmware_fusion/private_key
