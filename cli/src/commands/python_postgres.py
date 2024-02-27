@@ -70,7 +70,8 @@ class PythonPostgres:
         for group, group_values in self.configs.items():
             for key, value in group_values.items():
                 configs[group][key] = get_user_input(key, value)
-        
+            write_to_file("playbooks/group_vars", group, configs[group])   
+
 
     def check_defaults(self):
         self.check_configs()
