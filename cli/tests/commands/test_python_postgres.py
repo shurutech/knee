@@ -153,7 +153,14 @@ class TestPythonPostgresFunctions(unittest.TestCase):
             read_data = yaml.safe_load(file)
 
         self.assertEqual(data, read_data)
-
-
-
-          
+    
+    
+    @patch("yaml.safe_load")
+    @patch("builtins.open", new_callable=mock_open, read_data="test data")
+    def test_read_from_file(self, mock_open, mock_safe_load):
+        directory = "test/commands"
+        filename = "test.yaml"
+        read_from_file(directory, filename)
+        mock_open.assert_called_once_with(os.path.join(directory, filename), "r")
+        mock_safe_load.assert_called_once_with(mock_open.return_value.__enter__.return_value)
+       
