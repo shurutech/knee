@@ -48,7 +48,7 @@ class PythonPostgres:
         self.hosts = {}
         self.environment = environment
         self.hosts = read_from_file(dir_path[environment], "hosts.yml")    
-        postgres_replica_server_acceptance = inquirer.confirm(message="Do you want to setup a replica server? (Default= Yes) :: ", default=False).execute()
+        postgres_replica_server_acceptance = inquirer.confirm(message="Do you want to setup a replica server? (Default= No) :: ", default=False).execute()
         if postgres_replica_server_acceptance:
             CONFIG_FILES.append("postgresreplicaservers.yml")
             IMPACTED_HOST_GROUPS.append("postgresreplicaservers")
@@ -66,11 +66,10 @@ class PythonPostgres:
 
     def check_configs(self):
         print("config/....................")
-        configs = {}
         for group, group_values in self.configs.items():
             for key, value in group_values.items():
-                configs[group][key] = get_user_input(key, value)
-            write_to_file("playbooks/group_vars", group, configs[group])   
+                self.configs[group][key] = get_user_input(key, value)
+            write_to_file("playbooks/group_vars", group, self.configs[group])   
 
 
     def check_defaults(self):
