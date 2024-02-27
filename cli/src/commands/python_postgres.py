@@ -1,11 +1,6 @@
 import yaml
 import os
-from pprint import pprint
-import typer
-from rich.progress import track
-import time
-from colorama import Fore, Style
-import getpass
+from InquirerPy import inquirer
 
 CONFIG_FILES = [
     "all.yml",
@@ -14,68 +9,69 @@ CONFIG_FILES = [
     "postgresmainserver.yml",
 ]
 
+LOCAL_HOSTS_DIR = "inventories/local"
 STAGING_HOSTS_DIR = "inventories/staging"
 PRODUCTION_HOSTS_DIR = "inventories/production"
 
-IMPACTED_HOST_GROUPS = ["webservers", "pythonwebservers", "postgresmainserver"]
+dir_path = {
+     "staging": STAGING_HOSTS_DIR,
+     "local": LOCAL_HOSTS_DIR,
+     "production": PRODUCTION_HOSTS_DIR
+}
+
+IMPACTED_HOST_GROUPS = [
+     "webservers",
+     "pythonwebservers", 
+     "postgresmainserver"
+]
 
 
+def get_user_input(key, default_value):
+        return input(f"💼 Enter {key}: (Default: {default_value}) :: ") or default_value
+
+def get_user_confirmation(key):
+            user_confirmation = inquirer.confirm(message=f"Do you want to keep the default value for {key}?", default=True).execute()
+            return user_confirmation == False
+
+def write_to_file(directory, filename, data):
+        with open(os.path.join(directory, filename), "w") as file:
+            yaml.dump(data, file)
+
+def read_from_file(directory, filename):
+        with open(os.path.join(directory, filename), "r") as file:
+            return yaml.safe_load(file)
+        
 class PythonPostgres:
     def __init__(self, environment="staging", config_dir="playbooks/group_vars"):
         self.configs = {}
         self.inventory = {}
+        self.hosts = {}
         self.environment = environment
+        self.hosts = read_from_file(dir_path[environment], "hosts.yml")    
+        postgres_replica_server_acceptance = inquirer.confirm(message="Do you want to setup a replica server? (Default= Yes) :: ", default=False).execute()
+        if postgres_replica_server_acceptance:
+            CONFIG_FILES.append("postgresreplicaservers.yml")
+            IMPACTED_HOST_GROUPS.append("postgresreplicaservers")
         for config_file in CONFIG_FILES:
-            # print(os.path)
-            with open(os.path.join(config_dir, config_file)) as file:
-                self.configs[config_file] = yaml.safe_load(file)
+                self.configs[config_file] = read_from_file(config_dir, config_file)
 
-    def check_hosts(self, file_path=os.path.join(STAGING_HOSTS_DIR, "hosts.yml"), default_ip="192.168.181.128"):
-        hosts = {}
-        with open(file_path, "r") as file:
-            hosts = yaml.safe_load(file)
-            # print(hosts)
-            for group, group_info in hosts.items():
-                for host, host_info in group_info["hosts"].items():
-                    ansible_host = host_info.get("ansible_host")
-                    if group in IMPACTED_HOST_GROUPS and ansible_host == default_ip:
-                        raise ValueError(
-                            f"Host: {host}, Ansible Host: {ansible_host} is set to default IP. Please set the ansible_host for the host."
-                        )
-        return True
+    def check_hosts(self):
+            for group, group_info in self.hosts.items():  
+                if group in IMPACTED_HOST_GROUPS:
+                    for hosts, host_info in group_info["hosts"].items():
+                        print(f"-----{group}--> {hosts} Configuration")
+                        for key, value in host_info.items():
+                            self.hosts[group]["hosts"][hosts][key] = get_user_input(key, value)
+            write_to_file(dir_path[self.environment], "hosts.yml", self.hosts)
 
     def check_configs(self):
         print("config/....................")
         configs = {}
-        # pprint(self.configs)
-        for groups, groups_value in self.configs.items():
-            if groups not in configs:
-                configs[groups] = {}
-            for key, value in groups_value.items():
-                configs[groups][key] = input(f"💼 Enter {key}: (Default: {value}) :: ") or value 
-
-        print("\n Default values: \n")  
-        for groups, groups_value in configs.items():
-            for key, value in groups_value.items():
-                if value == self.configs[groups][key]:
-                    flag: bool = input(f"{Fore.RED} Do you want to keep the default value for {key}? (y/n) ::  {Style.RESET_ALL}").lower()
-                    while True:
-                     if flag in ['y','n']: 
-                        if flag == 'n':
-                            configs[groups][key] = input(f"💼 Enter {key}: (Default: {value}) :: ") or value
-                        break
-                     else:
-                        flag = input(f"💼 Do you want to keep the default value for {key}? (y/n) :: ")   
-
-
+        for group, group_values in self.configs.items():
+            for key, value in group_values.items():
+                configs[group][key] = get_user_input(key, value)
+        
 
     def check_defaults(self):
-        # for config_file, config in self.configs.items():
-            # print(f"Checking {config_file}...")
-            # print(config)
-        # print("Checking hosts file...")
         self.check_configs()
-        # if self.environment == "staging":
-        #     self.check_hosts(os.path.join(STAGING_HOSTS_DIR, "hosts.yml"))
-        # else:
-        #     self.check_hosts(os.path.join(PRODUCTION_HOSTS_DIR, "hosts.yml"))
+        self.check_hosts()
