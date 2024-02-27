@@ -1,12 +1,11 @@
-import pytest
 import os
-import yaml
 from cli.src.commands.python_postgres import PythonPostgres
 import tempfile
-from cli.src.commands.python_postgres import get_user_input, get_user_confirmation, write_to_file
-from unittest.mock import patch, mock_open, call
+from cli.src.commands.python_postgres import get_user_input, get_user_confirmation, write_to_file, read_from_file
+from unittest.mock import patch, mock_open, MagicMock
 import unittest
-
+import yaml
+from InquirerPy import inquirer 
 
 # class TestPythonPostgres:
 #     def test_check_hosts_raise_argument_error_if_default_ip(self):
@@ -111,21 +110,27 @@ class TestPythonPostgresFunctions(unittest.TestCase):
         with patch("builtins.input", return_value=""):
           assert get_user_input("ip", "10.10.10.10/56") == "10.10.10.10/56"     
 
-    def test_get_user_confirmation_with_yes(self):
-        with patch("builtins.input", return_value="y"):
-          assert get_user_confirmation("ip") == False
+    @patch("InquirerPy.inquirer.confirm")
+    def test_get_user_confirmation_input_true(self, mock_confirm):
+        mock_confirmation = MagicMock()
+        mock_confirm.return_value = mock_confirmation
+        mock_confirmation.execute.return_value = True
+        key = "test_key"
+        result = get_user_confirmation(key)
+        mock_confirm.assert_called_once_with(message=f"Do you want to keep the default value for {key}?", default=True)
+        mock_confirmation.execute.assert_called_once()
+        self.assertEqual(result, False)
 
-    def test_get_user_confirmation_with_no(self):
-        with patch("builtins.input", return_value="n"):
-          assert get_user_confirmation("ip") == True
-
-    def test_get_user_confirmation_with_invalid_input_then_no(self):
-        with patch("builtins.input", side_effect=['t', 'n']):
-          assert get_user_confirmation("ip") == True         
-
-    def test_get_user_confirmation_with_invalid_input_then_yes(self):
-        with patch("builtins.input", side_effect=['t', 'y']):
-          assert get_user_confirmation("ip") == False    
+    @patch("InquirerPy.inquirer.confirm")
+    def test_get_user_confirmation_input_False(self, mock_confirm):
+        mock_confirmation = MagicMock()
+        mock_confirm.return_value = mock_confirmation
+        mock_confirmation.execute.return_value = False
+        key = "test_key"
+        result = get_user_confirmation(key)
+        mock_confirm.assert_called_once_with(message=f"Do you want to keep the default value for {key}?", default=True)
+        mock_confirmation.execute.assert_called_once()
+        self.assertEqual(result, True)        
 
     @patch("yaml.dump")
     @patch("builtins.open", new_callable=mock_open)
@@ -144,13 +149,11 @@ class TestPythonPostgresFunctions(unittest.TestCase):
         filename = "test.yaml"
         data = {"ip": "10.10.10.1/98"}
         write_to_file(directory, filename, data)
-
-        # Now read the file and check its contents
         with open(os.path.join(directory, filename), 'r') as file:
             read_data = yaml.safe_load(file)
 
         self.assertEqual(data, read_data)
 
-    
+
 
           
