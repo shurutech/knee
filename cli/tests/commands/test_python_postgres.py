@@ -4,13 +4,60 @@ import tempfile
 from cli.src.commands.python_postgres import get_user_input, get_user_confirmation, write_to_file, read_from_file
 from unittest.mock import patch, mock_open, MagicMock
 import unittest
+from unittest.mock import call
 import yaml
 from InquirerPy import inquirer 
+
+
+class TestPythonPostgres(unittest.TestCase):
+    @patch("cli.src.commands.python_postgres.write_to_file")    
+    def test_check_configs_with_default_values(self, mock_write_to_file):
+        with patch("InquirerPy.inquirer.confirm") as mock_confirm:
+            mock_confirmation = MagicMock()
+            mock_confirm.return_value = mock_confirmation
+            mock_confirmation.execute.return_value = False
+            pp = PythonPostgres(environment="staging")
+            pp.configs ={
+                      "postgresmainserver.yml":
+                        {
+                            "postgres_port": "5432"
+                        }
+                   }
+            with patch("builtins.input", return_value=""):
+                pp.check_configs()
+            mock_confirm.assert_called_once_with(message=f"Do you want to setup a replica server? (Default= No) :: ", default=False)
+            mock_confirmation.execute.assert_called_once()
+            self.assertEqual(pp.configs["postgresmainserver.yml"]["postgres_port"], "5432")
+            calls = [call("playbooks/group_vars", group, pp.configs[group]) for group in pp.configs.keys()]
+            mock_write_to_file.assert_has_calls(calls, any_order=True)
+
+    @patch("cli.src.commands.python_postgres.write_to_file")    
+    def test_check_configs_with_user_input_values(self, mock_write_to_file):
+        with patch("InquirerPy.inquirer.confirm") as mock_confirm:
+            mock_confirmation = MagicMock()
+            mock_confirm.return_value = mock_confirmation
+            mock_confirmation.execute.return_value = False
+            pp = PythonPostgres(environment="staging")
+            pp.configs ={
+                      "postgresmainserver.yml":
+                        {
+                            "postgres_port": "5432"
+                        }
+                   }
+            with patch("builtins.input", return_value="5434"):
+                pp.check_configs()
+            mock_confirm.assert_called_once_with(message=f"Do you want to setup a replica server? (Default= No) :: ", default=False)
+            mock_confirmation.execute.assert_called_once()
+            self.assertEqual(pp.configs["postgresmainserver.yml"]["postgres_port"], "5434")
+            calls = [call("playbooks/group_vars", group, pp.configs[group]) for group in pp.configs.keys()]
+            mock_write_to_file.assert_has_calls(calls, any_order=True)
+
 
 class TestPythonPostgresUtility(unittest.TestCase):
     def test_get_input_user_with_user_input(self):
         with patch("builtins.input", return_value="10.10.09.01/67"):
           assert get_user_input("ip", "10.10.10.10/56") == "10.10.09.01/67"
+
 
     def test_get_input_user_with_default_input(self):
         with patch("builtins.input", return_value=""):
