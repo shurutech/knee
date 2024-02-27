@@ -1,5 +1,6 @@
 import typer
-
+from InquirerPy import prompt, inquirer
+from InquirerPy.base.control import Choice
 from commands.python_postgres import PythonPostgres
 
 app = typer.Typer()
@@ -24,15 +25,33 @@ def describe(command: str):
 
 
 @app.command()
-def execute(command: str, staging: bool = False, production: bool = False):
-    if not (staging or production):
-        typer.echo("Please specify an environment by passing --staging or --production")
-        raise typer.Exit(code=1)
-    environment = "staging" if staging else "production"
+def execute():
+    command = inquirer.select(
+        message="Select command to execute:",
+        choices=[
+            "PythonPostgres",
+            "React",
+            "MERN",
+            "golang-mongo",
+            "golang-postgresql",
+            "ruby-mysql",
+            "python-mysql"
+            "ruby-postgres"
+            "python-mongo"
+        ],
+        default="PythonPostgres",
+    ).execute()
+    environment = inquirer.select(
+        message="Select environment to execute command:",
+        choices=["local","staging", "production"],
+        default="staging",
+    ).execute()
     typer.echo(f"Executing {command} on {environment} environment...")
-    pp = PythonPostgres(environment=environment)
-    pp.check_defaults()
-
+    if command == "PythonPostgres":
+     pp = PythonPostgres(environment=environment)
+     pp.check_defaults()
+    else:
+        typer.secho("We are working hard for this command to be available soon!....", bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
 
 if __name__ == "__main__":
     app()
