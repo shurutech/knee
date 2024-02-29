@@ -1,0 +1,52 @@
+---
+- name: Setup Mysql
+  hosts: webservers
+  become: true
+
+  tasks:
+  - name: "Install mysql dependencies"
+    apt:
+      name:
+       - mysql-server
+       - mysql-client 
+       - python3-mysqldb
+       - libmysqlclient-dev
+      state: latest
+  
+  - name: "Start mysql service"
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+
+  - name: "Create new user with all privileges"
+    mysql_user:
+      name: "{{ mysql_database_user}}"
+      password: "{{ mysql_database_password }}"
+      priv: "*.*:ALL"
+      host: "%"
+      state: present
+
+  - name: "Create a database"
+    mysql_db:
+      name: "{{ mysql_database_name }"
+      login_user: "{{ mysql_database_user }}"
+      login_password: "{{ mysql_database_password }}"
+      state: present
+  
+  - name: Enable remote login to mysql
+    lineinfile:
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      regexp: '^bind-address'
+      line: 'bind-address = 0.0.0.0'
+      backup: yes
+    notify:
+         - Restart mysql
+         
+  handlers:
+    - name: Restart mysql
+      service:
+        name: mysql
+        state: restarted
+
+      
