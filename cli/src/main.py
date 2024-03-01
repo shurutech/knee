@@ -1,10 +1,9 @@
 import typer
-from InquirerPy import prompt, inquirer
-from InquirerPy.base.control import Choice
+from InquirerPy import inquirer
 from commands.python_postgres import PythonPostgres
+from commands.node_mongo import NodeMongo
 
 app = typer.Typer()
-
 
 @app.command()
 def list():
@@ -50,6 +49,9 @@ def execute():
     if command == "PythonPostgres":
      pp = PythonPostgres(environment=environment)
      pp.check_defaults()
+    elif command == "MERN":
+     nm = NodeMongo(environment=environment) 
+     nm.check_defaults()
     else:
         typer.secho("We are working hard for this command to be available soon!....", bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
 
