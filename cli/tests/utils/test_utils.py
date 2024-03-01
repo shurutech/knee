@@ -4,7 +4,7 @@ from unittest.mock import patch, mock_open, MagicMock
 import unittest
 import yaml 
 import os
-class TestPythonPostgresUtility(unittest.TestCase):
+class TestUtils(unittest.TestCase):
     def test_get_input_user_with_user_input(self):
         with patch("builtins.input", return_value="10.10.09.01/67"):
           assert get_user_input("ip", "10.10.10.10/56") == "10.10.09.01/67"
