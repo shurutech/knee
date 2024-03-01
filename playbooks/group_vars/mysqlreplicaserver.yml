@@ -1,0 +1,4 @@
+mysql_replica_database_name: myproject
+mysql_replica_database_password: dummy_password
+mysql_replica_database_user: myuser
+mysql_replica_version: 16

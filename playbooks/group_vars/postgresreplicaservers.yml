@@ -1,0 +1,3 @@
+postgres_replica_database_name: myproject
+postgres_replica_database_password: dummy_password
+postgres_replica_database_user: myuser

@@ -1,0 +1,4 @@
+mongodb_database_name: myproject
+mongodb_database_password: dummy_password
+mongodb_database_user: myuser
+mongodb_version: 16
