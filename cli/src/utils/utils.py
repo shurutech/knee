@@ -14,19 +14,19 @@ def write_to_file(directory, filename, data):
             yaml.dump(data, file)
 
 def read_from_file(directory, filename):
-    with open(os.path.join(directory, filename), "r") as file:
-        return yaml.safe_load(file)
-        
+         with open(os.path.join(directory, filename), "r") as file:
+            return yaml.safe_load(file)
+
 
 def hosts_configuration_parameters(impacted_host_groups, environment, dir_path, hosts_config):
-    for group, group_info in hosts_config.items():  
-        if group in impacted_host_groups:
-            for hosts, host_info in group_info["hosts"].items():
-                print(f"-----{group}--> {hosts} Configuration")
-                for key, value in host_info.items():
-                    hosts_config[group]["hosts"][hosts][key] = get_user_input(key, value)
-    return hosts
-    # write_to_file(dir_path[environment], "hosts.yml", hosts)
+        for group, group_info in hosts_config.items():  
+            if group in impacted_host_groups:
+                for hosts, host_info in group_info["hosts"].items():
+                    print(f"-----{group}--> {hosts} Configuration")
+                    for key, value in host_info.items():
+                        hosts_config[group]["hosts"][hosts][key] = get_user_input(key, value)
+        return hosts
+        # write_to_file(dir_path[environment], "hosts.yml", hosts)
 
 def node_configuration_parameters(configs):
     for group, group_values in configs.items():

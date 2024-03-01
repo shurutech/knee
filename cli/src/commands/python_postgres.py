@@ -1,9 +1,7 @@
-import yaml
-import os
 from InquirerPy import inquirer
-from utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
-from webserver.python import Python
-from database.postgresql import Postgresql
+from cli.src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
+from cli.src.webserver.python import Python
+from cli.src.database.postgresql import Postgresql
 
 CONFIG_FILES = [
     "all.yml",
@@ -25,7 +23,6 @@ IMPACTED_HOST_GROUPS = [
      "pythonwebservers", 
      "postgresmainserver"
 ]
-
 
         
 class PythonPostgres(Python, Postgresql):

@@ -1,7 +1,7 @@
 from InquirerPy import inquirer
-from utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
-from webserver.nodejs import Nodejs
-from database.mongodb import Mongodb
+from cli.src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
+from cli.src.webserver.nodejs import Nodejs
+from cli.src.database.mongodb import Mongodb
 
 CONFIG_FILES = [
     "all.yml",
