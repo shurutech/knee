@@ -15,7 +15,4 @@ class Mysql:
     def parameter_configuration(self):
         print(Mysql.configs)
         Mysql.configs = node_configuration_parameters(Mysql.configs)
-
-   def write_configs(self):
-        write_to_file(config_dir, "mysqlmainserver.yml", Mysql.configs["mysqlmainserver.yml"])
-        write_to_file(config_dir, "mysqlreplicaservers.yml", Mysql.configs["mysqlreplicaservers.yml"])  
+ 
