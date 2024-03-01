@@ -1,9 +1,7 @@
-import yaml
-import os
 from InquirerPy import inquirer
 from utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
-from webserver.python import Python
-from database.postgresql import Postgresql
+from webserver.nodejs import Nodejs
+from database.mongodb import Mongodb
 
 CONFIG_FILES = [
     "all.yml",
@@ -28,7 +26,7 @@ IMPACTED_HOST_GROUPS = [
 
 
         
-class PythonPostgres(Python, Postgresql):
+class NodeMongo(Nodejs, Mongodb):
     configs = {}
     def __init__(self, environment="staging", config_dir="playbooks/group_vars"):
         self.inventory = {}
@@ -39,20 +37,18 @@ class PythonPostgres(Python, Postgresql):
         if postgres_replica_server_acceptance:
             IMPACTED_HOST_GROUPS.append("postgresreplicaservers")
         for config_file in CONFIG_FILES:
-                PythonPostgres.configs[config_file] = read_from_file(config_dir, config_file)
-        Python.__init__(self)       
-        Postgresql.__init__(self, postgres_replica_server_acceptance)
+                NodeMongo.configs[config_file] = read_from_file(config_dir, config_file)
+        Nodejs.__init__(self)       
+        Mongodb.__init__(self, postgres_replica_server_acceptance)
 
     def check_hosts(self):
         self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.environment, dir_path, self.hosts)
 
     def check_configs(self):
-        PythonPostgres.configs = node_configuration_parameters(PythonPostgres.configs)
-        Python.parameter_configuration(self)
-        Postgresql.parameter_configuration(self)
+        NodeMongo.configs = node_configuration_parameters(NodeMongo.configs)
+        Nodejs.parameter_configuration(self)
+        Mongodb.parameter_configuration(self)
 
     def check_defaults(self):
         self.check_configs()
         self.check_hosts()
-
-    
