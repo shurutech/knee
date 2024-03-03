@@ -1,0 +1,24 @@
+---
+- name: Setup Golang
+  hosts: webservers
+  become: true
+
+  tasks:
+  - name: "Download go tar file"
+    shell: wget https://go.dev/dl/go{{golang_version}}.linux-amd64.tar.gz
+  - name: "Extract go tar file"
+    shell: tar -C /usr/local -xzf go{{golang_version}}.linux-amd64.tar.gz
+
+  - name: "Delete go tar file"
+    shell: rm -rf go{{golang_version}}.linux-amd64.tar.gz
+
+  - name: "Set go path"
+    lineinfile:
+      path: ~/.profile
+      line: 'export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin'
+      create: true
+      state: present
+
+  - name: "Reload profile"
+    shell: . ~/.profile && go version
+    become: true
