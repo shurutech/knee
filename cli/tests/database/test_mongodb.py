@@ -1,5 +1,5 @@
-from cli.src.database.mongodb import Mongodb
-from cli.src.utils.utils import node_configuration_parameters
+from src.database.mongodb import Mongodb
+from src.utils.utils import node_configuration_parameters
 import unittest
 from unittest.mock import patch
 

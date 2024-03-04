@@ -1,6 +1,6 @@
 from InquirerPy import inquirer
 from src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
-from src.webserver.nodejs import Nodejs
+from src.webserver.golang import Golang
 from src.database.mongodb import Mongodb
 
 CONFIG_FILES = [
@@ -13,19 +13,17 @@ STAGING_HOSTS_DIR = "inventories/staging"
 PRODUCTION_HOSTS_DIR = "inventories/production"
 
 dir_path = {
-     "staging": STAGING_HOSTS_DIR,
-     "local": LOCAL_HOSTS_DIR,
-     "production": PRODUCTION_HOSTS_DIR
-}
+        "staging": STAGING_HOSTS_DIR,
+        "local": LOCAL_HOSTS_DIR,
+        "production": PRODUCTION_HOSTS_DIR
+    }
 
 IMPACTED_HOST_GROUPS = [
-     "webservers", 
-     "databasemainserver"
-]
+        "webservers", 
+        "databasemainserver"
+    ]
 
-
-        
-class NodeMongo(Nodejs, Mongodb):
+class GolangMongo(Golang, Mongodb):
     configs = {}
     def __init__(self, environment="staging", config_dir="playbooks/group_vars"):
         self.inventory = {}
@@ -36,16 +34,16 @@ class NodeMongo(Nodejs, Mongodb):
         if postgres_replica_server_acceptance:
             IMPACTED_HOST_GROUPS.append("databasereplicaservers")
         for config_file in CONFIG_FILES:
-                NodeMongo.configs[config_file] = read_from_file(config_dir, config_file)
-        Nodejs.__init__(self)       
+                GolangMongo.configs[config_file] = read_from_file(config_dir, config_file)
+        Golang.__init__(self)       
         Mongodb.__init__(self, postgres_replica_server_acceptance)
 
     def check_hosts(self):
         self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.environment, dir_path, self.hosts)
 
     def check_configs(self):
-        NodeMongo.configs = node_configuration_parameters(NodeMongo.configs)
-        Nodejs.parameter_configuration(self)
+        GolangMongo.configs = node_configuration_parameters(GolangMongo.configs)
+        Golang.parameter_configuration(self)
         Mongodb.parameter_configuration(self)
 
     def check_defaults(self):

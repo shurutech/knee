@@ -15,9 +15,9 @@ def list():
 @app.command()
 def describe(command: str):
     descriptions = {
-        "pp": "Python Server, Postgres DB. This commands sets up python server with a PostgreSQL database.",
+        "pp": "Python Server, Postgres DB. This commands sets up python server with a PostgreSQL src.database.",
         "give-ssh-access": "This command grants SSH access to a user.",
-        "postgres": "This command sets up a PostgreSQL database.",
+        "postgres": "This command sets up a PostgreSQL src.database.",
         "postgres-with-replica": "This command sets up a PostgreSQL database with a replica.",
     }
     typer.echo(descriptions.get(command, "Command not found"))

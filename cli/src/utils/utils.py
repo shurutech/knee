@@ -26,11 +26,9 @@ def hosts_configuration_parameters(impacted_host_groups, environment, dir_path, 
                     for key, value in host_info.items():
                         hosts_config[group]["hosts"][hosts][key] = get_user_input(key, value)
         return hosts
-        # write_to_file(dir_path[environment], "hosts.yml", hosts)
 
 def node_configuration_parameters(configs):
     for group, group_values in configs.items():
         for key, value in group_values.items():
             configs[group][key] = get_user_input(key, value)
-        # write_to_file("playbooks/group_vars", group, configs[group]) 
     return configs       

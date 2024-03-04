@@ -1,4 +1,4 @@
-from cli.src.utils.utils import node_configuration_parameters, read_from_file
+from src.utils.utils import node_configuration_parameters, read_from_file
 config_dir = "playbooks/group_vars"
 class Ruby:
     config_files = ["rubywebservers.yml"]

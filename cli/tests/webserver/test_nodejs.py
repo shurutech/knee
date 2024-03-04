@@ -1,7 +1,7 @@
-from cli.src.webserver.nodejs import Nodejs
+from src.webserver.nodejs import Nodejs
 import unittest
 from unittest.mock import patch
-from cli.src.utils.utils import node_configuration_parameters
+from src.utils.utils import node_configuration_parameters
 
 class TestNodejs(unittest.TestCase):
     def test_parameter_configuration_with_default_values(self):

@@ -1,4 +1,4 @@
-from cli.src.utils.utils import node_configuration_parameters, read_from_file
+from src.utils.utils import node_configuration_parameters, read_from_file
 
 config_dir = "playbooks/group_vars"
 
@@ -12,6 +12,5 @@ class Mysql:
                 Mysql.configs[config_file] = read_from_file(config_dir, config_file)
 
     def parameter_configuration(self):
-        print(Mysql.configs)
         Mysql.configs = node_configuration_parameters(Mysql.configs)
  

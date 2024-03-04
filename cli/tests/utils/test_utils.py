@@ -1,5 +1,5 @@
 import tempfile
-from cli.src.utils.utils import get_user_input, get_user_confirmation, write_to_file, read_from_file
+from src.utils.utils import get_user_input, get_user_confirmation, write_to_file, read_from_file
 from unittest.mock import patch, mock_open, MagicMock
 import unittest
 import yaml 

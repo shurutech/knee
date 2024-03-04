@@ -1,7 +1,7 @@
 from InquirerPy import inquirer
-from cli.src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
-from cli.src.webserver.python import Python
-from cli.src.database.postgresql import Postgresql
+from src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
+from src.webserver.python import Python
+from src.database.postgresql import Postgresql
 
 CONFIG_FILES = [
     "all.yml",
@@ -19,9 +19,8 @@ dir_path = {
 }
 
 IMPACTED_HOST_GROUPS = [
-     "webservers",
-     "pythonwebservers", 
-     "postgresmainserver"
+     "webservers", 
+     "databasemainserver"
 ]
 
         
@@ -34,7 +33,7 @@ class PythonPostgres(Python, Postgresql):
         self.hosts = read_from_file(dir_path[environment], "hosts.yml")    
         postgres_replica_server_acceptance = inquirer.confirm(message="Do you want to setup a replica server? (Default= No) :: ", default=False).execute()
         if postgres_replica_server_acceptance:
-            IMPACTED_HOST_GROUPS.append("postgresreplicaservers")
+            IMPACTED_HOST_GROUPS.append("databasereplicaservers")
         for config_file in CONFIG_FILES:
                 PythonPostgres.configs[config_file] = read_from_file(config_dir, config_file)
         Python.__init__(self)       

@@ -1,5 +1,5 @@
-from cli.src.webserver.python import Python
-from cli.src.utils.utils import node_configuration_parameters
+from src.webserver.python import Python
+from src.utils.utils import node_configuration_parameters
 import unittest
 from unittest.mock import patch
 

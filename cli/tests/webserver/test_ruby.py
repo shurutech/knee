@@ -1,7 +1,7 @@
-from cli.src.webserver.ruby import Ruby
+from src.webserver.ruby import Ruby
+from src.utils.utils import node_configuration_parameters
 import unittest
 from unittest.mock import patch
-from cli.src.utils.utils import node_configuration_parameters
 
 class TestRuby(unittest.TestCase):
     def test_parameter_configuration_with_default_values(self):
