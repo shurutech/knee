@@ -23,8 +23,6 @@ IMPACTED_HOST_GROUPS = [
      "databasemainserver"
 ]
 
-
-        
 class NodeMongo(Nodejs, Mongodb):
     configs = {}
     def __init__(self, environment="staging", config_dir="playbooks/group_vars"):
@@ -48,6 +46,17 @@ class NodeMongo(Nodejs, Mongodb):
         Nodejs.parameter_configuration(self)
         Mongodb.parameter_configuration(self)
 
+    def write_configuration_to_file(self):
+        write_to_file(dir_path[self.environment], "hosts.yml", self.hosts)
+        for config_file in CONFIG_FILES:
+            write_to_file("playbooks/group_vars", config_file, NodeMongo.configs[config_file])
+        Mongodb.write_configuration_to_file(self)
+        Nodejs.write_configuration_to_file(self)    
+
     def check_defaults(self):
         self.check_configs()
         self.check_hosts()
+        configuration_acceptance = inquirer.confirm(message="Do you want to change the configuration? (Default= Yes) :: ", default=True).execute()
+        if configuration_acceptance:
+            self.write_configuration_to_file()
+        
