@@ -1,5 +1,5 @@
 from InquirerPy import inquirer
-from src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters
+from src.utils.utils import read_from_file, hosts_configuration_parameters, node_configuration_parameters, write_to_file
 from src.webserver.nodejs import Nodejs
 from src.database.mongodb import Mongodb
 
@@ -41,7 +41,7 @@ class NodeMongo(Nodejs, Mongodb):
         Mongodb.__init__(self, postgres_replica_server_acceptance)
 
     def check_hosts(self):
-        self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.environment, dir_path, self.hosts)
+        self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.hosts)
 
     def check_configs(self):
         NodeMongo.configs = node_configuration_parameters(NodeMongo.configs)

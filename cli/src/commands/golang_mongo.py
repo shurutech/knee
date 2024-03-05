@@ -39,7 +39,7 @@ class GolangMongo(Golang, Mongodb):
         Mongodb.__init__(self, postgres_replica_server_acceptance)
 
     def check_hosts(self):
-        self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.environment, dir_path, self.hosts)
+        self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.hosts)
 
     def check_configs(self):
         GolangMongo.configs = node_configuration_parameters(GolangMongo.configs)
