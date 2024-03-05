@@ -1,5 +1,5 @@
 import tempfile
-from src.utils.utils import get_user_input, get_user_confirmation, write_to_file, read_from_file
+from src.utils.utils import get_user_input, get_user_confirmation, write_to_file, read_from_file, hosts_configuration_parameters
 from unittest.mock import patch, mock_open, MagicMock
 import unittest
 import yaml 
@@ -67,4 +67,35 @@ class TestUtils(unittest.TestCase):
         read_from_file(directory, filename)
         mock_open.assert_called_once_with(os.path.join(directory, filename), "r")
         mock_safe_load.assert_called_once_with(mock_open.return_value.__enter__.return_value)
+
+
+    def test_host_configuration_parameters_default_input(self):
+        impacted_host_groups = ["webservers", "databasemainserver"]
+        hosts_config = {
+            "webservers": {
+                "hosts": {
+                    "web1": {
+                        "ip": "10.10.10.10/56"
+                    }
+                }
+            }
+        }
+        with patch("builtins.input", return_value=""):
+            result = hosts_configuration_parameters(impacted_host_groups, hosts_config)
+            self.assertEqual(result, hosts_config)
+
+    def test_host_configuration_parameters_user_input(self):
+        impacted_host_groups = ["webservers", "databasemainserver"]
+        hosts_config = {
+            "webservers": {
+                "hosts": {
+                    "web1": {
+                        "ip": "10.10.10.10/56"
+                    }
+                }
+            }
+        }
+        with patch("builtins.input", return_value="10.10.1.1/47"):
+            result = hosts_configuration_parameters(impacted_host_groups, hosts_config)
+            self.assertEqual(result["webservers"]["hosts"]["web1"]["ip"], "10.10.1.1/47")
        

@@ -18,14 +18,14 @@ def read_from_file(directory, filename):
             return yaml.safe_load(file)
 
 
-def hosts_configuration_parameters(impacted_host_groups, environment, dir_path, hosts_config):
+def hosts_configuration_parameters(impacted_host_groups, hosts_config):
         for group, group_info in hosts_config.items():  
             if group in impacted_host_groups:
                 for hosts, host_info in group_info["hosts"].items():
                     print(f"-----{group}--> {hosts} Configuration")
                     for key, value in host_info.items():
-                        hosts_config[group]["hosts"][hosts][key] = get_user_input(key, value)
-        return hosts
+                        hosts_config[group]["hosts"][hosts][key] = get_user_input(key, value)    
+        return hosts_config
 
 def node_configuration_parameters(configs):
     for group, group_values in configs.items():
