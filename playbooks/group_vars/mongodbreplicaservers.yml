@@ -1,0 +1,3 @@
+mongodb_replica_database_name: myproject
+mongodb_replica_database_password: dummy_password
+mongodb_replica_database_user: myuser

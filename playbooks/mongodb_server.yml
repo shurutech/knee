@@ -1,0 +1,57 @@
+---
+- name: Install Mongodb
+  hosts: webservers
+  become: true
+  tasks:
+
+  - name: "install curl and gnupg"
+    apt:
+      name: 
+      - curl
+      - gnupg
+      - python3-pip
+      state: latest
+
+  - name: Import MongoDB PGP key
+    shell: |
+      curl -fsSL https://pgp.mongodb.com/server-7.0.asc | sudo gpg --output /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor  
+
+  - name: Add MongoDB to the sources list
+    shell: |
+      echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+  - name: Update package cache
+    apt:
+      update_cache: yes
+
+  - name: Install mongodb-org
+    apt:
+      name: mongodb-org
+      state: present
+      update_cache: yes
+
+  - name: Install pymongo
+    pip:
+      name: pymongo
+
+  - name: Enable mongod service
+    systemd:
+      name: mongod
+      state: started
+  
+  - name: Create MongoDB root user
+    mongodb_user:
+      login_port: "27017"
+      database: "admin"
+      name: "{{ mongodb_database_user}}"
+      password: "{{ mongodb_database_password }}"
+      roles: "root"
+
+
+      
+        
+      
+
+    
+
+    
