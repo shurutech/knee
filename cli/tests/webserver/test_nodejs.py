@@ -29,13 +29,13 @@ class TestNodejs(unittest.TestCase):
     @patch("src.webserver.nodejs.write_to_file")
     def test_write_configuration_parameters_called_with_expected_arguments(self, mock_write_to_file):
         nodejs = Nodejs()
-        Nodejs.configs = {
+        nodejs.configs = {
             "nodewebservers.yml": {
                 "nodejs_version": "1.21.3"
             }
         }
         nodejs.write_configuration_to_file()
         actual_call = mock_write_to_file.call_args
-        expected_call = call('playbooks/group_vars', 'nodewebservers.yml', {'nodejs_version': Nodejs.configs["nodewebservers.yml"]["nodejs_version"]})
+        expected_call = call('playbooks/group_vars', 'nodewebservers.yml', nodejs.configs["nodewebservers.yml"])
         self.assertEqual(actual_call, expected_call)
     

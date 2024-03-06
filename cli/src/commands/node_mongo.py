@@ -24,8 +24,8 @@ IMPACTED_HOST_GROUPS = [
 ]
 
 class NodeMongo(Nodejs, Mongodb):
-    configs = {}
     def __init__(self, environment="staging", config_dir="playbooks/group_vars"):
+        self.configs = {}
         self.inventory = {}
         self.hosts = {}
         self.environment = environment
@@ -34,24 +34,24 @@ class NodeMongo(Nodejs, Mongodb):
         if postgres_replica_server_acceptance:
             IMPACTED_HOST_GROUPS.append("databasereplicaservers")
         for config_file in CONFIG_FILES:
-                NodeMongo.configs[config_file] = read_from_file(config_dir, config_file)
-        Nodejs.__init__(self)       
-        Mongodb.__init__(self, postgres_replica_server_acceptance)
+                self.configs[config_file] = read_from_file(config_dir, config_file)
+        self.server = Nodejs()
+        self.database = Mongodb(postgres_replica_server_acceptance)
 
     def check_hosts(self):
         self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.hosts)
 
     def check_configs(self):
-        NodeMongo.configs = node_configuration_parameters(NodeMongo.configs)
-        Nodejs.parameter_configuration(self)
-        Mongodb.parameter_configuration(self)
+        self.configs = node_configuration_parameters(self.configs)
+        self.server.parameter_configuration()
+        self.database.parameter_configuration()
 
     def write_configuration_to_file(self):
         write_to_file(dir_path[self.environment], "hosts.yml", self.hosts)
         for config_file in CONFIG_FILES:
-            write_to_file("playbooks/group_vars", config_file, NodeMongo.configs[config_file])
-        Mongodb.write_configuration_to_file(self)
-        Nodejs.write_configuration_to_file(self)    
+            write_to_file("playbooks/group_vars", config_file, self.configs[config_file])
+        self.database.write_configuration_to_file()
+        self.server.write_configuration_to_file()    
 
     def check_defaults(self):
         self.check_configs()
