@@ -1,4 +1,4 @@
-from src.utils.utils import node_configuration_parameters, read_from_file
+from src.utils.utils import node_configuration_parameters, read_from_file, write_to_file
 
 config_dir = "playbooks/group_vars"
 
@@ -7,9 +7,14 @@ class Postgresql:
     configs = {}
     def __init__(self, replica_server_acceptance=False):
         if replica_server_acceptance:
-            Postgresql.config_files.append("postgresreplicaservers.yml")  
-        for config_file in Postgresql.config_files:
-                Postgresql.configs[config_file] = read_from_file(config_dir, config_file)
+                self.config_files.append("postgresreplicaservers.yml")  
+        for config_file in  self.config_files:
+                    self.configs[config_file] = read_from_file(config_dir, config_file)
 
     def parameter_configuration(self):
-        Postgresql.configs = node_configuration_parameters(Postgresql.configs)
+            self.configs = node_configuration_parameters(self.configs)
+
+    def write_configuration_to_file(self):
+        for config_file in  self.config_files:
+            write_to_file(config_dir, config_file,  self.configs[config_file])
+
