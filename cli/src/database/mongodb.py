@@ -1,15 +1,24 @@
-from src.utils.utils import node_configuration_parameters, read_from_file
+from src.utils.utils import node_configuration_parameters, read_from_file, write_to_file
 
 config_dir = "playbooks/group_vars"
 
 class Mongodb:
-    config_files = ["mongodbmainserver.yml"]
-    configs = {}
     def __init__(self, replica_server_acceptance=False):
+        self.config_files = ["mongodbmainserver.yml"]
+        self.configs = {}
         if replica_server_acceptance:
-            Mongodb.config_files.append("mongodbreplicaservers.yml")  
-        for config_file in Mongodb.config_files:
-                Mongodb.configs[config_file] = read_from_file(config_dir, config_file)
+            self.config_files.append("mongodbreplicaservers.yml")  
+        for config_file in self.config_files:
+                self.configs[config_file] = read_from_file(config_dir, config_file)    
 
     def parameter_configuration(self):
-        Mongodb.configs = node_configuration_parameters(Mongodb.configs)
+        self.configs = node_configuration_parameters(self.configs)
+    
+    def write_configuration_to_file(self):
+        for config_file in self.config_files:
+            write_to_file(config_dir, config_file, self.configs[config_file])
+
+
+
+
+            
