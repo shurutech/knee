@@ -1,22 +1,97 @@
-from src.commands.python_postgres import PythonPostgres
+from src.commands.python_postgres import PythonPostgres, IMPACTED_HOST_GROUPS, CONFIG_FILES
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, call, MagicMock
 class TestPythonPostgres(unittest.TestCase) : 
-  
-
-    @patch('src.commands.python_postgres.inquirer.confirm')
-    @patch('src.commands.python_postgres.read_from_file')
-    @patch('src.commands.python_postgres.Python.__init__')
-    @patch('src.commands.python_postgres.Postgresql.__init__')
-    def test_init(self, mock_postgresql_init, mock_python_init, mock_read_from_file, mock_confirm):
-        mock_read_from_file.return_value = {}
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    def test_init_with_replica_server_acceptance_true(self, mock_confirm) : 
         mock_confirm.return_value.execute.return_value = True
-        pp = PythonPostgres()
-        mock_confirm.assert_called_with(message="Do you want to setup a replica server? (Default= No) :: ", default=False)
-        self.assertIn("databasereplicaservers", pp.IMPACTED_HOST_GROUPS)
+        PythonPostgres()
+        assert "databasereplicaservers" in IMPACTED_HOST_GROUPS
+    
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    def test_init_with_replica_server_acceptance_false(self, mock_confirm) : 
+        mock_confirm.return_value.execute.return_value = False
+        PythonPostgres()
+        assert "databasereplicaservers" not in IMPACTED_HOST_GROUPS
 
-        mock_read_from_file.assert_any_call('playbooks/group_vars', 'all.yml')
-        mock_read_from_file.assert_any_call('playbooks/group_vars', 'webservers.yml')
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    @patch("src.commands.python_postgres.hosts_configuration_parameters")
+    def test_check_hosts(self, mock_hosts_configurations_parameters, mock_confirm) : 
+        mock_confirm.return_value.execute.return_value = False
+        python_postgres = PythonPostgres()
+        python_postgres.hosts = {
+            "webservers": {
+                "hosts": {
+                    "webserver1": {
+                        "ansible_host": "10.10.10.1/23"
+                    }
+                }
+            }
+        }
+        python_postgres.check_hosts()
+        expected_args = (IMPACTED_HOST_GROUPS,  {
+            "webservers": {
+                "hosts": {
+                    "webserver1": {
+                        "ansible_host": "10.10.10.1/23"
+                    }
+                }
+            }
+        })
+        mock_hosts_configurations_parameters.assert_called_once_with(*expected_args)
 
-        mock_python_init.assert_called_once()
-        mock_postgresql_init.assert_called_once_with(False)
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    @patch.object(PythonPostgres, "write_configuration_to_file")
+    def test_write_configuration_to_file_when_it_is_called(self, mock_write_to_file, mock_confirm) : 
+        mock_confirm.return_value.execute.return_value = False
+        python_postgres = PythonPostgres()
+        python_postgres.environment = "staging"
+        python_postgres.hosts = {"test": "test"}
+        python_postgres.write_configuration_to_file()
+        assert mock_write_to_file.called
+    
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    @patch("src.commands.python_postgres.write_to_file")
+    def test_number_of_times_write_to_file_called(self, mock_write_config, mock_confirm) : 
+        mock_confirm.return_value.execute.return_value = False
+        python_postgres = PythonPostgres()
+        python_postgres.environment = "staging"
+        python_postgres.hosts = {"test": "test"}
+        python_postgres.write_configuration_to_file()
+        assert mock_write_config.call_count == 1 + CONFIG_FILES.__len__()
+
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    @patch("src.commands.python_postgres.PythonPostgres.check_configs")
+    @patch("src.commands.python_postgres.PythonPostgres.check_hosts")
+    @patch("src.commands.python_postgres.PythonPostgres.write_configuration_to_file")
+    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm) : 
+        mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: True)]
+        python_postgres = PythonPostgres()
+        python_postgres.check_defaults()
+        assert mock_check_configs.called
+        assert mock_check_hosts.called
+        assert mock_write_configuration_to_file.called
+
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    @patch("src.commands.python_postgres.node_configuration_parameters")
+    @patch("src.commands.python_postgres.Python.parameter_configuration")
+    @patch("src.commands.python_postgres.Postgresql.parameter_configuration")
+    def test_check_configs(self, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_node_configuration_parameters, mock_confirm) : 
+        mock_confirm.return_value.execute.return_value = False
+        python_postgres = PythonPostgres()
+        python_postgres.check_configs()
+        assert mock_python_parameter_configuration.called
+        assert mock_postgresql_parameter_configuration.called
+        assert mock_node_configuration_parameters.called
+
+    @patch("src.commands.python_postgres.inquirer.confirm")
+    @patch("src.commands.python_postgres.PythonPostgres.check_configs")
+    @patch("src.commands.python_postgres.PythonPostgres.check_hosts")
+    @patch("src.commands.python_postgres.PythonPostgres.write_configuration_to_file")
+    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm) : 
+        mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
+        python_postgres = PythonPostgres()
+        python_postgres.check_defaults()
+        assert mock_check_configs.called
+        assert mock_check_hosts.called
+        assert not mock_write_configuration_to_file.called
