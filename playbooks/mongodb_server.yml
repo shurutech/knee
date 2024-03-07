@@ -1,9 +1,15 @@
 ---
 - name: Install Mongodb
+  vars_files:
+    - group_vars/mongodbmainserver.yml
   hosts: webservers
   become: true
   tasks:
 
+  - name: "update apt cache"
+    apt:
+      update_cache: yes
+      
   - name: "install curl and gnupg"
     apt:
       name: 
