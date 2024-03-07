@@ -42,8 +42,11 @@ class TestMongodb(unittest.TestCase):
         self.assertEqual(mongodb.configs["mongodbreplicaservers.yml"]["mongodb_port"], "27019")
 
     @patch("src.database.mongodb.write_to_file")
-    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_write_to_file):
+    @patch("src.database.mongodb.run_playbook")
+    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_run_playbook ,mock_write_to_file):
         mongodb = Mongodb()
+        mongodb.environment = "local"
+        mongodb.config_files = ["mongodbmainserver.yml"]
         mongodb.configs = {
             "mongodbmainserver.yml": {
                 'mongodb_database_name': 'myproject',
@@ -53,3 +56,4 @@ class TestMongodb(unittest.TestCase):
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'mongodbmainserver.yml', mongodb.configs["mongodbmainserver.yml"])
         self.assertEqual(actual_call, expected_call)
+        mock_run_playbook.assert_called_once_with('mongodb_server.yml', mongodb.environment)
