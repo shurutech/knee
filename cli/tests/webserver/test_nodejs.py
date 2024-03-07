@@ -27,8 +27,9 @@ class TestNodejs(unittest.TestCase):
         self.assertEqual(nodejs.configs["nodejswebservers.yml"]["nodejs_port"], "8081")
 
     @patch("src.webserver.nodejs.write_to_file")
-    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_write_to_file):
-        nodejs = Nodejs()
+    @patch("src.webserver.nodejs.run_playbook")
+    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_run_playbook, mock_write_to_file):
+        nodejs = Nodejs('local')
         nodejs.configs = {
             "nodewebservers.yml": {
                 "nodejs_version": "1.21.3"
@@ -38,4 +39,4 @@ class TestNodejs(unittest.TestCase):
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'nodewebservers.yml', nodejs.configs["nodewebservers.yml"])
         self.assertEqual(actual_call, expected_call)
-    
+        mock_run_playbook.assert_called_once_with('node_server.yml', 'local')
