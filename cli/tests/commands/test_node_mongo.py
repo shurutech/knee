@@ -46,6 +46,8 @@ class TestNodeMongo(unittest.TestCase):
     def test_write_configuration_to_file_when_it_is_called(self, mock_write_to_file, mock_confirm):
         mock_confirm.return_value.execute.return_value = False
         node_mongo = NodeMongo()
+        node_mongo.database = MagicMock()
+        node_mongo.server = MagicMock()
         node_mongo.environment = "staging"
         node_mongo.hosts = {"test": "test"}
         node_mongo.write_configuration_to_file()
@@ -56,6 +58,8 @@ class TestNodeMongo(unittest.TestCase):
     def test_number_of_times_write_to_file_called(self, mock_write_config, mock_confirm):
         mock_confirm.return_value.execute.return_value = False
         node_mongo = NodeMongo()
+        node_mongo.database = MagicMock()
+        node_mongo.server = MagicMock()
         node_mongo.environment = "staging"
         node_mongo.hosts = {"test": "test"}
         node_mongo.write_configuration_to_file()

@@ -35,8 +35,8 @@ class NodeMongo(Nodejs, Mongodb):
             IMPACTED_HOST_GROUPS.append("databasereplicaservers")
         for config_file in CONFIG_FILES:
                 self.configs[config_file] = read_from_file(config_dir, config_file)
-        self.server = Nodejs()
-        self.database = Mongodb(postgres_replica_server_acceptance)
+        self.server = Nodejs(environment)
+        self.database = Mongodb(postgres_replica_server_acceptance, environment)
 
     def check_hosts(self):
         self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.hosts)
