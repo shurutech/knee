@@ -27,8 +27,9 @@ class TestGolang(unittest.TestCase):
         self.assertEqual(golang.configs["golangwebservers.yml"]["golang_port"], "8081")
     
     @patch("src.webserver.golang.write_to_file")
-    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_write_to_file):
-        golang = Golang()
+    @patch("src.webserver.golang.run_playbook")
+    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_run_playbook, mock_write_to_file):
+        golang = Golang('local')
         Golang.configs = {
             "golangwebservers.yml": {
                 "golang_version": "1.21.3"
@@ -38,4 +39,5 @@ class TestGolang(unittest.TestCase):
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'golangwebservers.yml', {'golang_version': Golang.configs["golangwebservers.yml"]["golang_version"]})
         self.assertEqual(actual_call, expected_call)
+        mock_run_playbook.assert_called_once_with('golang_server.yml', 'local')
         
