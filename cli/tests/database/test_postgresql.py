@@ -41,8 +41,9 @@ class TestPostgresql(unittest.TestCase):
         self.assertEqual(python.configs["postgresreplicaservers.yml"]["python_port"], "5000")
 
     @patch("src.database.postgresql.write_to_file")
-    def test_write_configuration_parameters_called_with_expected_arguments(self, mock_write_to_file):
-        postgresql = Postgresql(False)
+    @patch("src.database.postgresql.run_playbook")
+    def test_write_configuration_parameters_called_with_expected_arguments(self,mock_run_playbook, mock_write_to_file):
+        postgresql = Postgresql(False, 'staging')
         postgresql.config_files = ["postgresmainserver.yml"]
         postgresql.configs = {
             "postgresmainserver.yml": {
@@ -53,4 +54,5 @@ class TestPostgresql(unittest.TestCase):
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'postgresmainserver.yml', postgresql.configs["postgresmainserver.yml"])
         self.assertEqual(actual_call, expected_call)
+        mock_run_playbook.assert_called_once_with('postgres_server.yml', 'staging')
     
