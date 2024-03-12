@@ -1,6 +1,5 @@
-user_name: myproject
+database_cidr_address: 10.10.5.0/24
 project_name: myproject
-postgres_version: 16
-postgres_database_cidr_address: 10.10.5.0/24
-postgres_replication_user: replicator
-postgres_replication_user_password: dummy_password
+replication_user: replicator
+replication_user_password: dummy_password
+user_name: myproject
