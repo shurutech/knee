@@ -1,6 +1,8 @@
 ---
-- hosts: postgresmainserver
+- hosts: databasemainserver
   become: yes
+  vars_files:
+    - group_vars/postgresmainserver.yml
   tasks:
     - name: Install psycopg2 for Python 3
       ansible.builtin.apt:
@@ -50,8 +52,9 @@
         contype: host
         databases: all
         users: all
-        address: "{{ postgres_database_cidr_address }}"
+        address: 0.0.0.0/0
         method: password
+        state: present
 
     - name: Restart PostgreSQL to apply changes
       ansible.builtin.service:
