@@ -1,4 +1,4 @@
 postgres_database_name: myproject
 postgres_database_user: myuser
 postgres_database_password: dummy_password
-
+postgres_version: 16
