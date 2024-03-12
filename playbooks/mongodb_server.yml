@@ -44,7 +44,32 @@
     systemd:
       name: mongod
       state: started
-  
+
+  - name: Enable remote connections in MongoDB
+    lineinfile:
+      path: /etc/mongod.conf
+      regexp: '^ *bindIp:.*'
+      line: '  bindIp: 0.0.0.0'
+      state: present
+      backup: yes
+
+  - name: Restart MongoDB Service
+    service:
+      name: mongod
+      state: restarted
+
+  - name: Enable MongoDB authorization
+    ansible.builtin.blockinfile:
+      path: /etc/mongod.conf
+      block: |
+        security:
+          authorization: enabled
+
+  - name: Restart MongoDB Service
+    service:
+       name: mongod
+       state: restarted
+
   - name: Create MongoDB root user
     mongodb_user:
       login_port: "27017"
