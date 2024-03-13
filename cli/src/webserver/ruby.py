@@ -8,5 +8,4 @@ class Ruby:
                 Ruby.configs[config_file] = read_from_file(config_dir, config_file)
 
     def parameter_configuration(self):
-        print("Ruby")
         Ruby.configs = node_configuration_parameters(Ruby.configs)

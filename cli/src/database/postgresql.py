@@ -15,7 +15,7 @@ class Postgresql:
     def parameter_configuration(self):
             self.configs = node_configuration_parameters(self.configs)
 
-    def write_configuration_to_file(self):
+    def write_configuration_and_run_playbook(self):
         for config_file in  self.config_files:
             write_to_file(config_dir, config_file,  self.configs[config_file])
         run_playbook("postgres_server.yml",self.environment)

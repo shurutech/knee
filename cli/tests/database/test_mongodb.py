@@ -52,7 +52,7 @@ class TestMongodb(unittest.TestCase):
                 'mongodb_database_name': 'myproject',
             }
         }
-        mongodb.write_configuration_to_file()
+        mongodb.write_configuration_and_run_playbook()
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'mongodbmainserver.yml', mongodb.configs["mongodbmainserver.yml"])
         self.assertEqual(actual_call, expected_call)

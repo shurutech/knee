@@ -35,7 +35,7 @@ class TestNodejs(unittest.TestCase):
                 "nodejs_version": "1.21.3"
             }
         }
-        nodejs.write_configuration_to_file()
+        nodejs.write_configuration_and_run_playbook()
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'nodewebservers.yml', nodejs.configs["nodewebservers.yml"])
         self.assertEqual(actual_call, expected_call)

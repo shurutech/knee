@@ -43,14 +43,14 @@ class TestGolangMongo(unittest.TestCase):
     
     @patch("src.commands.golang_mongo.write_to_file")
     @patch("src.commands.golang_mongo.inquirer.confirm")
-    def test_write_configuration_to_file_when_it_is_called(self, mock_confirm, mock_write_to_file):
+    def test_write_configuration_and_run_playbook_when_it_is_called(self, mock_confirm, mock_write_to_file):
         mock_confirm.return_value.execute.return_value = False
         golang_mongo = GolangMongo()
         golang_mongo.database = MagicMock()
         golang_mongo.server = MagicMock()
         golang_mongo.environment = "staging"
         golang_mongo.hosts = {"test": "test"}
-        golang_mongo.write_configuration_to_file()
+        golang_mongo.write_configuration_and_run_playbook()
         assert mock_write_to_file.called
 
 
@@ -63,7 +63,7 @@ class TestGolangMongo(unittest.TestCase):
         golang_mongo.server = MagicMock()
         golang_mongo.environment = "staging"
         golang_mongo.hosts = {"test": "test"}
-        golang_mongo.write_configuration_to_file()
+        golang_mongo.write_configuration_and_run_playbook()
         assert mock_write_config.call_count == 1 + CONFIG_FILES.__len__()
     
     @patch("src.commands.golang_mongo.inquirer.confirm")
@@ -81,20 +81,20 @@ class TestGolangMongo(unittest.TestCase):
     @patch("src.commands.golang_mongo.inquirer.confirm")
     @patch("src.commands.golang_mongo.GolangMongo.check_configs")
     @patch("src.commands.golang_mongo.GolangMongo.check_hosts")
-    @patch("src.commands.golang_mongo.GolangMongo.write_configuration_to_file")
-    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm):
+    @patch("src.commands.golang_mongo.GolangMongo.write_configuration_and_run_playbook")
+    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_and_run_playbook ,mock_check_hosts, mock_check_configs, mock_confirm):
         mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: True)]
         golang_mongo = GolangMongo()
         golang_mongo.check_defaults()
         assert mock_check_hosts.called
         assert mock_check_configs.called
-        assert mock_write_configuration_to_file.called
+        assert mock_write_configuration_and_run_playbook.called
 
     @patch("src.commands.golang_mongo.inquirer.confirm")
     @patch("src.commands.golang_mongo.GolangMongo.check_configs")
     @patch("src.commands.golang_mongo.GolangMongo.check_hosts")
-    @patch("src.commands.golang_mongo.GolangMongo.write_configuration_to_file")
-    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm):
+    @patch("src.commands.golang_mongo.GolangMongo.write_configuration_and_run_playbook")
+    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_and_run_playbook ,mock_check_hosts, mock_check_configs, mock_confirm):
         mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
         golang_mongo = GolangMongo()
         golang_mongo.database = MagicMock()
@@ -102,6 +102,6 @@ class TestGolangMongo(unittest.TestCase):
         golang_mongo.check_defaults()
         assert mock_check_hosts.called
         assert mock_check_configs.called
-        assert not mock_write_configuration_to_file.called
+        assert not mock_write_configuration_and_run_playbook.called
 
     

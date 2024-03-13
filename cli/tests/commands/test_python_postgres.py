@@ -41,13 +41,13 @@ class TestPythonPostgres(unittest.TestCase) :
         mock_hosts_configurations_parameters.assert_called_once_with(*expected_args)
 
     @patch("src.commands.python_postgres.inquirer.confirm")
-    @patch.object(PythonPostgres, "write_configuration_to_file")
-    def test_write_configuration_to_file_when_it_is_called(self, mock_write_to_file, mock_confirm) : 
+    @patch.object(PythonPostgres, "write_configuration_and_run_playbook")
+    def test_write_configuration_and_run_playbook_when_it_is_called(self, mock_write_to_file, mock_confirm) : 
         mock_confirm.return_value.execute.return_value = False
         python_postgres = PythonPostgres()
         python_postgres.environment = "staging"
         python_postgres.hosts = {"test": "test"}
-        python_postgres.write_configuration_to_file()
+        python_postgres.write_configuration_and_run_playbook()
         assert mock_write_to_file.called
     
     @patch("src.commands.python_postgres.inquirer.confirm")
@@ -57,20 +57,20 @@ class TestPythonPostgres(unittest.TestCase) :
         python_postgres = PythonPostgres()
         python_postgres.environment = "staging"
         python_postgres.hosts = {"test": "test"}
-        python_postgres.write_configuration_to_file()
+        python_postgres.write_configuration_and_run_playbook()
         assert mock_write_config.call_count == 1 + CONFIG_FILES.__len__()
 
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.PythonPostgres.check_configs")
     @patch("src.commands.python_postgres.PythonPostgres.check_hosts")
-    @patch("src.commands.python_postgres.PythonPostgres.write_configuration_to_file")
-    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm) : 
+    @patch("src.commands.python_postgres.PythonPostgres.write_configuration_and_run_playbook")
+    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_and_run_playbook ,mock_check_hosts, mock_check_configs, mock_confirm) : 
         mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: True)]
         python_postgres = PythonPostgres()
         python_postgres.check_defaults()
         assert mock_check_configs.called
         assert mock_check_hosts.called
-        assert mock_write_configuration_to_file.called
+        assert mock_write_configuration_and_run_playbook.called
 
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.node_configuration_parameters")
@@ -87,11 +87,11 @@ class TestPythonPostgres(unittest.TestCase) :
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.PythonPostgres.check_configs")
     @patch("src.commands.python_postgres.PythonPostgres.check_hosts")
-    @patch("src.commands.python_postgres.PythonPostgres.write_configuration_to_file")
-    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm) : 
+    @patch("src.commands.python_postgres.PythonPostgres.write_configuration_and_run_playbook")
+    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_and_run_playbook ,mock_check_hosts, mock_check_configs, mock_confirm) : 
         mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
         python_postgres = PythonPostgres()
         python_postgres.check_defaults()
         assert mock_check_configs.called
         assert mock_check_hosts.called
-        assert not mock_write_configuration_to_file.called
+        assert not mock_write_configuration_and_run_playbook.called

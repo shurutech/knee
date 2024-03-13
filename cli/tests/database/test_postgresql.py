@@ -50,7 +50,7 @@ class TestPostgresql(unittest.TestCase):
                 "postgresql_version": "12.1"
             }
         }
-        postgresql.write_configuration_to_file()
+        postgresql.write_configuration_and_run_playbook()
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'postgresmainserver.yml', postgresql.configs["postgresmainserver.yml"])
         self.assertEqual(actual_call, expected_call)

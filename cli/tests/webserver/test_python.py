@@ -35,7 +35,7 @@ class TestPython(unittest.TestCase):
     ):
         mock_read_from_file.return_value = {"python_version": "3.8.1"}
         python = Python()
-        python.write_configuration_to_file()
+        python.write_configuration_and_run_playbook()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",

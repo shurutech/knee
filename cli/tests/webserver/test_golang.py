@@ -35,7 +35,7 @@ class TestGolang(unittest.TestCase):
                 "golang_version": "1.21.3"
             }
         }
-        golang.write_configuration_to_file()
+        golang.write_configuration_and_run_playbook()
         actual_call = mock_write_to_file.call_args
         expected_call = call('playbooks/group_vars', 'golangwebservers.yml', {'golang_version': Golang.configs["golangwebservers.yml"]["golang_version"]})
         self.assertEqual(actual_call, expected_call)

@@ -42,15 +42,15 @@ class TestNodeMongo(unittest.TestCase):
         mock_hosts_configurations_parameters.assert_called_once_with(*expected_args)
    
     @patch("src.commands.node_mongo.inquirer.confirm")
-    @patch.object(NodeMongo, "write_configuration_to_file")
-    def test_write_configuration_to_file_when_it_is_called(self, mock_write_to_file, mock_confirm):
+    @patch.object(NodeMongo, "write_configuration_and_run_playbook")
+    def test_write_configuration_and_run_playbook_when_it_is_called(self, mock_write_to_file, mock_confirm):
         mock_confirm.return_value.execute.return_value = False
         node_mongo = NodeMongo()
         node_mongo.database = MagicMock()
         node_mongo.server = MagicMock()
         node_mongo.environment = "staging"
         node_mongo.hosts = {"test": "test"}
-        node_mongo.write_configuration_to_file()
+        node_mongo.write_configuration_and_run_playbook()
         assert mock_write_to_file.called
 
     @patch("src.commands.node_mongo.inquirer.confirm")
@@ -62,7 +62,7 @@ class TestNodeMongo(unittest.TestCase):
         node_mongo.server = MagicMock()
         node_mongo.environment = "staging"
         node_mongo.hosts = {"test": "test"}
-        node_mongo.write_configuration_to_file()
+        node_mongo.write_configuration_and_run_playbook()
         assert mock_write_config.call_count == 1 + CONFIG_FILES.__len__()
     
     @patch("src.commands.node_mongo.inquirer.confirm")
@@ -80,26 +80,26 @@ class TestNodeMongo(unittest.TestCase):
     @patch("src.commands.node_mongo.inquirer.confirm")
     @patch("src.commands.node_mongo.NodeMongo.check_configs")
     @patch("src.commands.node_mongo.NodeMongo.check_hosts")
-    @patch("src.commands.node_mongo.NodeMongo.write_configuration_to_file")
-    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm):
+    @patch("src.commands.node_mongo.NodeMongo.write_configuration_and_run_playbook")
+    def test_check_defaults_with_configuration_when_acceptance_is_true(self, mock_write_configuration_and_run_playbook ,mock_check_hosts, mock_check_configs, mock_confirm):
         mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: True)]
         node_mongo = NodeMongo()
         node_mongo.check_defaults()
         assert mock_check_hosts.called
         assert mock_check_configs.called
-        assert mock_write_configuration_to_file.called
+        assert mock_write_configuration_and_run_playbook.called
 
     @patch("src.commands.node_mongo.inquirer.confirm")
     @patch("src.commands.node_mongo.NodeMongo.check_configs")
     @patch("src.commands.node_mongo.NodeMongo.check_hosts")
-    @patch("src.commands.node_mongo.NodeMongo.write_configuration_to_file")
-    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_to_file ,mock_check_hosts, mock_check_configs, mock_confirm):
+    @patch("src.commands.node_mongo.NodeMongo.write_configuration_and_run_playbook")
+    def test_check_defaults_with_configuration_when_acceptance_is_false(self, mock_write_configuration_and_run_playbook ,mock_check_hosts, mock_check_configs, mock_confirm):
         mock_confirm.side_effect =  [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
         node_mongo = NodeMongo()
         node_mongo.check_defaults()
         assert mock_check_hosts.called
         assert mock_check_configs.called
-        assert not mock_write_configuration_to_file.called    
+        assert not mock_write_configuration_and_run_playbook.called    
         
 
     
