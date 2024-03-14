@@ -51,14 +51,14 @@ class TestPythonPostgres(unittest.TestCase) :
         assert mock_write_to_file.called
     
     @patch("src.commands.python_postgres.inquirer.confirm")
-    @patch("src.commands.python_postgres.write_to_file")
+    @patch("src.commands.python_postgres.FileManager.write_to_file")
     def test_number_of_times_write_to_file_called(self, mock_write_config, mock_confirm) : 
         mock_confirm.return_value.execute.return_value = False
         python_postgres = PythonPostgres()
         python_postgres.environment = "staging"
         python_postgres.hosts = {"test": "test"}
         python_postgres.write_configuration_and_run_playbook()
-        assert mock_write_config.call_count == 1 + CONFIG_FILES.__len__()
+        assert mock_write_config.call_count == 4    
 
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.PythonPostgres.check_configs")
@@ -73,16 +73,16 @@ class TestPythonPostgres(unittest.TestCase) :
         assert mock_write_configuration_and_run_playbook.called
 
     @patch("src.commands.python_postgres.inquirer.confirm")
-    @patch("src.commands.python_postgres.node_configuration_parameters")
+    @patch("src.commands.python_postgres.load_configuration")
     @patch("src.commands.python_postgres.Python.parameter_configuration")
     @patch("src.commands.python_postgres.Postgresql.parameter_configuration")
-    def test_check_configs(self, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_node_configuration_parameters, mock_confirm) : 
+    def test_check_configs(self, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm) : 
         mock_confirm.return_value.execute.return_value = False
         python_postgres = PythonPostgres()
         python_postgres.check_configs()
         assert mock_python_parameter_configuration.called
         assert mock_postgresql_parameter_configuration.called
-        assert mock_node_configuration_parameters.called
+        assert mock_load_configuration.called
 
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.PythonPostgres.check_configs")

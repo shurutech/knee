@@ -2,4 +2,5 @@
 .vagrant
 Vagrantfile
 venv
+artifacts
 **/__pycache__/

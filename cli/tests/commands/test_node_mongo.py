@@ -54,7 +54,7 @@ class TestNodeMongo(unittest.TestCase):
         assert mock_write_to_file.called
 
     @patch("src.commands.node_mongo.inquirer.confirm")
-    @patch("src.commands.node_mongo.write_to_file")
+    @patch("src.commands.node_mongo.FileManager.write_to_file")
     def test_number_of_times_write_to_file_called(self, mock_write_config, mock_confirm):
         mock_confirm.return_value.execute.return_value = False
         node_mongo = NodeMongo()
@@ -66,16 +66,16 @@ class TestNodeMongo(unittest.TestCase):
         assert mock_write_config.call_count == 1 + CONFIG_FILES.__len__()
     
     @patch("src.commands.node_mongo.inquirer.confirm")
-    @patch("src.commands.node_mongo.node_configuration_parameters")
+    @patch("src.commands.node_mongo.load_configuration")
     @patch("src.commands.node_mongo.Mongodb.parameter_configuration")
     @patch("src.commands.node_mongo.Nodejs.parameter_configuration")
-    def test_check_configs(self, mock_node_parameter_configuration, mock_mongodb_parameter_configuration, mock_node_configuration_parameters, mock_confirm):
+    def test_check_configs(self, mock_node_parameter_configuration, mock_mongodb_parameter_configuration, mock_load_configuration, mock_confirm):
         mock_confirm.return_value.execute.return_value = False
         node_mongo = NodeMongo()
         node_mongo.check_configs()
         assert mock_node_parameter_configuration.called
         assert mock_mongodb_parameter_configuration.called
-        assert mock_node_configuration_parameters.called
+        assert mock_load_configuration.called
 
     @patch("src.commands.node_mongo.inquirer.confirm")
     @patch("src.commands.node_mongo.NodeMongo.check_configs")

@@ -4,7 +4,7 @@ from unittest.mock import patch, call
 
 
 class TestPython(unittest.TestCase):
-    @patch("src.webserver.python.read_from_file")
+    @patch("src.webserver.python.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):
         mock_read_from_file.return_value = {
             "pythonwebservers.yml": {"python_port": "5555"}
@@ -17,17 +17,17 @@ class TestPython(unittest.TestCase):
             "5555",
         )
 
-    @patch("src.webserver.python.node_configuration_parameters")
-    def test_parameter_configuration(self, mock_node_configuration_parameters):
+    @patch("src.webserver.python.load_configuration")
+    def test_parameter_configuration(self, mock_load_configuration):
         python = Python()
-        mock_node_configuration_parameters.return_value = {
+        mock_load_configuration.return_value = {
             "pythonwebservers.yml": {"python_port": "5434"}
         }
         python.parameter_configuration()
         self.assertEqual(python.configs["pythonwebservers.yml"]["python_port"], "5434")
 
-    @patch("src.webserver.python.write_to_file")
-    @patch("src.webserver.python.read_from_file")
+    @patch("src.webserver.python.FileManager.write_to_file")
+    @patch("src.webserver.python.FileManager.read_from_file")
     def test_write_configuration_parameters_called_with_expected_arguments(
         self,
         mock_read_from_file,
