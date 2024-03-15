@@ -28,8 +28,10 @@ class TestPython(unittest.TestCase):
 
     @patch("src.webserver.python.FileManager.write_to_file")
     @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.webserver.python.run_playbook")
     def test_write_configuration_parameters_called_with_expected_arguments(
         self,
+        mock_run_playbook,
         mock_read_from_file,
         mock_write_to_file,
     ):
@@ -47,3 +49,31 @@ class TestPython(unittest.TestCase):
             },
         )
         self.assertEqual(actual_call, expected_call)
+
+    @patch("src.webserver.python.run_playbook")
+    @patch("src.webserver.python.FileManager.write_to_file")
+    @patch("src.webserver.python.FileManager.read_from_file")
+    def test_write_configuration_and_run_playbook_when_it_is_called(
+        self, mock_read_from_file, mock_write_to_file, mock_run_playbook
+    ):
+        mock_read_from_file.return_value = {"python_version": "3.8.1"}
+        python = Python()
+        python.write_configuration_and_run_playbook()
+        mock_run_playbook.assert_called()
+
+    @patch("src.webserver.python.run_playbook")
+    @patch("src.webserver.python.FileManager.write_to_file")
+    @patch("src.webserver.python.FileManager.read_from_file")
+    def test_write_configuration_and_run_playbook_when_it_is_not_called(
+        self, mock_read_from_file, mock_write_to_file, mock_run_playbook
+    ):
+        mock_read_from_file.return_value = {"python_version": "3.8.1"}
+        mock_run_playbook.side_effect = Exception("An error occurred")
+        python = Python()
+        with self.assertRaises(Exception) as context:
+            python.write_configuration_and_run_playbook()
+
+        self.assertTrue("An error occurred" in str(context.exception))
+
+   
+

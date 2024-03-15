@@ -25,4 +25,5 @@ class Python:
             self.file_manager.write_to_file(
                 config_dir, config_file, self.configs[config_file]
             )
+        run_playbook("webserver_base.yml", self.environment)
         run_playbook("python_webservers.yml", self.environment)
