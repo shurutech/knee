@@ -1,9 +1,14 @@
 ---
-- hosts: pythonwebservers
+- hosts: webservers
+  vars_files:
+    - group_vars/pythonwebservers.yml
+    - group_vars/all.yml
   become: yes
   become_user: "{{ user_name }}"
   tasks:
     - name: Install required packages
+      become: yes
+      become_user: root
       apt:
         name:
           - make
