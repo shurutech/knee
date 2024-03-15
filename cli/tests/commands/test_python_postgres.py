@@ -52,13 +52,15 @@ class TestPythonPostgres(unittest.TestCase) :
     
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.FileManager.write_to_file")
-    def test_number_of_times_write_to_file_called(self, mock_write_config, mock_confirm) : 
+    def test_number_of_times_write_to_file_called(self, mock_write_to_file, mock_confirm) : 
         mock_confirm.return_value.execute.return_value = False
         python_postgres = PythonPostgres()
+        python_postgres.database = MagicMock()
+        python_postgres.server = MagicMock()
         python_postgres.environment = "staging"
         python_postgres.hosts = {"test": "test"}
         python_postgres.write_configuration_and_run_playbook()
-        assert mock_write_config.call_count == 4    
+        assert mock_write_to_file.call_count == 1 + CONFIG_FILES.__len__()  
 
     @patch("src.commands.python_postgres.inquirer.confirm")
     @patch("src.commands.python_postgres.PythonPostgres.check_configs")

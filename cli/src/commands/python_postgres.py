@@ -33,8 +33,8 @@ class PythonPostgres(Python, Postgresql):
             IMPACTED_HOST_GROUPS.append("databasereplicaservers")
         for config_file in CONFIG_FILES:
             self.configs[config_file] = self.file_manager.read_from_file(config_dir, config_file)
-        self.server = Python()
-        self.database = Postgresql(postgres_replica_server_acceptance)
+        self.server = Python(self.environment)
+        self.database = Postgresql(postgres_replica_server_acceptance,self.environment)
 
     def check_hosts(self):
         self.hosts = hosts_configuration_parameters(IMPACTED_HOST_GROUPS, self.hosts)
@@ -50,6 +50,7 @@ class PythonPostgres(Python, Postgresql):
             self.file_manager.write_to_file(
                 "playbooks/group_vars", config_file, self.configs[config_file]
             )
+        self.database.write_configuration_and_run_playbook()    
         self.server.write_configuration_and_run_playbook()
 
     def check_defaults(self):
