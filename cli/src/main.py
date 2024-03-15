@@ -29,8 +29,8 @@ def execute():
     command = inquirer.select(
         message="Select command to execute:",
         choices=[
-            "PythonPostgres",
-            "React",
+            "python-postgres",
+            "react",
             "MERN",
             "golang-mongo",
             "golang-postgresql",
@@ -39,7 +39,7 @@ def execute():
             "ruby-postgres"
             "python-mongo"
         ],
-        default="PythonPostgres",
+        default="python-postgres",
     ).execute()
     environment = inquirer.select(
         message="Select environment to execute command:",
@@ -47,15 +47,15 @@ def execute():
         default="staging",
     ).execute()
     typer.echo(f"Executing {command} on {environment} environment...")
-    if command == "PythonPostgres":
-     pp = PythonPostgres(environment=environment)
-     pp.check_defaults()
+    if command == "python-postgres":
+     python_postgres = PythonPostgres(environment=environment)
+     python_postgres.check_defaults()
     elif command == "MERN":
-     nm = NodeMongo(environment=environment) 
-     nm.check_defaults()
+     node_mongo = NodeMongo(environment=environment) 
+     node_mongo.check_defaults()
     elif command == "golang-mongo":
-        gm = GolangMongo(environment=environment)
-        gm.check_defaults() 
+        golang_mongo = GolangMongo(environment=environment)
+        golang_mongo.check_defaults() 
     else:
         typer.secho("We are working hard for this command to be available soon!....", bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
 
