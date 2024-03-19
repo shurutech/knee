@@ -3,6 +3,7 @@ from InquirerPy import inquirer
 from commands.python_postgres import PythonPostgres
 from commands.node_mongo import NodeMongo
 from commands.golang_mongo import GolangMongo
+from commands.ruby_mysql import RubyMysql
 
 app = typer.Typer()
 
@@ -56,6 +57,9 @@ def execute():
     elif command == "golang-mongo":
         golang_mongo = GolangMongo(environment=environment)
         golang_mongo.check_defaults() 
+    elif command == "ruby-mysql":
+        ruby_mysql = RubyMysql(environment=environment)
+        ruby_mysql.check_defaults()
     else:
         typer.secho("We are working hard for this command to be available soon!....", bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
 
