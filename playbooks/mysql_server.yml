@@ -1,6 +1,8 @@
 ---
 - name: Setup Mysql
   hosts: webservers
+  vars_files:
+    - group_vars/mysqlmainserver.yml
   become: true
 
   tasks:
@@ -29,7 +31,7 @@
 
   - name: "Create a database"
     mysql_db:
-      name: "{{ mysql_database_name }"
+      name: "{{ mysql_database_name }}"
       login_user: "{{ mysql_database_user }}"
       login_password: "{{ mysql_database_password }}"
       state: present
