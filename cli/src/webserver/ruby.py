@@ -1,19 +1,28 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
+from src.utils.runner import run_playbook
 
 config_dir = "playbooks/group_vars"
 
 
 class Ruby:
-    config_files = ["rubywebservers.yml"]
-    configs = {}
-
-    def __init__(self):
+    CONFIG_FILES = ["rubywebservers.yml"]
+    def __init__(self, environment="local"):
+        self.configs = {}
         self.file_manager = FileManager()
-        for config_file in Ruby.config_files:
-            Ruby.configs[config_file] = self.file_manager.read_from_file(
+        self.environment = environment
+        for config_file in self.CONFIG_FILES:
+            self.configs[config_file] = self.file_manager.read_from_file(
                 config_dir, config_file
             )
 
     def parameter_configuration(self):
-        Ruby.configs = load_configuration(Ruby.configs)
+        self.configs = load_configuration(self.configs)
+
+    def write_configuration_and_run_playbook(self):
+        for config_file in self.CONFIG_FILES:
+            self.file_manager.write_to_file(
+                config_dir, config_file, self.configs[config_file]
+            )
+        run_playbook("webserver_base.yml", self.environment)    
+        run_playbook("ruby_webservers.yml", self.environment)
