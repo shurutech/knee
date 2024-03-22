@@ -1,0 +1,229 @@
+---
+- name: Setup Mysql
+  hosts: databasemainserver:databasereplicaservers
+  vars_files:
+    - group_vars/mysqlmainserver.yml
+  become: true
+  tasks:
+  - name: Update apt cache
+    ansible.builtin.apt:
+      update_cache: yes
+    register: result
+    until: result is succeeded
+    retries: 5
+    delay: 10
+  - name: Update apt cache
+    ansible.builtin.apt:
+      update_cache: yes
+  - name: "Install mysql dependencies"
+    apt:
+      name:
+       - mysql-server
+       - mysql-client
+       - python3-mysqldb
+       - libmysqlclient-dev
+      state: latest
+  - name: "Start mysql service"
+    service:
+      name: mysql
+      state: started
+      enabled: yes
+  - name: "Create new user with all privileges"
+    community.mysql.mysql_user:
+      name: "{{ mysql_database_user}}"
+      password: "{{ mysql_database_password }}"
+      priv: "*.*:ALL"
+      host: "%"
+      state: present
+  - name: "Create a database"
+    mysql_db:
+      name: "{{ mysql_database_name }}"
+      login_user: "{{ mysql_database_user }}"
+      login_password: "{{ mysql_database_password }}"
+      state: present
+  - name: Enable remote login to mysql
+    lineinfile:
+      path: /etc/mysql/mysql.conf.d/mysqld.cnf
+      regexp: '^bind-address'
+      line: 'bind-address = 0.0.0.0'
+      backup: yes
+    notify:
+         - Restart mysql
+  handlers:
+    - name: Restart mysql
+      service:
+        name: mysql
+        state: restarted
+
+- hosts: databasemainserver
+  become: yes
+  vars:
+    source_server_ip: 0.0.0.0
+    replica_server_ip: "{{ hostvars[groups['databasereplicaservers'][0]]['ansible_host'] }}"
+  vars_files:
+    - group_vars/mysqlmainserver.yml
+    - group_vars/databasereplicaserver.yml
+  tasks:
+    - name: Allow connections from replica server
+      ansible.builtin.ufw:
+        rule: allow
+        src: "{{ replica_server_ip }}"
+        port: '3306'
+        proto: tcp
+
+    - name: Uncomment and update MySQL configuration
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      become: yes
+      become_method: sudo
+      loop:
+        - { regexp: '^#\s*bind-address.*', line: 'bind-address = {{ source_server_ip }}' }
+        - { regexp: '^#\s*server-id.*', line: 'server-id        =1' }
+        - { regexp: '^#\s*log_bin.*', line: 'log_bin        =/var/log/mysql/mysql-bin.log' }
+        - { regexp: '^#\s*binlog_do_db.*', line: 'binlog_do_db        ={{ mysql_database_name }}' }
+      notify: Restart MySQL
+
+    - name: Force restart MySQL service
+      ansible.builtin.systemd:
+        name: mysql
+        state: restarted
+        daemon_reload: yes
+      become: yes
+      become_method: sudo
+
+    - name: Create replication user
+      community.mysql.mysql_user:
+        login_user: root
+        name: "{{ replica_user }}"
+        host: "{{ replica_server_ip }}"
+        password: "{{ replica_password }}"
+        priv: "*.*:REPLICATION SLAVE"
+        state: present
+
+    - name: Flush privileges
+      community.mysql.mysql_query:
+        login_user: root
+        query: FLUSH PRIVILEGES
+
+    - name: Lock tables
+      community.mysql.mysql_query:
+        login_user: root
+        query: FLUSH TABLES WITH READ LOCK
+
+    - name: Show master status
+      community.mysql.mysql_query:
+        login_user: root
+        query: SHOW MASTER STATUS
+      register: master_status
+      
+    - name: Get MySQL server info
+      community.mysql.mysql_info:
+        login_user: root
+        filter:
+          - variables
+      register: server_info
+
+    - name: Display MySQL server ID
+      ansible.builtin.debug:
+        var: server_info.variables.server-id
+    - name: master status
+      debug:
+        msg:
+          - "{{ master_status.query_result[0][0].File }}"
+          - "{{ master_status.query_result[0][0].Position }}"
+    - name: Unlock tables
+      community.mysql.mysql_query:
+        login_user: root
+        query: UNLOCK TABLES
+
+    - name: Create database
+      community.mysql.mysql_db:
+        login_user: root
+        name: "{{ mysql_database_name }}"
+        state: present
+  handlers:
+    - name: Restart MySQL
+      ansible.builtin.service:
+        name: mysql
+        state: restarted
+
+- hosts: databasereplicaservers
+  become: yes
+  vars:
+    source_server_ip: "{{ hostvars[groups['databasemainserver'][0]]['ansible_host'] }}"
+  vars_files:
+    - group_vars/mysqlmainserver.yml
+    - group_vars/databasereplicaserver.yml
+  tasks:
+    - name: Stop replication
+      community.mysql.mysql_replication:
+        mode: stopreplica
+        login_user: root
+
+    - name: Fully reset replica
+      community.mysql.mysql_query:
+        login_user: root
+        query: RESET SLAVE ALL
+
+    - name: Reset replica server
+      community.mysql.mysql_replication:
+        mode: resetreplica
+        login_user: root
+
+    - name: Create database
+      community.mysql.mysql_db:
+        login_user: root
+        name: "{{ mysql_database_name}}"
+        state: present
+
+    - name: Uncomment and update MySQL configuration
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      become: yes
+      become_method: sudo
+      loop:
+        - { regexp: '^#\s*server-id.*', line: 'server-id        =2' }
+        - { regexp: '^#\s*log_bin.*', line: 'log_bin = /var/log/mysql/mysql-bin.log' }
+        - { regexp: '^#\s*binlog_do_db.*', line: 'binlog_do_db = {{ mysql_database_name }}' }
+        - { regexp: '^#\s*relay-log.*', line: 'relay-log = /var/log/mysql/mysql-relay-bin.log' }
+
+    - name: Force restart MySQL service
+      ansible.builtin.systemd:
+        name: mysql
+        state: restarted
+        daemon_reload: yes
+      become: yes
+      become_method: sudo
+
+    - name: Set up replication
+      community.mysql.mysql_replication:
+        mode: changeprimary
+        primary_host: "{{ source_server_ip }}"
+        primary_user: "{{ replica_user }}"
+        primary_password: "{{ replica_password }}"
+        primary_log_file: "{{ hostvars['vm1']['master_status'].query_result[0][0].File }}"
+        primary_log_pos: "{{ hostvars['vm1']['master_status'].query_result[0][0].Position }}"
+
+    - name: Start replication
+      community.mysql.mysql_replication:
+        mode: startreplica
+        login_user: root
+
+    - name: Stop replication
+      community.mysql.mysql_replication:
+        mode: stopreplica
+        login_user: root
+
+    - name: Skip one transaction
+      community.mysql.mysql_query:
+        login_user: root
+        query: "SET GLOBAL sql_replica_skip_counter = 1;"
+
+    - name: Start replication
+      community.mysql.mysql_replication:
+        mode: startreplica
+        login_user: root
