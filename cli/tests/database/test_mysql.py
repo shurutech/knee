@@ -83,3 +83,28 @@ class TestMysql(unittest.TestCase):
         mock_write_to_file.assert_called_once_with(
             "playbooks/group_vars", "mysqlmainserver.yml", {"mysql_port": "3305"}
         )
+
+    @patch("src.database.mysql.FileManager.write_to_file")
+    @patch("src.database.mysql.run_playbook")
+    def test_write_configuration_and_run_playbook_when_replica_server_acceptance_is_true(self, mock_run_playbook, mock_write_to_file):
+        mysql = Mysql()
+        mysql.replica_server_acceptance = True
+        mysql.configs = {
+            "mysqlmainserver.yml": {"mysql_port": "3305"},
+            "mysqlreplicaservers.yml": {"mysql_port": "3306"}
+        }
+        mysql.write_configuration_and_run_playbook()
+        if mysql.replica_server_acceptance:
+            mock_run_playbook.assert_called_once_with("mysql_replica_server.yml", "local")
+
+    @patch("src.database.mysql.FileManager.write_to_file")
+    @patch("src.database.mysql.run_playbook")
+    def test_write_configuration_and_run_playbook_when_replica_server_acceptance_is_false(self, mock_run_playbook, mock_write_to_file):
+        mysql = Mysql()
+        mysql.replica_server_acceptance = False
+        mysql.configs = {
+            "mysqlmainserver.yml": {"mysql_port": "3305"},
+        }
+        mysql.write_configuration_and_run_playbook()
+        if not mysql.replica_server_acceptance:
+            mock_run_playbook.assert_called_once_with("mysql_server.yml", "local")
