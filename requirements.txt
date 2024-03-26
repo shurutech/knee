@@ -1,6 +1,9 @@
 ansible-lint==6.22.2
-typer[all]==0.9.0
+ansible_runner==2.3.5
+inquirerpy==0.3.4
 pytest==8.0.0
 python-dotenv==1.0.1
-inquirerpy==0.3.4
-ansible_runner==2.3.6
+pytest==8.0.0
+python-dotenv==1.0.1
+typer[all]==0.9.0
+colorama==0.4.6
