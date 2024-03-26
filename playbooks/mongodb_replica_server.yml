@@ -1,0 +1,126 @@
+---
+- name: Install mongodb
+  hosts:
+    - databasereplicaservers
+    - databasemainserver
+  become: true
+  tasks:
+  - name: "update apt cache"
+    apt:
+      update_cache: yes
+      
+  - name: "install curl and gnupg"
+    apt:
+      name: 
+      - curl
+      - gnupg
+      - python3-pip
+      state: latest
+
+  - name: Import MongoDB PGP key
+    shell: |
+      curl -fsSL https://pgp.mongodb.com/server-7.0.asc | sudo gpg --yes --output /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor  
+
+  - name: Add MongoDB to the sources list
+    shell: |
+      echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+  - name: Update package cache
+    apt:
+      update_cache: yes
+
+  - name: Install mongodb-org
+    apt:
+      name: mongodb-org
+      state: present
+      update_cache: yes
+
+  - name: Install pymongo
+    pip:
+      name: pymongo
+
+  - name: Enable mongod service
+    systemd:
+      name: mongod
+      state: started
+
+  - name: Enable remote connections in MongoDB
+    lineinfile:
+      path: /etc/mongod.conf
+      regexp: '^ *bindIp:.*'
+      line: '  bindIp: 0.0.0.0'
+      state: present
+      backup: yes
+
+  - name: Restart MongoDB Service
+    service:
+      name: mongod
+      state: restarted
+  
+- hosts: databasemainserver
+  become: true
+  vars_files:
+    - group_vars/mongodbmainserver.yml
+    - group_vars/mongodbreplicaservers.yml
+  tasks:
+  - name: Create MongoDB admin user
+    community.mongodb.mongodb_user:
+        login_host: localhost
+        login_database: admin
+        database: 
+        name: "{{ mongodb_database_user}}"
+        password: "{{ mongodb_database_password }}"
+        roles: userAdminAnyDatabase
+        state: present
+
+  - name: Create Mongodb clusterAdmin user
+    community.mongodb.mongodb_user:
+        login_host: localhost
+        login_database: admin
+        login_user: "{{ mongodb_database_user}}"
+        login_password: "{{ mongodb_database_password }}"
+        database: admin
+        name: "{{ mongodb_replica_database_user }}"
+        password: "{{ mongodb_replica_database_password }}"
+        roles: clusterAdmin
+        state: present
+
+- hosts: 
+    - databasemainserver
+    - databasereplicaservers
+  become: true
+  tasks:          
+
+  - name: Enable replication in MongoDB
+    blockinfile:
+      path: /etc/mongod.conf
+      block: |
+        replication:
+          replSetName: rs0
+      state: present
+
+  - name: Restart MongoDB service
+    service:
+      name: mongod
+      state: restarted
+
+- hosts: databasemainserver
+  vars_files:
+    - group_vars/mongodbmainserver.yml
+    - group_vars/mongodbreplicaservers.yml
+  become: true
+  tasks:
+  - name: Create MongoDB replica set
+    community.mongodb.mongodb_replicaset:
+        login_host: localhost
+        login_user: "{{ mongodb_replica_database_user }}"
+        login_password: "{{ mongodb_replica_database_password }}"
+        replica_set: rs0
+        members:
+          - _id: 0
+            host: "{{ hostvars['mainserver']['ansible_host'] }}:27017"
+          - _id: 1
+            host:  "{{ hostvars['replica1']['ansible_host'] }}:27017"
+          - _id: 2
+            host: "{{ hostvars['replica2']['ansible_host'] }}:27017"  
+    
