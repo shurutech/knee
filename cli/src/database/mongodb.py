@@ -10,6 +10,7 @@ class Mongodb:
         self.config_files = ["mongodbmainserver.yml"]
         self.configs = {}
         self.environment = environment
+        self.replica_server_acceptance = replica_server_acceptance
         self.file_manager = FileManager()
         if replica_server_acceptance:
             self.config_files.append("mongodbreplicaservers.yml")
@@ -26,4 +27,7 @@ class Mongodb:
             self.file_manager.write_to_file(
                 config_dir, config_file, self.configs[config_file]
             )
-        run_playbook("mongodb_server.yml", self.environment)
+        if self.replica_server_acceptance:
+            run_playbook("mongodb_replica_server.yml", self.environment)
+        else:    
+            run_playbook("mongodb_server.yml", self.environment)
