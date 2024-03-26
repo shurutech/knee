@@ -117,7 +117,7 @@
         login_user: root
         query: SHOW MASTER STATUS
       register: master_status
-      
+
     - name: Get MySQL server info
       community.mysql.mysql_info:
         login_user: root
@@ -128,11 +128,7 @@
     - name: Display MySQL server ID
       ansible.builtin.debug:
         var: server_info.variables.server-id
-    - name: master status
-      debug:
-        msg:
-          - "{{ master_status.query_result[0][0].File }}"
-          - "{{ master_status.query_result[0][0].Position }}"
+
     - name: Unlock tables
       community.mysql.mysql_query:
         login_user: root
@@ -221,7 +217,7 @@
     - name: Skip one transaction
       community.mysql.mysql_query:
         login_user: root
-        query: "SET GLOBAL sql_replica_skip_counter = 1;"
+        query: "SET GLOBAL sql_replica_skip_counter = 0;"
 
     - name: Start replication
       community.mysql.mysql_replication:
