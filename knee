@@ -1,4 +1,6 @@
 #!/bin/bash
-
-# Pass all command line arguments to main.py
+CLI_PATH=$(pwd)/cli
+if [[ ":$PYTHONPATH:" != *":$CLI_PATH:"* ]]; then
+    export PYTHONPATH=$CLI_PATH:${PYTHONPATH}
+fi
 python3 cli/src/main.py "$@"
