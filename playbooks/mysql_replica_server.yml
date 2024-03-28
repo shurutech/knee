@@ -62,7 +62,7 @@
     replica_server_ip: "{{ hostvars[groups['databasereplicaservers'][0]]['ansible_host'] }}"
   vars_files:
     - group_vars/mysqlmainserver.yml
-    - group_vars/databasereplicaserver.yml
+    - group_vars/mysqlreplicaservers.yml
   tasks:
     - name: Allow connections from replica server
       ansible.builtin.ufw:
@@ -96,9 +96,9 @@
     - name: Create replication user
       community.mysql.mysql_user:
         login_user: root
-        name: "{{ replica_user }}"
+        name: "{{ mysql_replica_database_user }}"
         host: "{{ replica_server_ip }}"
-        password: "{{ replica_password }}"
+        password: "{{ mysql_replica_database_password }}"
         priv: "*.*:REPLICATION SLAVE"
         state: present
 
@@ -151,7 +151,7 @@
     source_server_ip: "{{ hostvars[groups['databasemainserver'][0]]['ansible_host'] }}"
   vars_files:
     - group_vars/mysqlmainserver.yml
-    - group_vars/databasereplicaserver.yml
+    - group_vars/mysqlreplicaservers.yml
   tasks:
     - name: Stop replication
       community.mysql.mysql_replication:
@@ -199,10 +199,10 @@
       community.mysql.mysql_replication:
         mode: changeprimary
         primary_host: "{{ source_server_ip }}"
-        primary_user: "{{ replica_user }}"
-        primary_password: "{{ replica_password }}"
-        primary_log_file: "{{ hostvars['vm1']['master_status'].query_result[0][0].File }}"
-        primary_log_pos: "{{ hostvars['vm1']['master_status'].query_result[0][0].Position }}"
+        primary_user: "{{ mysql_replica_database_user }}"
+        primary_password: "{{ mysql_replica_database_password }}"
+        primary_log_file: "{{ hostvars['mainserver']['master_status'].query_result[0][0].File }}"
+        primary_log_pos: "{{ hostvars['mainserver']['master_status'].query_result[0][0].Position }}"
 
     - name: Start replication
       community.mysql.mysql_replication:
