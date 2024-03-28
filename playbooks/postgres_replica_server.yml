@@ -1,13 +1,17 @@
 ---
-- hosts: postgresmainserver
+- hosts: databasemainserver
   become: yes
+  vars_files:
+    - group_vars/all.yml
+    - group_vars/postgresmainserver.yml
+    - group_vars/postgresreplicaservers.yml
   vars:
-    replica_host: "{{ hostvars[groups['postgresreplicaservers'][0]]['ansible_host'] }}"
+    replica_host: "{{ hostvars[groups['databasereplicaservers'][0]]['ansible_host'] }}"
   tasks:
     - name: Add replication user
       community.postgresql.postgresql_user:
-        name: "{{ postgres_replication_user }}"
-        password: "{{ postgres_replication_user_password }}"
+        name: "{{ postgres_replica_database_user }}"
+        password: "{{ postgres_replica_database_password }}"
         role_attr_flags: LOGIN,REPLICATION
         state: present
 
@@ -35,7 +39,7 @@
         dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
         contype: host
         databases: replication
-        users: "{{ postgres_replication_user }}"
+        users: "{{ postgres_replica_database_user }}"
         address: "{{ replica_host }}/32"
         method: md5
         
@@ -44,10 +48,15 @@
         name: postgresql
         state: restarted
     
-- hosts: postgresreplicaservers
+- hosts: databasereplicaservers
   become: yes
+  vars_files:
+    - group_vars/all.yml
+    - group_vars/postgresmainserver.yml
+    - group_vars/postgresreplicaservers.yml
   vars:
-    master_host: "{{ hostvars[groups['postgresmainserver'][0]]['ansible_host'] }}"
+    database_cidr_address: 0.0.0.0/0
+    master_host: "{{ hostvars[groups['databasemainserver'][0]]['ansible_host'] }}"
     postgres_data_directory: /var/lib/postgresql/{{ postgres_version }}/main
   tasks:
     - name: Install psycopg2 for Python 3
@@ -84,8 +93,8 @@
         dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
         contype: host
         databases: replication
-        users: "{{ postgres_replication_user }}"
-        address: "{{ postgres_database_cidr_address }}"
+        users: "{{ postgres_replica_database_user }}"
+        address: "{{ database_cidr_address }}"
         method: md5
 
     - name: Configure PostgreSQL pg_hba for postgres user
@@ -113,7 +122,7 @@
         contype: host
         databases: all
         users: all
-        address: "{{ postgres_database_cidr_address }}"
+        address: "{{ database_cidr_address }}"
         method: password
 
     - name: Set listen_addresses to all interfaces
@@ -142,10 +151,10 @@
 
     - name: Run pg_basebackup to initialize replica
       ansible.builtin.command:
-        cmd: "pg_basebackup -d 'host={{ master_host }} user={{ postgres_replication_user }} sslmode=disable' -D {{ postgres_data_directory }} -P -X stream -R --write-recovery-conf"
+        cmd: "pg_basebackup -d 'host={{ master_host }} user={{ postgres_replica_database_user }} sslmode=disable' -D {{ postgres_data_directory }} -P -X stream -R --write-recovery-conf"
         creates: "{{ postgres_data_directory }}/base"
       environment:
-        PGPASSWORD: "{{ postgres_replication_user_password }}"
+        PGPASSWORD: "{{ postgres_replica_database_password }}"
       become: yes
       become_user: postgres
 
