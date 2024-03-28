@@ -10,7 +10,6 @@ from src.utils.file_manager import FileManager
 
 CONFIG_FILES = [
     "all.yml",
-    "webservers.yml",
 ]
 
 IMPACTED_HOST_GROUPS = ["webservers", "databasemainserver"]

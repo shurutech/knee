@@ -10,7 +10,6 @@ from constants import DIRECTORY_PATH
 
 CONFIG_FILES = [
     "all.yml",
-    "webservers.yml",
 ]
 
 
