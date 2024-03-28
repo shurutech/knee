@@ -67,7 +67,7 @@
     community.mongodb.mongodb_user:
         login_host: localhost
         login_database: admin
-        database: 
+        database: admin
         name: "{{ mongodb_database_user}}"
         password: "{{ mongodb_database_password }}"
         roles: userAdminAnyDatabase
@@ -90,7 +90,6 @@
     - databasereplicaservers
   become: true
   tasks:          
-
   - name: Enable replication in MongoDB
     blockinfile:
       path: /etc/mongod.conf
@@ -124,3 +123,11 @@
           - _id: 2
             host: "{{ hostvars['replica2']['ansible_host'] }}:27017"  
     
+  - name: Check MongoDB replication status
+    shell: echo 'rs.status()' | mongosh --quiet
+    register: replication_status
+    changed_when: false
+
+  - name: Display replication status
+    debug:
+      var: replication_status.stdout_lines
