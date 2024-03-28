@@ -29,7 +29,6 @@ class RubyMysql(Ruby, Mysql):
         postgres_replica_server_acceptance = inquirer.confirm(message="Do you want to setup a replica server? (Default= No) :: ", default=False).execute()
         if postgres_replica_server_acceptance:
             IMPACTED_HOST_GROUPS.append("databasereplicaservers")
-            CONFIG_FILES.append("databasereplicaserver.yml")
         for config_file in CONFIG_FILES:
             self.configs[config_file] = self.file_manager.read_from_file(config_dir, config_file)
         self.server = Ruby(self.environment)
