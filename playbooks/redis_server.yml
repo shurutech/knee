@@ -1,0 +1,46 @@
+---
+- name: Install Redis
+  hosts: redisservers
+  become: yes
+  vars_files:
+    - group_vars/redisserver.yml
+  tasks:
+    - name: Install Redis
+      apt:
+        name: redis-server
+        state: present
+        update_cache: yes
+        
+    - name: Ensure Redis is running
+      ansible.builtin.service:
+        name: redis-server
+        state: started
+
+    - name: Enable Redis to listen on all interfaces
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^ *bind .*'
+        line: 'bind 0.0.0.0'
+        state: present
+        backup: yes
+
+    - name: Restart Redis to apply changes
+      ansible.builtin.service:
+        name: redis-server
+        state: restarted
+
+    - name: Enable Redis to start on boot
+      ansible.builtin.systemd:
+        name: redis-server
+        enabled: yes
+
+    - name: Configure Redis password
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: '^ *requirepass .*'
+        line: 'requirepass "{{ redis_password }}"'
+    
+    - name: Restart Redis to apply password changes
+      ansible.builtin.service:
+        name: redis-server
+        state: restarted
