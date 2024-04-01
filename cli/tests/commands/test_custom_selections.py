@@ -19,7 +19,8 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.commands.custom_selections.inquirer.confirm")
     def test_init_when_db_class_is_not_none(self, mock_confirm, mock_read_from_file):
         db_client_class = "postgresql"
-        custom_selections = CustomSelections(db_client_class=db_client_class)
+        mock_confirm.return_value.execute.return_value = False
+        custom_selections = CustomSelections(db_client_class=db_client_class) 
         self.assertIn('databasemainserver', custom_selections.impacted_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
