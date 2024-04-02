@@ -1,26 +1,12 @@
 import typer
 from InquirerPy import inquirer
 from commands.custom_selections import CustomSelections
-from command_class_mapping import COMMAND_TO_CATEGORY_MAP
+from constants import COMMAND_WITH_DESCRIPTION, COMMAND_TO_CATEGORY_MAP
 from input_selection import custom_selections, get_environment, initial_input_selection
+from commands.help_command import help_command
 
 app = typer.Typer()
-
-@app.command()
-def list_command():
-    commands = ["python-postgres", "give-ssh-access", "rails-with-postgres"]
-    for command in commands:
-        typer.echo(command)
-
-@app.command()
-def describe(command: str):
-    descriptions = {
-        "pp": "Python Server, Postgres DB. This commands sets up python server with a PostgreSQL src.database.",
-        "give-ssh-access": "This command grants SSH access to a user.",
-        "postgres": "This command sets up a PostgreSQL src.database.",
-        "postgres-with-replica": "This command sets up a PostgreSQL database with a replica.",
-    }
-    typer.echo(descriptions.get(command, "Command not found"))
+help_command(app)
 
 @app.command()
 def execute():
