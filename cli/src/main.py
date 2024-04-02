@@ -1,8 +1,5 @@
 import typer
 from InquirerPy import inquirer
-from commands.python_postgres import PythonPostgres
-from commands.node_mongo import NodeMongo
-from commands.golang_mongo import GolangMongo
 from commands.custom_selections import CustomSelections
 from command_class_mapping import COMMAND_TO_CATEGORY_MAP
 from input_selection import custom_selections, get_environment, initial_input_selection
@@ -51,6 +48,6 @@ def execute():
     custom_inputs = CustomSelections(environment=environment, db_client_class=db, server_class=server, additional_service=additional_service)
     custom_inputs.check_defaults()
     typer.echo("Done!")
-    
+
 if __name__ == "__main__":
     app()
