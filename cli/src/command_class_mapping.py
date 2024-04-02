@@ -1,12 +1,6 @@
-from commands.python_postgres import PythonPostgres
-from commands.node_mongo import NodeMongo
-from commands.golang_mongo import GolangMongo
-from commands.ruby_mysql import RubyMysql
-
-
-COMMAND_TO_CLASS_MAP = {
-    "python-postgres": PythonPostgres,
-    "node-mongo": NodeMongo,
-    "golang-mongo": GolangMongo,
-    "ruby-mysql": RubyMysql,
+COMMAND_TO_CATEGORY_MAP = {
+    "python-postgres": {"server": "python", "db": "postgres"},
+    "node-mongo": {"server": "node", "db": "mongo"},
+    "golang-mongo": {"server": "golang", "db": "mongo"},
+    "ruby-mysql": {"server": "ruby", "db": "mysql"},
 }
