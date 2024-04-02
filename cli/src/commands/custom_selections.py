@@ -11,6 +11,7 @@ from src.database.mongodb import Mongodb
 from src.webserver.nodejs import Nodejs
 from src.database.mysql import Mysql
 from src.webserver.ruby import Ruby
+from src.additional_services.redis import Redis
 from constants import DIRECTORY_PATH
 
 
@@ -21,7 +22,8 @@ class_map = {
     'mongodb': Mongodb,
     'nodejs': Nodejs,
     'mysql': Mysql,
-    'ruby': Ruby
+    'ruby': Ruby,
+    'redis': Redis
 }
 
 db_replica_map = {
@@ -34,11 +36,12 @@ db_replica_map = {
 class CustomSelections:
     CONFIG_FILES = ["all.yml"]
     
-    def __init__(self, environment="staging", config_dir="playbooks/group_vars", db_client_class=None, server_class=None):
+    def __init__(self, environment="staging", config_dir="playbooks/group_vars", db_client_class=None, server_class=None, additional_service=None):
         self.environment = environment
         self.file_manager = FileManager()
         self.server_class = self.get_class(server_class)
         self.db_class = self.get_class(db_client_class)
+        self.additional_service = self.get_class(additional_service)
         self.replica_server_acceptance = self.get_confirmation_to_setup_replica_server() if self.db_class else False
         self.hosts = self.load_hosts_based_on_environment()
         self.replica_host_group = self.get_replica_host_group(db_client_class) if self.replica_server_acceptance else None
@@ -48,6 +51,8 @@ class CustomSelections:
             self.database = self.db_class(self.replica_server_acceptance, self.environment)
         if self.server_class:
             self.server = self.server_class(self.environment)
+        if self.additional_service:
+            self.additional_service = self.additional_service(self.environment)
 
     def load_hosts_based_on_environment(self):
         return self.file_manager.read_from_file(DIRECTORY_PATH[self.environment], "hosts.yml")
@@ -86,6 +91,8 @@ class CustomSelections:
                 host_groups.append("databasemainserver")
             if self.server_class:
                 host_groups.append("webservers")
+            if self.additional_service:
+                host_groups.append("redisservers")
         return host_groups
 
     def load_generic_configuration(self, config_dir):
@@ -99,10 +106,12 @@ class CustomSelections:
 
     def check_configs(self):
         self.configs = load_configuration(self.configs)
-        if hasattr(self, 'server'):
+        if self.server_class:
             self.server.parameter_configuration()
-        if hasattr(self, 'database'):
+        if self.db_class:
             self.database.parameter_configuration()
+        if self.additional_service:
+            self.additional_service.parameter_configuration()
 
     def write_configuration_and_run_playbook(self):
         self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.hosts)
@@ -114,6 +123,8 @@ class CustomSelections:
             self.database.write_configuration_and_run_playbook()
         if hasattr(self, 'server'):
             self.server.write_configuration_and_run_playbook()
+        if hasattr(self, 'additional_service') and self.additional_service:
+            self.additional_service.write_configuration_and_run_playbook()
 
     def check_defaults(self):
         self.check_configs()

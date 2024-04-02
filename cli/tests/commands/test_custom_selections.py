@@ -31,6 +31,20 @@ class TestCustomSelections(unittest.TestCase):
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_selections.inquirer.confirm")
+    def test_init_when_additional_service_is_not_none(self, mock_confirm, mock_read_from_file):
+        additional_service = "redis"
+        mock_confirm.return_value.execute.return_value = False
+        custom_selections = CustomSelections(additional_service=additional_service)
+        self.assertIn('redisservers', custom_selections.impacted_host_groups)
+
+    @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.commands.custom_selections.inquirer.confirm")
+    def test_init_when_additional_service_is_none(self, mock_confirm, mock_read_from_file):
+        custom_selections = CustomSelections()
+        self.assertNotIn('redisservers', custom_selections.impacted_host_groups)
+
+    @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.commands.custom_selections.inquirer.confirm")
     def test_init_when_replica_server_acceptance_true(self, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = True
         custom_selections = CustomSelections(db_client_class="postgresql")
@@ -92,21 +106,21 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.commands.custom_selections.load_configuration")
     def test_check_configs(self, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
+        mock_load_configuration.return_value = {"test": "test"}
         custom_selections = CustomSelections()
+        custom_selections.server = MagicMock()
+        custom_selections.database = MagicMock()
+        custom_selections.additional_service = MagicMock()
         custom_selections.check_configs()
         self.assertTrue(mock_load_configuration.called)
-
     
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_selections.inquirer.confirm")
     @patch("src.commands.custom_selections.load_configuration")
-    @patch("src.commands.custom_selections.Python.parameter_configuration")
-    @patch("src.commands.custom_selections.Ruby.parameter_configuration")
-    def test_check_configs_with_server_class(self, mock_ruby_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
+    def test_check_configs_with_server_class(self, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
-        custom_selections = CustomSelections(server_class="ruby")
+        custom_selections = CustomSelections(server_class="python")
         custom_selections.check_configs()
-        self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
 
     @patch("src.webserver.python.FileManager.read_from_file")
@@ -114,7 +128,8 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.commands.custom_selections.load_configuration")
     @patch("src.commands.custom_selections.Python.parameter_configuration")
     @patch("src.commands.custom_selections.Postgresql.parameter_configuration")
-    def test_check_configs_with_db_class(self, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
+    @patch("src.commands.custom_selections.Redis.parameter_configuration")
+    def test_check_configs_with_db_class(self, mock_redis_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         custom_selections = CustomSelections(db_client_class="postgresql")
         custom_selections.check_configs()
@@ -127,12 +142,24 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.commands.custom_selections.Python.parameter_configuration")
     @patch("src.commands.custom_selections.Postgresql.parameter_configuration")
     @patch("src.commands.custom_selections.Ruby.parameter_configuration")
-    def test_check_configs_with_db_and_server_class(self, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
+    @patch("src.commands.custom_selections.Redis.parameter_configuration")
+    def test_check_configs_with_db_and_server_class(self, mock_redis_parameter_configuration, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         custom_selections = CustomSelections(db_client_class="postgresql", server_class="ruby")
         custom_selections.check_configs()
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_postgresql_parameter_configuration.called)
+        self.assertTrue(mock_load_configuration.called)
+
+    @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.commands.custom_selections.inquirer.confirm")
+    @patch("src.commands.custom_selections.load_configuration")
+    @patch("src.commands.custom_selections.Redis.parameter_configuration")
+    def test_check_configs_with_additional_service(self, mock_ruby_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
+        mock_confirm.return_value.execute.return_value = False
+        custom_selections = CustomSelections(additional_service="redis")
+        custom_selections.check_configs()
+        self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
     
     @patch("src.webserver.python.FileManager.read_from_file")
@@ -141,9 +168,10 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.commands.custom_selections.Python.parameter_configuration")
     @patch("src.commands.custom_selections.Postgresql.parameter_configuration")
     @patch("src.commands.custom_selections.Ruby.parameter_configuration")
-    def test_check_defaults(self, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
+    @patch("src.commands.custom_selections.Redis.parameter_configuration")
+    def test_check_defaults(self,mock_redis_parameter_configuration, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.side_effect = [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
-        custom_selections = CustomSelections(db_client_class="postgresql", server_class="ruby")
+        custom_selections = CustomSelections(db_client_class="postgresql", server_class="ruby", additional_service="redis")
         custom_selections.check_defaults()
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_postgresql_parameter_configuration.called)
