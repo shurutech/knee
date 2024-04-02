@@ -19,14 +19,18 @@ def custom_selections():
         choices=["python", "nodejs", "golang","ruby",None],
         default="python",
     ).execute()
-    return db, backend
+    additional_services = inquirer.select(
+        message="Select additional services:",
+        choices=["redis",None],
+        default="redis",
+    ).execute()
+    return db, backend, additional_services
 
 @app.command()
-def list():
+def list_command():
     commands = ["python-postgres", "give-ssh-access", "rails-with-postgres"]
     for command in commands:
         typer.echo(command)
-
 
 @app.command()
 def describe(command: str):
@@ -47,7 +51,7 @@ def execute():
     if option == "knee-defaults":
         command = inquirer.select(
             message="Please select a command:",
-            choices=[key for key in COMMAND_TO_CLASS_MAP.keys()],
+            choices=list(COMMAND_TO_CLASS_MAP.keys()),
             default="python-postgres",
         ).execute()
 
@@ -63,8 +67,8 @@ def execute():
         else:
             typer.secho("We are working hard for this command to be available soon!....", bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
     elif option == "custom-selections":
-        db, server = custom_selections()
-        if db is None and server is None:
+        db, server, additional_service = custom_selections()
+        if db is None and server is None and additional_service is None:
             typer.secho("Please select a valid option", bg=typer.colors.RED, fg=typer.colors.WHITE, bold=True)
             raise typer.Abort()
         environment= inquirer.select(
@@ -72,7 +76,7 @@ def execute():
         choices=["local","staging", "production"],
         default="staging",
         ).execute()
-        custom_inputs = CustomSelections(environment=environment, db_client_class=db, server_class=server)
+        custom_inputs = CustomSelections(environment=environment, db_client_class=db, server_class=server, additional_service=additional_service)
         custom_inputs.check_defaults()
         typer.echo(f"Setting up {db} database with {server} server and client...")
     else:
