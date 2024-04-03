@@ -9,8 +9,13 @@ Before you start using Knee, it's important to ensure you have the following pre
 
 2. **Infrastructure Fundamentals**: Knowledge of key infrastructure concepts such as virtual machines, networking, and cloud services will greatly aid in the deployment and management of services with Knee.
 
-3. **System Requirements**: Your system should meet the minimum requirements for running Ansible. This includes a compatible operating system and the necessary hardware resources to handle your deployment needs.
+3. **System Requirements**:  
+    
+    - Your system should meet the minimum requirements for running Ansible.
 
+    - This requires a suitable operating system and sufficient hardware capabilities for your tasks.
+
+    - Target System should be Ubuntu for the intended installation.
 
 ## Getting Started
 
@@ -46,57 +51,53 @@ Before you start using Knee, it's important to ensure you have the following pre
     ```bash
     ./knee execute
     ```
-## Components
-Detail each component that your playbook supports. Since you have multiple components, each should have its subsection.
 
-### Webserver
-Every web server deployment would need a basic setup like setting a new user for the service, installing the necessary packages, and configuring the server, and creating a systemd service. The webserver_base playbook does the same here. It creates a new user, installs the necessary packages, and creates a systemd service for the webserver. It accepts the following variables:
-1. `user_name`: The name of the user and group to be created in linux.
-2. `project_name`: The name of the project using which it would create the project directory and sytemd service.
-3. `start_command`: The command to start the server.
+## Next Steps/Features
+We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
 
-### Python Server
-The python_webserver playbook is used to deploy a python web server. It accepts the following variables:
-1. `user_name`: The name of the user using which it would install pyenv and install the required python version.
-2. `python_version`: The version of python to be installed and scoped to the user.
+  - **Platform Compatibility:** Knee plans to support more OS and configurations.  
+  
+  - **Adaptation to Trends:** Staying updated with emerging technologies to meet the changing needs of users.
 
-### PostgreSQL Server
-The postgresql_main playbook is used to deploy a PostgreSQL server. It accepts the following variables:
-1. `postgres_version`: The version of PostgreSQL to be installed.
-2. `postgres_database_cidr_address`: The CIDR address to be used for the database.
-3. `postgres_database_user`: The user to be created for the database.
-4. `postgres_database_password`: The password for the user to be created for the database.
-5. `postgres_database_name`: The name of the database to be created.
+## Contribution Guidelines
+We value the contributions of each developer and encourage you to share your ideas, improvements, and fixes with us. To ensure a smooth collaboration process, please follow these guidelines.
 
-#### ToDo
-- [ ] Change default user permissions from Superuser to minimum required permissions.
-- [ ] Make postgres user trust permission configurable.
-- [ ] Make all local connections to the database trust permission configurable.
-- [ ] 
+Before you begin:
 
+ - Make sure you have a GitHub account.
+ - Familiarize yourself with the project by reading the README, exploring the issues, and understanding the tool's architecture and coding standards.
 
-### PostgreSQL Replica Servers
-The postgresql_replica playbook is used to deploy a PostgreSQL replica server. The current setup only sets up streaming replication. It accepts the following variables:
-1. `postgres_replication_user`: The user to be created for the replication on the master server.
-2. `postgres_replication_user_password`: The password for the user to be created for the replication on the master server.
-3. `postgres_version`: The version of PostgreSQL to be installed.
-4. `replica_host`: The replica server host ip to be allowed in pg_hba.conf file of the master server.
-5. `postgres_database_cidr_address`: The CIDR address to be used for the database.
-6. `postgres_data_directory`: The data directory for the database.
-7. `master_host`: The master server host ip to be allowed in pg_hba.conf file of the replica server.
+## How to Contribute
+**Reporting Bugs**
 
-#### ToDo
-- [ ] Add support for logical replication.
-- [ ] Make wal_level, max_wal_senders, wal_keep_size configurable.
-- [ ] Make postgres user trust permission configurable.
-- [ ] Make all local connections to the database trust permission configurable.
-- [ ] Verify the replica server is in sync with the master server.
-- [ ] Add support for multiple replica servers.
-- [ ] 
+Before reporting a bug, please:
 
+ - Check the issue tracker to ensure the bug hasn't already been reported.
+ - If the issue is unreported, create a new issue, providing:
+    - A clear title and description.
+    - Steps to reproduce the bug.
+    - Expected behavior and what actually happened.
+    - Any relevant error messages or screenshots.
 
-### User Management to VMs
-The user_management playbook is used to manage users on the VMs. It creates a user in linux, with login ability and also adds their ssh key to the VM. It works on a local playbook variable called users which is a list of users to be created along with their ssh keys.
+**Suggesting Enhancements**
+We love to receive suggestions for enhancements! Please:
+
+- First, check if the enhancement has already been suggested.
+- If not, open a new issue, describing the enhancement and why it would be beneficial.
+
+**Pull Requests**
+Ready to contribute code? Follow these steps:
+
+1. Fork the repository - Create your own fork of the project.
+2. Create a new branch for your changes - Keep your branch focused on a single feature or bug fix.
+3. Commit your changes - Write clear, concise commit messages that explain your changes.
+4. Follow the coding standards - Ensure your code adheres to the coding standards used throughout the project.
+5. Write tests - If possible, write tests to cover the new functionality or bug fix.
+6. Submit a pull request - Provide a clear description of the problem and solution. Include the relevant issue number if applicable.
+
+**Conduct**
+We are committed to providing a welcoming and inspiring community for all. By participating in this project, you are expected to uphold our Code of Conduct, which promotes respect and collaboration.
+
 
 ## Usage Examples
 [WIP]
