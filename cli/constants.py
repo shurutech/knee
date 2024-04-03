@@ -33,10 +33,10 @@ COMMAND_WITH_DESCRIPTION = {
             "node": "Sets up node server.",
             "golang": "Sets up golang server.",
             "ruby": "Sets up ruby server.",
-            "postgres": "Sets up a PostgreSQL src.database.",
-            "mongo": "Sets up a MongoDB src.database.",
-            "mysql": "Sets up a MySQL src.database.",
-            "redis": "Sets up a Redis src.database.",
+            "postgres": "Sets up a PostgreSQL",
+            "mongo": "Sets up a MongoDB",
+            "mysql": "Sets up a MySQL",
+            "redis": "Sets up a Redis",
         }
     }
 }
