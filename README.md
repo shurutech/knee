@@ -13,8 +13,38 @@ Before you start using Knee, it's important to ensure you have the following pre
 
 
 ## Getting Started
-Provide instructions on how to clone/download and start using your playbook.
 
+- Ensure Python is Installed:  
+  Download and install Python from [https://www.python.org/downloads/] 🐍  
+
+- To begin, clone this Git repository:
+  
+    ```bash
+    git clone https://github.com/shurutech/ansible-base.git
+    ```
+
+- Create virtualenv
+  
+  ```bash
+  virtualenv -p python3.12.x venv
+  ```
+
+- Activate Virtualenv
+
+    ```bash
+    source venv/bin/activate
+    ```
+
+- Install Dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+- Execute the Command:
+    ```bash
+    ./knee execute
+    ```
 ## Components
 Detail each component that your playbook supports. Since you have multiple components, each should have its subsection.
 
