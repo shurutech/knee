@@ -3,11 +3,18 @@ from InquirerPy import inquirer
 from commands.custom_selections import CustomSelections
 from constants import COMMAND_WITH_DESCRIPTION, COMMAND_TO_CATEGORY_MAP
 from input_selection import custom_selections, get_environment, initial_input_selection
-from commands.help_command import help_command
+from commands.help_command import version_callback, help_callback
 
 app = typer.Typer()
-help_command(app)
+#help_command(app)
 
+@app.callback()
+def help_command(
+    version: bool = typer.Option(None, "--version", callback=version_callback),
+    help: bool = typer.Option(None, "--help", callback=help_callback),
+):
+    return
+    
 @app.command()
 def execute():
     option = initial_input_selection()
