@@ -14,11 +14,3 @@ def help_callback(value: bool):
             for command, description in data['commands'].items():
                 typer.echo(f"{command:<{max_length}} : {description}")
         raise typer.Exit()
-
-def help_command(app):
-    @app.callback(invoke_without_command=True)
-    def help(
-        version: bool = typer.Option(None, "--version", callback=version_callback),
-        help: bool = typer.Option(None, "--help", callback=help_callback),
-    ):
-        return
