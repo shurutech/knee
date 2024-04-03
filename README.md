@@ -15,7 +15,8 @@ Before you start using Knee, it's important to ensure you have the following pre
 ## Getting Started
 
 - Ensure Python is Installed:  
-  Download and install Python from [https://www.python.org/downloads/] 🐍  
+  
+  Download and install Python from [https://www.python.org/downloads/]. 🐍  
 
 - To begin, clone this Git repository:
   
