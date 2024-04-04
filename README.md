@@ -52,7 +52,7 @@ Before you start using Knee, it's important to ensure you have the following pre
     ./knee execute
     ```
 
-## Usage
+## Usage 
 
 After you've completed the setup, you can start exploring the functionalities provided by Knee. 
 
@@ -68,10 +68,22 @@ Choose the option that best suits your needs and follow the prompts to complete 
     ```bash
     ./knee --help
     ```
-    or
+    or  
+
     ```bash
     ./knee -h
     ```
+
+## Usage Examples
+
+1. **Setting Up a Python Server:** If you're a Python developer looking to quickly set up a server for your application, you can use Knee. Simply run ./knee execute and choose the server option in the custom selection.
+
+2. **Deploying a PostgreSQL Database:** If you need to deploy a PostgreSQL database, Knee can help streamline the process. Run `./knee execute` and select the database option in the custom selection.
+
+3. **Quickly Setting Up a Common Software Stack:** If you're not sure what software to install, or if you want to quickly set up a popular software combination, you can use the Knee defaults option. Run `./knee execute` and choose the Knee defaults option.
+
+4. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run ./knee execute and use the custom selection option to choose the server, database, and additional services that fit your needs
+
 ## Next Steps/Features
 We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
 
@@ -117,10 +129,6 @@ Ready to contribute code? Follow these steps:
 
 **Conduct**
 We are committed to providing a welcoming and inspiring community for all. By participating in this project, you are expected to uphold our Code of Conduct, which promotes respect and collaboration.
-
-
-## Usage Examples
-[WIP]
 
 ## Future Additions
 [WIP]
