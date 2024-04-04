@@ -9,14 +9,17 @@ DIRECTORY_PATH = {
     "production": PRODUCTION_HOSTS_DIR,
 }
 
+KNEE_DEFAULTS = "knee-defaults"
+CUSTOM_SELECTIONS = "custom-selections"
+
 COMMAND_TO_CATEGORY_MAP = {
-    "python-postgres": {"server": "python", "db": "postgres"},
-    "node-mongo": {"server": "node", "db": "mongo"},
-    "golang-mongo": {"server": "golang", "db": "mongo"},
+    "python-postgres": {"server": "python", "db": "postgresql"},
+    "node-mongo": {"server": "nodejs", "db": "mongodb"},
+    "golang-mongo": {"server": "golang", "db": "mongodb"},
     "ruby-mysql": {"server": "ruby", "db": "mysql"},
 }
 
-COMMAND_WITH_DESCRIPTION = {
+SUBCOMMAND_TO_DESCRIPTION_MAP = {
     "knee-defaults": {
         "description": "These are the default commands provided by Knee.",
         "commands": {
@@ -39,4 +42,8 @@ COMMAND_WITH_DESCRIPTION = {
             "redis": "Sets up a Redis",
         }
     }
+}
+
+COMMANDS_TO_DESCRIPTION_MAP = {
+    "execute": "Prompts for user input, processes selected option, and executes related actions"
 }
