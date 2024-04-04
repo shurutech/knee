@@ -1,4 +1,5 @@
 from InquirerPy import inquirer
+from constants import KNEE_DEFAULTS, CUSTOM_SELECTIONS
 
 
 def custom_selections():
@@ -29,5 +30,5 @@ def get_environment():
 def initial_input_selection():
     return inquirer.select(
         message="Please select an option:",
-        choices=["knee-defaults", "custom-selections"],
+        choices=[KNEE_DEFAULTS, CUSTOM_SELECTIONS],
     ).execute()

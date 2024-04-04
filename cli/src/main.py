@@ -1,25 +1,29 @@
 import typer
 from InquirerPy import inquirer
+from constants import KNEE_DEFAULTS, CUSTOM_SELECTIONS
 from commands.custom_selections import CustomSelections
-from constants import COMMAND_WITH_DESCRIPTION, COMMAND_TO_CATEGORY_MAP
+from constants import SUBCOMMAND_TO_DESCRIPTION_MAP, COMMAND_TO_CATEGORY_MAP
 from input_selection import custom_selections, get_environment, initial_input_selection
-from commands.help_command import version_callback, help_callback
+from commands.help_command import version_callback, help_callback, command_callback
 
 app = typer.Typer()
-#help_command(app)
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def help_command(
-    version: bool = typer.Option(None, "--version", callback=version_callback),
-    help: bool = typer.Option(None, "--help", callback=help_callback),
+    ctx: typer.Context,
+    version: bool = typer.Option(None, "--version", "-v", callback=version_callback),
+    command: bool = typer.Option(None, "--command", "-c", callback=command_callback),
+    help: bool = typer.Option(None, "--help", "-h", callback=help_callback),
 ):
+    if ctx.invoked_subcommand is None and not (version or command or help):
+        typer.echo(typer.style("Invalid option. Use '--help' for available options.", fg=typer.colors.MAGENTA, bold=True))
     return
-    
+
 @app.command()
 def execute():
     option = initial_input_selection()
     server = db = additional_service = None
-    if option == "knee-defaults":
+    if option == KNEE_DEFAULTS:
         command = inquirer.select(
             message="Please select a command:",
             choices=list(COMMAND_TO_CATEGORY_MAP.keys()),
@@ -30,7 +34,7 @@ def execute():
             db = COMMAND_TO_CATEGORY_MAP[command]["db"]
         else:
             typer.secho("We are working hard for this command to be available soon!....", bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
-    elif option == "custom-selections":
+    elif option == CUSTOM_SELECTIONS:
         db, server, additional_service = custom_selections()
         if db is None and server is None and additional_service is None:
             typer.secho("Please select a valid option", bg=typer.colors.RED, fg=typer.colors.WHITE, bold=True)
