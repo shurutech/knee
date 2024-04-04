@@ -52,6 +52,26 @@ Before you start using Knee, it's important to ensure you have the following pre
     ./knee execute
     ```
 
+## Usage
+
+After you've completed the setup, you can start exploring the functionalities provided by Knee. 
+
+When you run the application, you'll be presented with two main options:
+
+- **Knee Defaults**: This option provides a set of predefined configurations that automate the installation and setup of commonly used software combinations. If you're not sure what software to install, or if you want to quickly set up a popular software combination, this is a good option to choose.
+
+- **Custom Selection**: This option allows you to customize the setup according to your needs. You can select the server, database, additional services, or any combination of these. You can also choose not to select any of these options if you prefer.
+
+Choose the option that best suits your needs and follow the prompts to complete the setup.
+
+- For a comprehensive list of all available commands and options, you can use the help command:
+    ```bash
+    ./knee --help
+    ```
+    or
+    ```bash
+    ./knee -h
+    ```
 ## Next Steps/Features
 We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
 
