@@ -23,7 +23,7 @@ Before you start using Knee, it's important to ensure you have the following pre
   
   Download and install Python from [https://www.python.org/downloads/]. 🐍  
 
-- To begin, clone this Git repository:
+- Clone the Git repository:
   
     ```bash
     git clone https://github.com/shurutech/ansible-base.git
