@@ -13,6 +13,7 @@ from src.database.mysql import Mysql
 from src.webserver.ruby import Ruby
 from src.additional_services.redis import Redis
 from constants import DIRECTORY_PATH
+import src.utils.constants.message_constants as MESSAGE
 
 
 class_map = {
@@ -62,7 +63,7 @@ class CustomSelections:
 
     def get_confirmation_to_setup_replica_server(self):
         return inquirer.confirm(
-            message="Do you want to setup a replica server? (Default= No) :: ",
+            message=MESSAGE.REPLICA_SETUP_PROMPT,
             default=False,
         ).execute()
     
@@ -119,18 +120,18 @@ class CustomSelections:
             self.file_manager.write_to_file(
                 "playbooks/group_vars", config_file, self.configs[config_file]
             )
-        if hasattr(self, 'database'):
+        if self.db_class:
             self.database.write_configuration_and_run_playbook()
-        if hasattr(self, 'server'):
+        if self.server_class:
             self.server.write_configuration_and_run_playbook()
-        if hasattr(self, 'additional_service') and self.additional_service:
+        if self.additional_service:
             self.additional_service.write_configuration_and_run_playbook()
 
     def check_defaults(self):
         self.check_configs()
         self.check_hosts()
         configuration_acceptance = inquirer.confirm(
-            message="Do you want to change the configuration? (Default= Yes) :: ",
+            message=MESSAGE.CONFIGURATION_SETUP_CHANGE_PROMPT,
             default=True,
         ).execute()
         if configuration_acceptance:
