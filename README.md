@@ -26,7 +26,7 @@ Before you start using Knee, it's important to ensure you have the following pre
 - Clone the Git repository:
   
     ```bash
-    git clone [https://github.com/shurutech/knee]
+    git clone https://github.com/shurutech/knee
     ```
 
 - Create virtualenv
