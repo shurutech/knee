@@ -21,12 +21,12 @@ Before you start using Knee, it's important to ensure you have the following pre
 
 - Ensure Python is Installed:  
   
-  Download and install Python from [https://www.python.org/downloads/]. 🐍  
+  Download and install Python from [https://www.python.org/downloads/] 🐍  
 
 - Clone the Git repository:
   
     ```bash
-    git clone https://github.com/shurutech/ansible-base.git
+    git clone [https://github.com/shurutech/knee]
     ```
 
 - Create virtualenv
