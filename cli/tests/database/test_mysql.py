@@ -50,7 +50,7 @@ class TestMysql(unittest.TestCase):
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
         }
-        mysql.write_configuration_and_run_playbook()
+        mysql.apply_configuration()
         mock_write_to_file.assert_called_once_with(
             "playbooks/group_vars", "mysqlmainserver.yml", {"mysql_port": "3305"}
         )
@@ -65,7 +65,7 @@ class TestMysql(unittest.TestCase):
         }
         mock_write_to_file.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            mysql.write_configuration_and_run_playbook()
+            mysql.apply_configuration()
         self.assertTrue('Error' in str(context.exception))
         mock_run_playbook.assert_not_called()
     
@@ -78,7 +78,7 @@ class TestMysql(unittest.TestCase):
         }
         mock_run_playbook.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            mysql.write_configuration_and_run_playbook()
+            mysql.apply_configuration()
         self.assertTrue('Error' in str(context.exception))
         mock_write_to_file.assert_called_once_with(
             "playbooks/group_vars", "mysqlmainserver.yml", {"mysql_port": "3305"}
@@ -93,7 +93,7 @@ class TestMysql(unittest.TestCase):
             "mysqlmainserver.yml": {"mysql_port": "3305"},
             "mysqlreplicaservers.yml": {"mysql_port": "3306"}
         }
-        mysql.write_configuration_and_run_playbook()
+        mysql.apply_configuration()
         if mysql.replica_server_acceptance:
             mock_run_playbook.assert_called_once_with("mysql_replica_server.yml", "local")
 
@@ -105,6 +105,6 @@ class TestMysql(unittest.TestCase):
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"},
         }
-        mysql.write_configuration_and_run_playbook()
+        mysql.apply_configuration()
         if not mysql.replica_server_acceptance:
             mock_run_playbook.assert_called_once_with("mysql_server.yml", "local")

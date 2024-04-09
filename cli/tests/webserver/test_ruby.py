@@ -53,7 +53,7 @@ class TestRuby(unittest.TestCase):
         ruby.configs = {
              "rubyserver.yml": {"ruby_port": "3305"}
         }
-        ruby.write_configuration_and_run_playbook()
+        ruby.apply_configuration()
         mock_write_to_file.assert_called_once_with(
             "playbooks/group_vars", "rubyserver.yml", {"ruby_port": "3305"}
         )
@@ -71,7 +71,7 @@ class TestRuby(unittest.TestCase):
         }
         mock_write_to_file.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            ruby.write_configuration_and_run_playbook()
+            ruby.apply_configuration()
         self.assertTrue('Error' in str(context.exception))  
         mock_run_playbook.assert_not_called()
 
@@ -85,7 +85,7 @@ class TestRuby(unittest.TestCase):
         }
         mock_run_playbook.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            ruby.write_configuration_and_run_playbook()
+            ruby.apply_configuration()
         self.assertTrue('Error' in str(context.exception))  
         mock_write_to_file.assert_called_once_with(
             "playbooks/group_vars", "rubyserver.yml", {"ruby_port": "3305"}

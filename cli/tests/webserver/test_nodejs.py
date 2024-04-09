@@ -26,7 +26,7 @@ class TestNodejs(unittest.TestCase):
     ):
         nodejs = Nodejs("local")
         nodejs.configs = {"nodewebservers.yml": {"nodejs_version": "1.21.3"}}
-        nodejs.write_configuration_and_run_playbook()
+        nodejs.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",

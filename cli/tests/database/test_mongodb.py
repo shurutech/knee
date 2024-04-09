@@ -51,7 +51,7 @@ class TestMongodb(unittest.TestCase):
                 "mongodb_database_name": "myproject",
             }
         }
-        mongodb.write_configuration_and_run_playbook()
+        mongodb.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",

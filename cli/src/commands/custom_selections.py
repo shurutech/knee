@@ -27,7 +27,7 @@ class_map = {
     'redis': Redis
 }
 
-db_replica_map = {
+db_replica_count = {
     'postgresql': 1,
     'mysql': 1,
     'mongodb': 2
@@ -43,8 +43,8 @@ class CustomSelections:
         self.server_class = self.get_class(server_class)
         self.db_class = self.get_class(db_client_class)
         self.additional_service = self.get_class(additional_service)
-        self.replica_server_acceptance = self.get_confirmation_to_setup_replica_server() if self.db_class else False
-        self.hosts = self.load_hosts_based_on_environment()
+        self.replica_server_acceptance = self.get_replica_setup_confirmation() if self.db_class else False
+        self.hosts = self.load_hosts()
         self.replica_host_group = self.get_replica_host_group(db_client_class) if self.replica_server_acceptance else None
         self.impacted_host_groups = self.get_impacted_host_groups()
         self.configs = self.load_generic_configuration(config_dir)
@@ -55,20 +55,20 @@ class CustomSelections:
         if self.additional_service:
             self.additional_service = self.additional_service(self.environment)
 
-    def load_hosts_based_on_environment(self):
+    def load_hosts(self):
         return self.file_manager.read_from_file(DIRECTORY_PATH[self.environment], "hosts.yml")
     
     def get_class(self, class_name):
         return class_map[class_name] if class_name in class_map else None
 
-    def get_confirmation_to_setup_replica_server(self):
+    def get_replica_setup_confirmation(self):
         return inquirer.confirm(
             message=MESSAGE.REPLICA_SETUP_PROMPT,
             default=False,
         ).execute()
     
     def get_replica_host_group(self, db_client_class):
-        num_of_replica = db_replica_map[db_client_class] if db_client_class in db_replica_map else 0
+        num_of_replica = db_replica_count[db_client_class] if db_client_class in db_replica_count else 0
         replicas = {}
         for i in range(1, num_of_replica + 1):
            replica_name = f"replica{i}"
@@ -114,18 +114,18 @@ class CustomSelections:
         if self.additional_service:
             self.additional_service.parameter_configuration()
 
-    def write_configuration_and_run_playbook(self):
+    def apply_configuration(self):
         self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.hosts)
         for config_file in self.configs:
             self.file_manager.write_to_file(
                 "playbooks/group_vars", config_file, self.configs[config_file]
             )
         if self.db_class:
-            self.database.write_configuration_and_run_playbook()
+            self.database.apply_configuration()
         if self.server_class:
-            self.server.write_configuration_and_run_playbook()
+            self.server.apply_configuration()
         if self.additional_service:
-            self.additional_service.write_configuration_and_run_playbook()
+            self.additional_service.apply_configuration()
 
     def check_defaults(self):
         self.check_configs()
@@ -135,5 +135,5 @@ class CustomSelections:
             default=True,
         ).execute()
         if configuration_acceptance:
-            self.write_configuration_and_run_playbook()
+            self.apply_configuration()
 

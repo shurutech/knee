@@ -37,7 +37,7 @@ class TestPython(unittest.TestCase):
     ):
         mock_read_from_file.return_value = {"python_version": "3.8.1"}
         python = Python()
-        python.write_configuration_and_run_playbook()
+        python.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",
@@ -58,7 +58,7 @@ class TestPython(unittest.TestCase):
     ):
         mock_read_from_file.return_value = {"python_version": "3.8.1"}
         python = Python()
-        python.write_configuration_and_run_playbook()
+        python.apply_configuration()
         mock_run_playbook.assert_called()
 
     @patch("src.webserver.python.run_playbook")
@@ -71,7 +71,7 @@ class TestPython(unittest.TestCase):
         mock_run_playbook.side_effect = Exception("An error occurred")
         python = Python()
         with self.assertRaises(Exception) as context:
-            python.write_configuration_and_run_playbook()
+            python.apply_configuration()
 
         self.assertTrue("An error occurred" in str(context.exception))
 

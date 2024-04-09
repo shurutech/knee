@@ -85,7 +85,7 @@ class TestCustomSelections(unittest.TestCase):
         custom_selections = CustomSelections()
         custom_selections.environment = "staging"
         custom_selections.hosts = {"test": "test"}
-        custom_selections.write_configuration_and_run_playbook()
+        custom_selections.apply_configuration()
         self.assertTrue(mock_write_to_file.called)
 
     @patch("src.webserver.python.FileManager.read_from_file")
@@ -98,7 +98,7 @@ class TestCustomSelections(unittest.TestCase):
         custom_selections.server = MagicMock()
         custom_selections.environment = "staging"
         custom_selections.hosts = {"test": "test"}
-        custom_selections.write_configuration_and_run_playbook()
+        custom_selections.apply_configuration()
         self.assertEqual(mock_write_to_file.call_count, 2)
 
     @patch("src.webserver.python.FileManager.read_from_file")

@@ -18,7 +18,7 @@ class Nodejs:
     def parameter_configuration(self):
         self.configs = load_configuration(self.configs)
 
-    def write_configuration_and_run_playbook(self):
+    def apply_configuration(self):
         for config_file in self.config_files:
             self.file_manager.write_to_file(config_dir, config_file, self.configs[config_file])
         run_playbook("node_server.yml", self.environment)

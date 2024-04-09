@@ -44,7 +44,7 @@ class TestPostgresql(unittest.TestCase):
         postgresql = Postgresql(False, "staging")
         postgresql.config_files = ["postgresmainserver.yml"]
         postgresql.configs = {"postgresmainserver.yml": {"postgresql_version": "12.1"}}
-        postgresql.write_configuration_and_run_playbook()
+        postgresql.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",

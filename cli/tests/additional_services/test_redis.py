@@ -52,7 +52,7 @@ class TestRedis(unittest.TestCase):
         redis.configs = {
              "redisserver.yml": {"redis_port": "6379"}
         }
-        redis.write_configuration_and_run_playbook()
+        redis.apply_configuration()
         mock_write_to_file.assert_called_once_with(
             "playbooks/group_vars", "redisserver.yml", {"redis_port": "6379"}
         )
@@ -66,7 +66,7 @@ class TestRedis(unittest.TestCase):
     ):
         mock_read_from_file.return_value = {"redis_port": "6379"}
         redis = Redis()
-        redis.write_configuration_and_run_playbook()
+        redis.apply_configuration()
         mock_run_playbook.assert_called()
 
     @patch("src.additional_services.redis.run_playbook")
@@ -79,7 +79,7 @@ class TestRedis(unittest.TestCase):
         mock_run_playbook.side_effect = Exception("An error occurred")
         redis = Redis()
         with self.assertRaises(Exception) as context:
-            redis.write_configuration_and_run_playbook()
+            redis.apply_configuration()
 
         self.assertTrue("An error occurred" in str(context.exception))
 

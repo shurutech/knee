@@ -26,7 +26,7 @@ class TestGolang(unittest.TestCase):
     ):
         golang = Golang("local")
         Golang.configs = {"golangwebservers.yml": {"golang_version": "1.21.3"}}
-        golang.write_configuration_and_run_playbook()
+        golang.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",
