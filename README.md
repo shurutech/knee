@@ -93,6 +93,8 @@ We plan to continue building after the initial release and look forward to the f
   
   - **Adaptation to Trends:** Staying updated with emerging technologies to meet the changing needs of users.
 
+  - **Interactive Input:** Enable users to input configuration details directly via command-line.
+
 ## Contribution Guidelines
 We value the contributions of each developer and encourage you to share your ideas, improvements, and fixes with us. To ensure a smooth collaboration process, please follow these guidelines.
 
