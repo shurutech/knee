@@ -33,11 +33,21 @@ db_replica_count = {
     'mongodb': 2
 }
 
+REMOTE_NODE_CONFIG = {
+            'ansible_connection': 'ssh',
+            'ansible_host': '192.168.181.129',
+            'ansible_port': 22,
+            'ansible_ssh_private_key_file': '.vagrant/machines/vm2/vmware_fusion/private_key',
+            'ansible_user': 'vagrant',
+        }
 
-class CustomSelections:
+config_dir = "playbooks/group_vars"
+
+
+class CustomSystem:
     CONFIG_FILES = ["all.yml"]
     
-    def __init__(self, environment="staging", config_dir="playbooks/group_vars", db_client_class=None, server_class=None, additional_service=None):
+    def __init__(self, environment="staging", db_client_class=None, server_class=None, additional_service=None):
         self.environment = environment
         self.file_manager = FileManager()
         self.server_class = self.get_class(server_class)
@@ -47,7 +57,7 @@ class CustomSelections:
         self.hosts = self.load_hosts()
         self.replica_host_group = self.get_replica_host_group(db_client_class) if self.replica_server_acceptance else None
         self.impacted_host_groups = self.get_impacted_host_groups()
-        self.configs = self.load_generic_configuration(config_dir)
+        self.configs = self.load_generic_configuration()
         if self.db_class:
             self.database = self.db_class(self.replica_server_acceptance, self.environment)
         if self.server_class:
@@ -70,15 +80,9 @@ class CustomSelections:
     def get_replica_host_group(self, db_client_class):
         num_of_replica = db_replica_count[db_client_class] if db_client_class in db_replica_count else 0
         replicas = {}
-        for i in range(1, num_of_replica + 1):
-           replica_name = f"replica{i}"
-           replicas[replica_name] = {
-            'ansible_connection': 'ssh',
-            'ansible_host': '192.168.181.129',
-            'ansible_port': 22,
-            'ansible_ssh_private_key_file': '.vagrant/machines/vm2/vmware_fusion/private_key',
-            'ansible_user': 'vagrant',
-        }
+        for replica_count in range(1, num_of_replica + 1):
+           replica_name = f"replica{replica_count}"
+           replicas[replica_name] = dict(REMOTE_NODE_CONFIG)
         self.hosts['databasereplicaservers'] = {
             'hosts': replicas
         }
@@ -96,7 +100,7 @@ class CustomSelections:
                 host_groups.append("redisservers")
         return host_groups
 
-    def load_generic_configuration(self, config_dir):
+    def load_generic_configuration(self):
         configs = {}
         for config_file in self.CONFIG_FILES:
             configs[config_file] = self.file_manager.read_from_file(config_dir, config_file)
@@ -118,7 +122,7 @@ class CustomSelections:
         self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.hosts)
         for config_file in self.configs:
             self.file_manager.write_to_file(
-                "playbooks/group_vars", config_file, self.configs[config_file]
+                config_dir, config_file, self.configs[config_file]
             )
         if self.db_class:
             self.database.apply_configuration()

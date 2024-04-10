@@ -1,7 +1,7 @@
 import typer
 from InquirerPy import inquirer
 from constants import INITIAL_OPTION_KNEE_DEFAULTS, INITIAL_OPTION_CUSTOM_SELECTIONS
-from commands.custom_selections import CustomSelections
+from commands.custom_selections import CustomSystem
 from constants import SUBCOMMAND_DESCRIPTION_MAP, COMMAND_SERVICE_MAP
 from input_selection import custom_selections, get_environment, initial_input_selection
 from commands.help_command import version_callback, help_callback, command_callback
@@ -41,7 +41,7 @@ def execute():
     else:
         typer.secho(MESSAGE.COMMAND_NOT_AVAILABLE, bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
     environment = get_environment()
-    custom_inputs = CustomSelections(environment=environment, db_client_class=db, server_class=server, additional_service=additional_service)
+    custom_inputs = CustomSystem(environment=environment, db_client_class=db, server_class=server, additional_service=additional_service)
     custom_inputs.check_defaults()
     typer.echo("Done!")
 
