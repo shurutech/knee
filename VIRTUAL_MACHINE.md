@@ -32,7 +32,29 @@ Install
 ```
 vagrant plugin install vagrant-vmware-desktop
 ```
-**Note**: vagrant template(Vagrantfile) already exists in the repo. You can customize it as per your requirement.
+**Note**: vagrant template(Vagrantfile) already exists in the repo. You can customize it as per your requirement.  
+
+# Vagrant Commands
+
+1. Start up your Vagrant environment.
+
+    ```bash
+    vagrant up
+    ```  
+
+2. Connect to the designated virtual machine via SSH.
+
+    ```bash
+    vagrant ssh <vm-name>
+    ```
+
+3. To destroy Vagrant environment.
+
+    ```
+    vagrant destroy
+    ```
+
+
 
 
 
