@@ -52,6 +52,8 @@ Before you start using Knee, it's important to ensure you have the following pre
     ./knee execute
     ```
 
+**Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
+
 ## Usage 
 
 After you've completed the setup, you can start exploring the functionalities provided by Knee. 
