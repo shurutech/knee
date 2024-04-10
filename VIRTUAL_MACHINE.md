@@ -5,8 +5,8 @@
 3. Open the Finder app and navigate to the Downloads directory in your Mac machine.
 4. Open the VMware Fusion package, then double-click the icon and follow the onscreen instructions.
 5. During the installation process, a license key prompt appears. Within the same window, you'll find a Get a Free License Key button. Simply click this button to obtain the personal use license key and complete the installation.
-
-
+   
+<img width="1092" alt="Screenshot 2024-04-10 at 1 33 42 PM" src="https://github.com/shurutech/knee/assets/150419934/e092d3eb-b7aa-45c0-987e-e67c70b5bbd1">
 
 # Install Vagrant and its plugins on Apple chip-based Mac machine
 Step 1: Tap HashiCorp Repository
