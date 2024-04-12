@@ -16,7 +16,7 @@ def hosts_configuration_parameters(impacted_host_groups, hosts_config):
     for group, group_info in hosts_config.items():
         if group in impacted_host_groups:
             for hosts, host_info in group_info["hosts"].items():
-                print(f"-----{group}--> {hosts} Configuration")
+                print(f"-------{group}------->")
                 for key, value in host_info.items():
                     hosts_config[group]["hosts"][hosts][key] = get_user_input(
                         key, value
