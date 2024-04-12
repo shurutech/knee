@@ -86,6 +86,8 @@ Choose the option that best suits your needs and follow the prompts to complete 
 
 4. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run `./knee execute` and use the custom selection option to choose the server, database, and additional services that fit your needs
 
+https://github.com/shurutech/knee/assets/158024046/e5e1bafc-f92f-4bd8-922b-6aa8cc608331
+
 ## Next Steps/Features
 We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
 
@@ -94,7 +96,7 @@ We plan to continue building after the initial release and look forward to the f
   - **Adaptation to Trends:** Staying updated with emerging technologies to meet the changing needs of users.
 
   - **Interactive Input:** Enable users to input configuration details directly via command-line.
-
+    
 ## Contribution Guidelines
 We value the contributions of each developer and encourage you to share your ideas, improvements, and fixes with us. To ensure a smooth collaboration process, please follow these guidelines.
 
