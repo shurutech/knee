@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, Mock
 import typer
-from src.commands.help_command import version_callback
+from src.callback import version_callback
 
 class TestHelpCommand(unittest.TestCase):
     @patch('typer.echo')
