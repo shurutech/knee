@@ -9,9 +9,6 @@ DIRECTORY_PATH = {
     "production": PRODUCTION_HOSTS_DIR,
 }
 
-INITIAL_OPTION_KNEE_DEFAULTS = "knee-defaults"
-INITIAL_OPTION_CUSTOM_SELECTIONS = "custom-selections"
-
 COMMAND_SERVICE_MAP = {
     "python-postgres": {"server": "python", "db": "postgresql"},
     "node-mongo": {"server": "nodejs", "db": "mongodb"},
