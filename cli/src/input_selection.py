@@ -1,7 +1,6 @@
 from InquirerPy import inquirer
-from constants import INITIAL_OPTION_KNEE_DEFAULTS, INITIAL_OPTION_CUSTOM_SELECTIONS
 from utils.constants.prompt import Prompt
-from utils.constants.enum import Database, Webserver, CachingTool, Environment
+from utils.constants.enum import Database, Webserver, CachingTool, Environment, InitialOption
 
 
 def custom_selections():
@@ -37,5 +36,6 @@ def get_environment():
 def initial_input_selection():
     return inquirer.select(
         message=Prompt.SELECT_OPTION.value,
-        choices=[INITIAL_OPTION_KNEE_DEFAULTS, INITIAL_OPTION_CUSTOM_SELECTIONS],
+        choices=[InitialOption.KNEE_DEFAULTS.value, InitialOption.CUSTOM_SELECTIONS.value],
     ).execute()
+

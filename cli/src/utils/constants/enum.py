@@ -20,3 +20,7 @@ class Environment(Enum):
     STAGING = "staging"
     PRODUCTION = "production"
 
+class InitialOption(Enum):
+    KNEE_DEFAULTS = "knee-defaults"
+    CUSTOM_SELECTIONS = "custom-selections"
+
