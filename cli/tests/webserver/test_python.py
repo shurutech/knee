@@ -18,7 +18,7 @@ class TestPython(unittest.TestCase):
         )
 
     @patch("src.webserver.python.load_configuration")
-    def test_parameter_configuration(self, mock_load_configuration):
+    def test_update_configuration(self, mock_load_configuration):
         python = Python()
         mock_load_configuration.return_value = {
             "pythonwebservers.yml": {"python_port": "5434"}
@@ -29,7 +29,7 @@ class TestPython(unittest.TestCase):
     @patch("src.webserver.python.FileManager.write_to_file")
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.webserver.python.run_playbook")
-    def test_write_configuration_parameters_called_with_expected_arguments(
+    def test_apply_configuration_called_with_expected_arguments(
         self,
         mock_run_playbook,
         mock_read_from_file,
@@ -53,7 +53,7 @@ class TestPython(unittest.TestCase):
     @patch("src.webserver.python.run_playbook")
     @patch("src.webserver.python.FileManager.write_to_file")
     @patch("src.webserver.python.FileManager.read_from_file")
-    def test_write_configuration_and_run_playbook_when_it_is_called(
+    def test_apply_configuration_when_it_is_called(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
         mock_read_from_file.return_value = {"python_version": "3.8.1"}
@@ -64,7 +64,7 @@ class TestPython(unittest.TestCase):
     @patch("src.webserver.python.run_playbook")
     @patch("src.webserver.python.FileManager.write_to_file")
     @patch("src.webserver.python.FileManager.read_from_file")
-    def test_write_configuration_and_run_playbook_when_it_is_not_called(
+    def test_apply_configuration_when_it_is_not_called(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
         mock_read_from_file.return_value = {"python_version": "3.8.1"}

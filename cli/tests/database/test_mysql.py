@@ -15,7 +15,7 @@ class TestMysql(unittest.TestCase):
         )
 
     @patch("src.database.mysql.load_configuration")
-    def test_parameter_configuration(self, mock_load_configuration):
+    def test_update_configuration(self, mock_load_configuration):
         mysql = Mysql()
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
@@ -33,7 +33,7 @@ class TestMysql(unittest.TestCase):
          )
 
     @patch("src.database.mysql.load_configuration")
-    def test_parameter_configuration_raises_error(self, mock_load_configuration):
+    def test_update_configuration_raises_error(self, mock_load_configuration):
         mysql = Mysql()
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
@@ -45,7 +45,7 @@ class TestMysql(unittest.TestCase):
 
     @patch("src.database.mysql.FileManager.write_to_file")
     @patch("src.database.mysql.run_playbook")
-    def test_write_configuration_and_run_playbook(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
@@ -58,7 +58,7 @@ class TestMysql(unittest.TestCase):
 
     @patch("src.database.mysql.FileManager.write_to_file")
     @patch("src.database.mysql.run_playbook")
-    def test_write_configuration_and_run_playbook_when_write_to_file_raises_error(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_when_write_to_file_raises_error(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
@@ -71,7 +71,7 @@ class TestMysql(unittest.TestCase):
     
     @patch("src.database.mysql.FileManager.write_to_file")
     @patch("src.database.mysql.run_playbook")
-    def test_write_configuration_and_run_playbook_when_run_playbook_raises_error(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_when_run_playbook_raises_error(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
@@ -86,7 +86,7 @@ class TestMysql(unittest.TestCase):
 
     @patch("src.database.mysql.FileManager.write_to_file")
     @patch("src.database.mysql.run_playbook")
-    def test_write_configuration_and_run_playbook_when_replica_server_acceptance_is_true(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_when_replica_server_acceptance_is_true(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.is_replica_required = True
         mysql.configs = {
@@ -99,7 +99,7 @@ class TestMysql(unittest.TestCase):
 
     @patch("src.database.mysql.FileManager.write_to_file")
     @patch("src.database.mysql.run_playbook")
-    def test_write_configuration_and_run_playbook_when_replica_server_acceptance_is_false(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_when_replica_server_acceptance_is_false(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.is_replica_required = False
         mysql.configs = {

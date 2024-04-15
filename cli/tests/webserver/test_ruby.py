@@ -17,7 +17,7 @@ class TestRuby(unittest.TestCase):
         )
 
     @patch("src.webserver.ruby.load_configuration")
-    def test_parameter_configuration(self, mock_load_configuration):
+    def test_update_configuration(self, mock_load_configuration):
         ruby = Ruby()
         ruby.configs = {
             "rubyserver.yml": {"ruby_port": "3305"}
@@ -35,7 +35,7 @@ class TestRuby(unittest.TestCase):
          )
 
     @patch("src.webserver.ruby.load_configuration")
-    def test_parameter_configuration_raises_error(self, mock_load_configuration):
+    def test_update_configuration_raises_error(self, mock_load_configuration):
         ruby = Ruby()
         ruby.configs = {
             "rubyserver.yml": {"ruby_port": "3305"}
@@ -47,7 +47,7 @@ class TestRuby(unittest.TestCase):
 
     @patch("src.webserver.ruby.FileManager.write_to_file")
     @patch("src.webserver.ruby.run_playbook")
-    def test_write_configuration_and_run_playbook(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration(self, mock_run_playbook, mock_write_to_file):
         ruby = Ruby()
         ruby.CONFIG_FILES = ["rubyserver.yml"]
         ruby.configs = {
@@ -63,7 +63,7 @@ class TestRuby(unittest.TestCase):
 
     @patch("src.webserver.ruby.FileManager.write_to_file")
     @patch("src.webserver.ruby.run_playbook")
-    def test_write_configuration_and_run_playbook_when_write_to_file_raises_error(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_when_write_to_file_raises_error(self, mock_run_playbook, mock_write_to_file):
         ruby = Ruby()
         ruby.CONFIG_FILES = ["rubyserver.yml"]
         ruby.configs = {
@@ -77,7 +77,7 @@ class TestRuby(unittest.TestCase):
 
     @patch("src.webserver.ruby.FileManager.write_to_file")
     @patch("src.webserver.ruby.run_playbook")
-    def test_write_configuration_and_run_playbook_when_run_playbook_raises_error(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_when_run_playbook_raises_error(self, mock_run_playbook, mock_write_to_file):
         ruby = Ruby()
         ruby.CONFIG_FILES = ["rubyserver.yml"]
         ruby.configs = {

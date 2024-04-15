@@ -5,7 +5,7 @@ from unittest.mock import patch, call
 
 
 class TestPostgresql(unittest.TestCase):
-    def test_parameter_configuration_with_default_values(self):
+    def test_update_configuration_with_default_values(self):
         postgresql = Postgresql()
         postgresql.configs = {"mainserver.yml": {"postgresql_port": "5432"}}
         with patch("builtins.input", return_value=""):
@@ -14,7 +14,7 @@ class TestPostgresql(unittest.TestCase):
             postgresql.configs["mainserver.yml"]["postgresql_port"], "5432"
         )
 
-    def test_parameter_configuration_with_user_input(self):
+    def test_update_configuration_with_user_input(self):
         postgresql = Postgresql()
         postgresql.configs = {"mainserver.yml": {"postgresql_port": "5432"}}
         with patch("builtins.input", return_value="5434"):
@@ -23,7 +23,7 @@ class TestPostgresql(unittest.TestCase):
             postgresql.configs["mainserver.yml"]["postgresql_port"], "5434"
         )
 
-    def test_parameter_configuration_with_replica_server_acceptance(self):
+    def test_update_configuration_with_replica_server_acceptance(self):
         python = Postgresql(True)
         python.configs = {
             "postgresmainrvers.yml": {"python_port": "5432"},
@@ -38,7 +38,7 @@ class TestPostgresql(unittest.TestCase):
 
     @patch("src.database.postgresql.FileManager.write_to_file")
     @patch("src.database.postgresql.run_playbook")
-    def test_write_configuration_parameters_called_with_expected_arguments(
+    def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):
         postgresql = Postgresql(False, "staging")

@@ -5,14 +5,14 @@ from src.utils.utils import load_configuration
 
 
 class TestGolang(unittest.TestCase):
-    def test_parameter_configuration_with_default_values(self):
+    def test_update_configuration_with_default_values(self):
         golang = Golang()
         golang.configs = {"golangwebservers.yml": {"golang_port": "8080"}}
         with patch("builtins.input", return_value=""):
             golang.configs = load_configuration(golang.configs)
         self.assertEqual(golang.configs["golangwebservers.yml"]["golang_port"], "8080")
 
-    def test_parameter_configuration_with_user_input(self):
+    def test_update_configuration_with_user_input(self):
         golang = Golang()
         golang.configs = {"golangwebservers.yml": {"golang_port": "8080"}}
         with patch("builtins.input", return_value="8081"):
@@ -21,7 +21,7 @@ class TestGolang(unittest.TestCase):
 
     @patch("src.webserver.golang.FileManager.write_to_file")
     @patch("src.webserver.golang.run_playbook")
-    def test_write_configuration_parameters_called_with_expected_arguments(
+    def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):
         golang = Golang("local")

@@ -5,7 +5,7 @@ from unittest.mock import patch, call
 
 
 class TestMongodb(unittest.TestCase):
-    def test_parameter_configuration_with_default_values(self):
+    def test_update_configuration_with_default_values(self):
         mongodb = Mongodb()
         mongodb.configs = {"mongodbmainserver.yml": {"mongodb_port": "27017"}}
         with patch("builtins.input", return_value=""):
@@ -14,7 +14,7 @@ class TestMongodb(unittest.TestCase):
             mongodb.configs["mongodbmainserver.yml"]["mongodb_port"], "27017"
         )
 
-    def test_parameter_configuration_with_user_input(self):
+    def test_update_configuration_with_user_input(self):
         mongodb = Mongodb()
         mongodb.configs = {"mongodbmainserver.yml": {"mongodb_port": "27017"}}
         with patch("builtins.input", return_value="27018"):
@@ -23,7 +23,7 @@ class TestMongodb(unittest.TestCase):
             mongodb.configs["mongodbmainserver.yml"]["mongodb_port"], "27018"
         )
 
-    def test_parameter_configuration_with_replica_server_acceptance(self):
+    def test_update_configuration_with_replica_server_acceptance(self):
         mongodb = Mongodb(True)
         mongodb.configs = {
             "mongodbwebservers.yml": {"mongodb_port": "27017"},
@@ -40,7 +40,7 @@ class TestMongodb(unittest.TestCase):
 
     @patch("src.database.mongodb.FileManager.write_to_file")
     @patch("src.database.mongodb.run_playbook")
-    def test_write_configuration_parameters_called_with_expected_arguments(
+    def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):
         mongodb = Mongodb()
