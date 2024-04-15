@@ -28,13 +28,13 @@ class_map = {
     'redis': Redis
 }
 
-db_replica_count = {
+default_db_replica_count = {
     'postgresql': 1,
     'mysql': 1,
     'mongodb': 2
 }
 
-REMOTE_NODE_CONFIG = {
+REPLICA_CONFIG = {
             'ansible_connection': 'ssh',
             'ansible_host': '192.168.181.129',
             'ansible_port': 22,
@@ -54,17 +54,14 @@ class CustomSystem:
         self.webserver = self.get_class(user_selections.get("webserver"))
         self.database = self.get_class(user_selections.get('database'))
         self.caching_tool = self.get_class(user_selections.get("caching_tool"))
-        self.replica_server_acceptance = self.get_replica_setup_confirmation() if self.database else False
-        self.hosts = self.load_hosts()
-        self.replica_host_group = self.get_replica_host_group(user_selections.get('database')) if self.replica_server_acceptance else None
-        self.impacted_host_groups = self.get_impacted_host_groups()
+        self.is_replica_required = self.get_replica_setup_confirmation() if self.database else False
+        self.default_hosts = self.load_hosts()
+        self.replica_host_group = self.get_replica_host_group(user_selections.get('database')) if self.is_replica_required else None
+        self.impacted_host_groups = self.get_selected_host_groups()
         self.configs = self.load_generic_configuration()
-        if self.database:
-            self.database_obj = self.database(self.replica_server_acceptance, self.environment)
-        if self.webserver:
-            self.webserver_obj = self.webserver(self.environment)
-        if self.caching_tool:
-            self.caching_tool_obj = self.caching_tool(self.environment)
+        self.database_obj = self.database(self.is_replica_required, self.environment) if self.database else None
+        self.webserver_obj = self.webserver(self.environment) if self.webserver else None
+        self.caching_tool_obj = self.caching_tool(self.environment) if self.caching_tool else None
 
     def load_hosts(self):
         return self.file_manager.read_from_file(DIRECTORY_PATH[self.environment], "hosts.yml")
@@ -79,18 +76,18 @@ class CustomSystem:
         ).execute()
     
     def get_replica_host_group(self, database):
-        num_of_replica = db_replica_count[database] if database in db_replica_count else 0
+        num_of_replica = default_db_replica_count[database] if database in default_db_replica_count else 0
         replicas = {}
         for replica_count in range(1, num_of_replica + 1):
            replica_name = f"replica{replica_count}"
-           replicas[replica_name] = dict(REMOTE_NODE_CONFIG)
-        self.hosts['databasereplicaservers'] = {
+           replicas[replica_name] = dict(REPLICA_CONFIG)
+        self.default_hosts['databasereplicaservers'] = {
             'hosts': replicas
         }
 
-    def get_impacted_host_groups(self):
+    def get_selected_host_groups(self):
         host_groups = []
-        if self.replica_server_acceptance:
+        if self.is_replica_required:
             host_groups.append("databasereplicaservers")
         else:
             if self.database:
@@ -108,7 +105,7 @@ class CustomSystem:
         return configs
 
     def check_hosts(self):
-        self.hosts = hosts_configuration_parameters(self.impacted_host_groups, self.hosts)
+        self.default_hosts = hosts_configuration_parameters(self.impacted_host_groups, self.default_hosts)
 
     def check_configs(self):
         self.configs = load_configuration(self.configs)
@@ -120,7 +117,7 @@ class CustomSystem:
             self.caching_tool_obj.update_configuration()
 
     def apply_configuration(self):
-        self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.hosts)
+        self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.default_hosts)
         for config_file in self.configs:
             self.file_manager.write_to_file(
                 config_dir, config_file, self.configs[config_file]

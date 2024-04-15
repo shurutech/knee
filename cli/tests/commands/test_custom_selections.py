@@ -75,7 +75,7 @@ class TestCustomSelections(unittest.TestCase):
     def test_check_hosts(self, mock_hosts_configurations_parameters, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         custom_system = CustomSystem({})
-        custom_system.hosts = {
+        custom_system.default_hosts = {
             "webservers": {"hosts": {"webserver1": {"ansible_host": "10.10.12.1/23" }}}
         }
         custom_system.check_hosts()
