@@ -88,23 +88,23 @@ class TestMysql(unittest.TestCase):
     @patch("src.database.mysql.run_playbook")
     def test_write_configuration_and_run_playbook_when_replica_server_acceptance_is_true(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
-        mysql.replica_server_acceptance = True
+        mysql.is_replica_required = True
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"},
             "mysqlreplicaservers.yml": {"mysql_port": "3306"}
         }
         mysql.apply_configuration()
-        if mysql.replica_server_acceptance:
+        if mysql.is_replica_required:
             mock_run_playbook.assert_called_once_with("mysql_replica_server.yml", "local")
 
     @patch("src.database.mysql.FileManager.write_to_file")
     @patch("src.database.mysql.run_playbook")
     def test_write_configuration_and_run_playbook_when_replica_server_acceptance_is_false(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
-        mysql.replica_server_acceptance = False
+        mysql.is_replica_required = False
         mysql.configs = {
             "mysqlmainserver.yml": {"mysql_port": "3305"},
         }
         mysql.apply_configuration()
-        if not mysql.replica_server_acceptance:
+        if not mysql.is_replica_required:
             mock_run_playbook.assert_called_once_with("mysql_server.yml", "local")

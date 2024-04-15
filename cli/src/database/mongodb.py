@@ -6,13 +6,13 @@ config_dir = "playbooks/group_vars"
 
 
 class Mongodb:
-    def __init__(self, replica_server_acceptance=False, environment="local"):
+    def __init__(self, is_replica_required=False, environment="local"):
         self.config_files = ["mongodbmainserver.yml"]
         self.configs = {}
         self.environment = environment
-        self.replica_server_acceptance = replica_server_acceptance
+        self.is_replica_required = is_replica_required
         self.file_manager = FileManager()
-        if replica_server_acceptance:
+        if is_replica_required:
             self.config_files.append("mongodbreplicaservers.yml")
         for config_file in self.config_files:
             self.configs[config_file] = self.file_manager.read_from_file(
@@ -27,7 +27,7 @@ class Mongodb:
             self.file_manager.write_to_file(
                 config_dir, config_file, self.configs[config_file]
             )
-        if self.replica_server_acceptance:
+        if self.is_replica_required:
             run_playbook("mongodb_replica_server.yml", self.environment)
         else:    
             run_playbook("mongodb_server.yml", self.environment)

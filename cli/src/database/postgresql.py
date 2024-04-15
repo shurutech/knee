@@ -9,11 +9,11 @@ class Postgresql:
     config_files = ["postgresmainserver.yml"]
     configs = {}
 
-    def __init__(self, replica_server_acceptance=False, environment="local"):
+    def __init__(self, is_replica_required=False, environment="local"):
         self.file_manager = FileManager()
         self.environment = environment
-        self.replica_server_acceptance = replica_server_acceptance
-        if replica_server_acceptance:
+        self.is_replica_required = is_replica_required
+        if is_replica_required:
             self.config_files.append("postgresreplicaservers.yml")
         for config_file in self.config_files:
             self.configs[config_file] = self.file_manager.read_from_file(
@@ -29,5 +29,5 @@ class Postgresql:
                 config_dir, config_file, self.configs[config_file]
             )
         run_playbook("postgres_server.yml", self.environment)
-        if self.replica_server_acceptance:
+        if self.is_replica_required:
             run_playbook("postgres_replica_server.yml", self.environment)
