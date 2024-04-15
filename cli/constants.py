@@ -48,4 +48,6 @@ COMMANDS_DESCRIPTION_MAP = {
     "execute": "Prompts for user input, processes selected option, and executes related actions"
 }
 
+KNEE_VERSION = "Knee 1.0.0"
+
 
