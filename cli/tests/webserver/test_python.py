@@ -23,7 +23,7 @@ class TestPython(unittest.TestCase):
         mock_load_configuration.return_value = {
             "pythonwebservers.yml": {"python_port": "5434"}
         }
-        python.parameter_configuration()
+        python.update_configuration()
         self.assertEqual(python.configs["pythonwebservers.yml"]["python_port"], "5434")
 
     @patch("src.webserver.python.FileManager.write_to_file")

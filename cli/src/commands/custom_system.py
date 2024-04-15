@@ -113,11 +113,11 @@ class CustomSystem:
     def check_configs(self):
         self.configs = load_configuration(self.configs)
         if self.webserver:
-            self.webserver_obj.parameter_configuration()
+            self.webserver_obj.update_configuration()
         if self.database:
-            self.database_obj.parameter_configuration()
+            self.database_obj.update_configuration()
         if self.caching_tool:
-            self.caching_tool_obj.parameter_configuration()
+            self.caching_tool_obj.update_configuration()
 
     def apply_configuration(self):
         self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.hosts)

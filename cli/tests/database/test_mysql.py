@@ -23,7 +23,7 @@ class TestMysql(unittest.TestCase):
         mock_load_configuration.return_value = {
             "mysqlmainserver.yml": {"mysql_port": "3307"}
         }
-        mysql.parameter_configuration()
+        mysql.update_configuration()
         mock_load_configuration.assert_called_once_with( {
             "mysqlmainserver.yml": {"mysql_port": "3305"}
         })
@@ -40,7 +40,7 @@ class TestMysql(unittest.TestCase):
         }
         mock_load_configuration.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            mysql.parameter_configuration()
+            mysql.update_configuration()
         self.assertTrue('Error' in str(context.exception))
 
     @patch("src.database.mysql.FileManager.write_to_file")

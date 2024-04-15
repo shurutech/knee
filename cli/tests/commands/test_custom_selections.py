@@ -141,9 +141,9 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     @patch("src.commands.custom_system.load_configuration")
-    @patch("src.commands.custom_system.Python.parameter_configuration")
-    @patch("src.commands.custom_system.Postgresql.parameter_configuration")
-    @patch("src.commands.custom_system.Redis.parameter_configuration")
+    @patch("src.commands.custom_system.Python.update_configuration")
+    @patch("src.commands.custom_system.Postgresql.update_configuration")
+    @patch("src.commands.custom_system.Redis.update_configuration")
     def test_check_configs_with_db_class(self, mock_redis_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         user_selection = {
@@ -157,10 +157,10 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     @patch("src.commands.custom_system.load_configuration")
-    @patch("src.commands.custom_system.Python.parameter_configuration")
-    @patch("src.commands.custom_system.Postgresql.parameter_configuration")
-    @patch("src.commands.custom_system.Ruby.parameter_configuration")
-    @patch("src.commands.custom_system.Redis.parameter_configuration")
+    @patch("src.commands.custom_system.Python.update_configuration")
+    @patch("src.commands.custom_system.Postgresql.update_configuration")
+    @patch("src.commands.custom_system.Ruby.update_configuration")
+    @patch("src.commands.custom_system.Redis.update_configuration")
     def test_check_configs_with_db_and_server_class(self, mock_redis_parameter_configuration, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         user_selection = {
@@ -176,7 +176,7 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     @patch("src.commands.custom_system.load_configuration")
-    @patch("src.commands.custom_system.Redis.parameter_configuration")
+    @patch("src.commands.custom_system.Redis.update_configuration")
     def test_check_configs_with_additional_service(self, mock_ruby_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         user_selection = {
@@ -190,10 +190,10 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     @patch("src.commands.custom_system.load_configuration")
-    @patch("src.commands.custom_system.Python.parameter_configuration")
-    @patch("src.commands.custom_system.Postgresql.parameter_configuration")
-    @patch("src.commands.custom_system.Ruby.parameter_configuration")
-    @patch("src.commands.custom_system.Redis.parameter_configuration")
+    @patch("src.commands.custom_system.Python.update_configuration")
+    @patch("src.commands.custom_system.Postgresql.update_configuration")
+    @patch("src.commands.custom_system.Ruby.update_configuration")
+    @patch("src.commands.custom_system.Redis.update_configuration")
     def test_check_defaults(self,mock_redis_parameter_configuration, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.side_effect = [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
         user_selection = {

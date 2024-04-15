@@ -16,7 +16,7 @@ class Ruby:
                 config_dir, config_file
             )
 
-    def parameter_configuration(self):
+    def update_configuration(self):
         self.configs = load_configuration(self.configs)
 
     def apply_configuration(self):

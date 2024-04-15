@@ -25,7 +25,7 @@ class TestRuby(unittest.TestCase):
         mock_load_configuration.return_value = {
             "rubyserver.yml": {"ruby_port": "3307"}
         }
-        ruby.parameter_configuration()
+        ruby.update_configuration()
         mock_load_configuration.assert_called_once_with( {
             "rubyserver.yml": {"ruby_port": "3305"}
         })
@@ -42,7 +42,7 @@ class TestRuby(unittest.TestCase):
         }
         mock_load_configuration.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            ruby.parameter_configuration()
+            ruby.update_configuration()
         self.assertTrue('Error' in str(context.exception))
 
     @patch("src.webserver.ruby.FileManager.write_to_file")

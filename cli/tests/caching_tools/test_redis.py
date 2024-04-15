@@ -24,7 +24,7 @@ class TestRedis(unittest.TestCase):
         mock_load_configuration.return_value = {
             "rediswebservers.yml": {"redis_port": "6380"}
         }
-        redis.parameter_configuration()
+        redis.update_configuration()
         mock_load_configuration.assert_called_once_with( {
             "rediswebservers.yml": {"redis_port": "6379"}
         })
@@ -41,7 +41,7 @@ class TestRedis(unittest.TestCase):
         }
         mock_load_configuration.side_effect = Exception("Error")
         with self.assertRaises(Exception) as context:
-            redis.parameter_configuration()
+            redis.update_configuration()
         self.assertTrue('Error' in str(context.exception))
 
     @patch("src.caching_tools.redis.FileManager.write_to_file")
