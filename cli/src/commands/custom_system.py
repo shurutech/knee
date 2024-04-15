@@ -106,7 +106,7 @@ class CustomSystem:
     def set_hosts(self):
         self.default_hosts = hosts_configuration_parameters(self.impacted_host_groups, self.default_hosts)
 
-    def check_configs(self):
+    def set_configs(self):
         self.configs = load_configuration(self.configs)
         if self.webserver:
             self.webserver_obj.update_configuration()
@@ -129,7 +129,7 @@ class CustomSystem:
             self.caching_tool_obj.apply_configuration()
 
     def check_defaults(self):
-        self.check_configs()
+        self.set_configs()
         self.set_hosts()
         configuration_acceptance = inquirer.confirm(
             message=Prompt.CONFIGURATION_SETUP_CHANGE.value,

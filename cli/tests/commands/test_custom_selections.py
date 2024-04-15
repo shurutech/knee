@@ -123,7 +123,7 @@ class TestCustomSelections(unittest.TestCase):
         custom_system.webserver_obj = MagicMock()
         custom_system.database_obj = MagicMock()
         custom_system.caching_tool_obj = MagicMock()
-        custom_system.check_configs()
+        custom_system.set_configs()
         self.assertTrue(mock_load_configuration.called)
     
     @patch("src.webserver.python.FileManager.read_from_file")
@@ -135,7 +135,7 @@ class TestCustomSelections(unittest.TestCase):
             "webserver": "python",
         } 
         custom_system = CustomSystem(user_selections)
-        custom_system.check_configs()
+        custom_system.set_configs()
         self.assertTrue(mock_load_configuration.called)
 
     @patch("src.webserver.python.FileManager.read_from_file")
@@ -150,7 +150,7 @@ class TestCustomSelections(unittest.TestCase):
             "database": "postgresql"
         }
         custom_system = CustomSystem(user_selection)
-        custom_system.check_configs()
+        custom_system.set_configs()
         self.assertTrue(mock_postgresql_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
 
@@ -168,7 +168,7 @@ class TestCustomSelections(unittest.TestCase):
             "webserver": "ruby"
         }
         custom_system = CustomSystem(user_selection)
-        custom_system.check_configs()
+        custom_system.set_configs()
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_postgresql_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
@@ -183,7 +183,7 @@ class TestCustomSelections(unittest.TestCase):
             "caching_tool": "redis"
         }
         custom_system = CustomSystem(user_selection)
-        custom_system.check_configs()
+        custom_system.set_configs()
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
     
