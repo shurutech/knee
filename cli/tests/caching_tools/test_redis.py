@@ -1,10 +1,10 @@
-from src.additional_services.redis import Redis
+from src.caching_tools.redis import Redis
 import unittest
 from unittest.mock import patch, call
 
 
 class TestRedis(unittest.TestCase):
-    @patch("src.additional_services.redis.FileManager.read_from_file")
+    @patch("src.caching_tools.redis.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):
         mock_read_from_file.return_value = {
             "rediswebservers.yml": {"redis_port": "6379"}
@@ -15,7 +15,7 @@ class TestRedis(unittest.TestCase):
             "6379",
         )
 
-    @patch("src.additional_services.redis.load_configuration")
+    @patch("src.caching_tools.redis.load_configuration")
     def test_parameter_configuration(self, mock_load_configuration):
         redis = Redis()
         redis.configs = {
@@ -33,7 +33,7 @@ class TestRedis(unittest.TestCase):
               "6380",
           )
 
-    @patch("src.additional_services.redis.load_configuration")
+    @patch("src.caching_tools.redis.load_configuration")
     def test_parameter_configuration_raises_error(self, mock_load_configuration):
         redis = Redis()
         redis.configs = {
@@ -44,8 +44,8 @@ class TestRedis(unittest.TestCase):
             redis.parameter_configuration()
         self.assertTrue('Error' in str(context.exception))
 
-    @patch("src.additional_services.redis.FileManager.write_to_file")
-    @patch("src.additional_services.redis.run_playbook")
+    @patch("src.caching_tools.redis.FileManager.write_to_file")
+    @patch("src.caching_tools.redis.run_playbook")
     def test_write_configuration_and_run_playbook(self, mock_run_playbook, mock_write_to_file):
         redis = Redis()
         redis.CONFIG_FILES = ["redisserver.yml"]
@@ -58,9 +58,9 @@ class TestRedis(unittest.TestCase):
         )
         mock_run_playbook.assert_any_call("redis_server.yml", "local")
 
-    @patch("src.additional_services.redis.run_playbook")
-    @patch("src.additional_services.redis.FileManager.write_to_file")
-    @patch("src.additional_services.redis.FileManager.read_from_file")
+    @patch("src.caching_tools.redis.run_playbook")
+    @patch("src.caching_tools.redis.FileManager.write_to_file")
+    @patch("src.caching_tools.redis.FileManager.read_from_file")
     def test_write_configuration_and_run_playbook_when_it_is_called(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
@@ -69,9 +69,9 @@ class TestRedis(unittest.TestCase):
         redis.apply_configuration()
         mock_run_playbook.assert_called()
 
-    @patch("src.additional_services.redis.run_playbook")
-    @patch("src.additional_services.redis.FileManager.write_to_file")
-    @patch("src.additional_services.redis.FileManager.read_from_file")
+    @patch("src.caching_tools.redis.run_playbook")
+    @patch("src.caching_tools.redis.FileManager.write_to_file")
+    @patch("src.caching_tools.redis.FileManager.read_from_file")
     def test_write_configuration_and_run_playbook_raises_error(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
