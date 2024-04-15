@@ -1,6 +1,0 @@
-SELECT_VALID_OPTION_PROMPT = "Please select a valid option"
-SELECT_COMMAND_PROMPT = "Please select a command:"
-INVALID_OPTION_PROMPT = "Invalid option. Use '--help' for available options."
-COMMAND_NOT_AVAILABLE = "We are working hard for this command to be available soon!...."
-REPLICA_SETUP_PROMPT = "Do you want to setup a replica server? (Default= No) :: "
-CONFIGURATION_SETUP_CHANGE_PROMPT = "Do you want to change the configuration? (Default= Yes) :: "
