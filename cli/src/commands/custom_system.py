@@ -89,13 +89,12 @@ class CustomSystem:
         host_groups = []
         if self.is_replica_required:
             host_groups.append("databasereplicaservers")
-        else:
-            if self.database:
-                host_groups.append("databasemainserver")
-            if self.webserver:
-                host_groups.append("webservers")
-            if self.caching_tool:
-                host_groups.append("redisservers")
+        if self.database:
+            host_groups.append("databasemainserver")
+        if self.webserver:
+            host_groups.append("webservers")
+        if self.caching_tool:
+            host_groups.append("redisservers")
         return host_groups
 
     def load_generic_configuration(self):
@@ -104,7 +103,7 @@ class CustomSystem:
             configs[config_file] = self.file_manager.read_from_file(config_dir, config_file)
         return configs
 
-    def check_hosts(self):
+    def set_hosts(self):
         self.default_hosts = hosts_configuration_parameters(self.impacted_host_groups, self.default_hosts)
 
     def check_configs(self):
@@ -131,7 +130,7 @@ class CustomSystem:
 
     def check_defaults(self):
         self.check_configs()
-        self.check_hosts()
+        self.set_hosts()
         configuration_acceptance = inquirer.confirm(
             message=Prompt.CONFIGURATION_SETUP_CHANGE.value,
             default=True,

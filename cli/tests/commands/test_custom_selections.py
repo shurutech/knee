@@ -72,13 +72,13 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     @patch("src.commands.custom_system.hosts_configuration_parameters")
-    def test_check_hosts(self, mock_hosts_configurations_parameters, mock_confirm, mock_read_from_file):
+    def test_set_hosts(self, mock_hosts_configurations_parameters, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         custom_system = CustomSystem({})
         custom_system.default_hosts = {
             "webservers": {"hosts": {"webserver1": {"ansible_host": "10.10.12.1/23" }}}
         }
-        custom_system.check_hosts()
+        custom_system.set_hosts()
         expected_args = (
             custom_system.impacted_host_groups,
             {
@@ -92,7 +92,7 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     @patch("src.commands.custom_system.FileManager.write_to_file")
-    def test_write_configuration_and_run_playbook_when_it_is_called(self, mock_write_to_file, mock_confirm, mock_read_from_file):
+    def test_apply_configuration_when_it_is_called(self, mock_write_to_file, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         custom_system = CustomSystem({})
         custom_system.environment = "staging"
