@@ -79,7 +79,6 @@ class CustomSystem:
         ).execute()
     
     def get_replica_host_group(self, database):
-        breakpoint()
         num_of_replica = db_replica_count[database] if database in db_replica_count else 0
         replicas = {}
         for replica_count in range(1, num_of_replica + 1):
