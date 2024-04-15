@@ -43,8 +43,8 @@ def execute():
     else:
         typer.secho(Prompt.COMMAND_NOT_AVAILABLE.value, bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
     environment = get_environment()
-    custom_inputs = CustomSystem(environment=environment, user_selections=user_selections)
-    custom_inputs.check_defaults()
+    custom_system = CustomSystem(environment=environment, user_selections=user_selections)
+    custom_system.check_defaults()
     typer.echo("Done!")
 
 if __name__ == "__main__":
