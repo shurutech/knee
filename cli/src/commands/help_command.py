@@ -1,9 +1,11 @@
 import typer
-from constants import SUBCOMMAND_DESCRIPTION_MAP, COMMANDS_DESCRIPTION_MAP
+from constants import SUBCOMMAND_DESCRIPTION_MAP, COMMANDS_DESCRIPTION_MAP, KNEE_VERSION
+from src.utils.constants.prompt import Prompt
+
 
 def version_callback(value: bool):
     if value:
-        typer.echo("Knee 1.0.0")
+        typer.echo(KNEE_VERSION)
         raise typer.Exit()
 
 def command_callback(value: bool):
@@ -18,9 +20,9 @@ def command_callback(value: bool):
 def help_callback(value: bool):
     if value:
         typer.echo(typer.style("Options:", fg=typer.colors.BRIGHT_MAGENTA))
-        typer.echo("-v, --version : Show the version and exit.")
-        typer.echo("-c, --command : Show the commands and exit.")
-        typer.echo("-h, --help : Show this message and exit.")
+        typer.echo(Prompt.SHOW_VERSION_MESSAGE)
+        typer.echo(Prompt.SHOW_COMMAND_MESSAGE)
+        typer.echo(Prompt.SHOW_HELP_MESSAGE)
         typer.echo()
         typer.echo(typer.style("Commands:", fg=typer.colors.BRIGHT_MAGENTA))
         for command, description in COMMANDS_DESCRIPTION_MAP.items():
