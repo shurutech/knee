@@ -11,9 +11,10 @@ from src.database.mongodb import Mongodb
 from src.webserver.nodejs import Nodejs
 from src.database.mysql import Mysql
 from src.webserver.ruby import Ruby
-from src.additional_services.redis import Redis
+from src.caching_tools.redis import Redis
 from constants import DIRECTORY_PATH
-import src.utils.constants.message_constants as MESSAGE
+from src.utils.constants.prompt import Prompt
+from src.utils.constants.enum import Environment
 
 
 class_map = {
@@ -47,23 +48,23 @@ config_dir = "playbooks/group_vars"
 class CustomSystem:
     CONFIG_FILES = ["all.yml"]
     
-    def __init__(self, environment="staging", db_client_class=None, server_class=None, additional_service=None):
+    def __init__(self, user_selections, environment=Environment.LOCAL.value):
         self.environment = environment
         self.file_manager = FileManager()
-        self.server_class = self.get_class(server_class)
-        self.db_class = self.get_class(db_client_class)
-        self.additional_service = self.get_class(additional_service)
-        self.replica_server_acceptance = self.get_replica_setup_confirmation() if self.db_class else False
+        self.webserver = self.get_class(user_selections.get("webserver"))
+        self.database = self.get_class(user_selections.get('database'))
+        self.caching_tool = self.get_class(user_selections.get("caching_tool"))
+        self.replica_server_acceptance = self.get_replica_setup_confirmation() if self.database else False
         self.hosts = self.load_hosts()
-        self.replica_host_group = self.get_replica_host_group(db_client_class) if self.replica_server_acceptance else None
+        self.replica_host_group = self.get_replica_host_group(user_selections.get('database')) if self.replica_server_acceptance else None
         self.impacted_host_groups = self.get_impacted_host_groups()
         self.configs = self.load_generic_configuration()
-        if self.db_class:
-            self.database = self.db_class(self.replica_server_acceptance, self.environment)
-        if self.server_class:
-            self.server = self.server_class(self.environment)
-        if self.additional_service:
-            self.additional_service = self.additional_service(self.environment)
+        if self.database:
+            self.database_obj = self.database(self.replica_server_acceptance, self.environment)
+        if self.webserver:
+            self.webserver_obj = self.webserver(self.environment)
+        if self.caching_tool:
+            self.caching_tool_obj = self.caching_tool(self.environment)
 
     def load_hosts(self):
         return self.file_manager.read_from_file(DIRECTORY_PATH[self.environment], "hosts.yml")
@@ -73,12 +74,13 @@ class CustomSystem:
 
     def get_replica_setup_confirmation(self):
         return inquirer.confirm(
-            message=MESSAGE.REPLICA_SETUP_PROMPT,
+            message=Prompt.REPLICA_SETUP.value,
             default=False,
         ).execute()
     
-    def get_replica_host_group(self, db_client_class):
-        num_of_replica = db_replica_count[db_client_class] if db_client_class in db_replica_count else 0
+    def get_replica_host_group(self, database):
+        breakpoint()
+        num_of_replica = db_replica_count[database] if database in db_replica_count else 0
         replicas = {}
         for replica_count in range(1, num_of_replica + 1):
            replica_name = f"replica{replica_count}"
@@ -92,11 +94,11 @@ class CustomSystem:
         if self.replica_server_acceptance:
             host_groups.append("databasereplicaservers")
         else:
-            if self.db_class:
+            if self.database:
                 host_groups.append("databasemainserver")
-            if self.server_class:
+            if self.webserver:
                 host_groups.append("webservers")
-            if self.additional_service:
+            if self.caching_tool:
                 host_groups.append("redisservers")
         return host_groups
 
@@ -111,12 +113,12 @@ class CustomSystem:
 
     def check_configs(self):
         self.configs = load_configuration(self.configs)
-        if self.server_class:
-            self.server.parameter_configuration()
-        if self.db_class:
-            self.database.parameter_configuration()
-        if self.additional_service:
-            self.additional_service.parameter_configuration()
+        if self.webserver:
+            self.webserver_obj.parameter_configuration()
+        if self.database:
+            self.database_obj.parameter_configuration()
+        if self.caching_tool:
+            self.caching_tool_obj.parameter_configuration()
 
     def apply_configuration(self):
         self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.hosts)
@@ -124,18 +126,18 @@ class CustomSystem:
             self.file_manager.write_to_file(
                 config_dir, config_file, self.configs[config_file]
             )
-        if self.db_class:
-            self.database.apply_configuration()
-        if self.server_class:
-            self.server.apply_configuration()
-        if self.additional_service:
-            self.additional_service.apply_configuration()
+        if self.database:
+            self.database_obj.apply_configuration()
+        if self.webserver:
+            self.webserver_obj.apply_configuration()
+        if self.caching_tool:
+            self.caching_tool_obj.apply_configuration()
 
     def check_defaults(self):
         self.check_configs()
         self.check_hosts()
         configuration_acceptance = inquirer.confirm(
-            message=MESSAGE.CONFIGURATION_SETUP_CHANGE_PROMPT,
+            message=Prompt.CONFIGURATION_SETUP_CHANGE.value,
             default=True,
         ).execute()
         if configuration_acceptance:
