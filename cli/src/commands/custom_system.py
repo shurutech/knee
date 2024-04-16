@@ -126,12 +126,17 @@ class CustomSystem:
             self.caching_tool_obj.apply_configuration()
 
     def set_and_execute_configurations(self):
-        self.set_configs()
-        self.set_hosts()
-        configuration_acceptance = inquirer.confirm(
-            message=Prompt.CONFIGURATION_SETUP_CHANGE.value,
-            default=True,
-        ).execute()
-        if configuration_acceptance:
-            self.apply_configuration()
+        try:
+            self.set_configs()
+            self.set_hosts()
+            configuration_acceptance = inquirer.confirm(
+                message=Prompt.CONFIGURATION_SETUP_CHANGE.value,
+                default=True,
+            ).execute()
+            if configuration_acceptance:
+                self.apply_configuration()
+            return True
+        except Exception as e:
+            return False
+            
 
