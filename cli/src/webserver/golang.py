@@ -1,12 +1,12 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, GolangFile
 from constants import VARIABLE_DIR_PATH
 
 
 class Golang:
-    config_files = ["golangwebservers.yml"]
+    config_files = [GolangFile.GOLANG_WEBSERVERS.value]
     configs = {}
 
     def __init__(self, environment=Environment.LOCAL.value):
@@ -25,5 +25,5 @@ class Golang:
             self.file_manager.write_to_file(
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
-        run_playbook("golang_server.yml", self.environment)
+        run_playbook(GolangFile.GOLANG_SERVER_PLAYBOOK.value, self.environment)
 

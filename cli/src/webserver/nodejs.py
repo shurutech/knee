@@ -1,12 +1,12 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, NodejsFile
 from constants import VARIABLE_DIR_PATH
 
 
 class Nodejs:
-    config_files = ["nodewebservers.yml"]
+    config_files = [NodejsFile.NODEJS_WEBSERVERS.value]
 
     def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
@@ -21,5 +21,5 @@ class Nodejs:
     def apply_configuration(self):
         for config_file in self.config_files:
             self.file_manager.write_to_file(VARIABLE_DIR_PATH, config_file, self.configs[config_file])
-        run_playbook("node_server.yml", self.environment)
+        run_playbook(NodejsFile.NODEJS_SERVER_PLAYBOOK.value, self.environment)
 

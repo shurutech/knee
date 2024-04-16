@@ -1,12 +1,12 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, RubyFile, WebserverBaseFile
 from constants import VARIABLE_DIR_PATH
 
 
 class Ruby:
-    CONFIG_FILES = ["rubywebservers.yml"]
+    CONFIG_FILES = [RubyFile.RUBY_WEBSERVERS.value]
     def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
         self.file_manager = FileManager()
@@ -24,6 +24,6 @@ class Ruby:
             self.file_manager.write_to_file(
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
-        run_playbook("webserver_base.yml", self.environment)    
-        run_playbook("ruby_webservers.yml", self.environment)
+        run_playbook(WebserverBaseFile.WEBSERVER_BASE_PLAYBOOK.value, self.environment)    
+        run_playbook(RubyFile.RUBY_SERVER_PLAYBOOK.value, self.environment)
 

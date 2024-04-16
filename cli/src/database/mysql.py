@@ -1,13 +1,13 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, MysqlFile
 from constants import VARIABLE_DIR_PATH
 
 
 class Mysql:
-    CONFIG_FILES = ["mysqlmainserver.yml"]
-    REPLICA_CONFIG_FILES = ["mysqlmainserver.yml", "mysqlreplicaservers.yml"]
+    CONFIG_FILES = [MysqlFile.MYSQL_MAIN_SERVER.value]
+    REPLICA_CONFIG_FILES = [MysqlFile.MYSQL_MAIN_SERVER, MysqlFile.MYSQL_REPLICA_SERVER.value]
 
     def __init__(self, is_replica_required=False, environment=Environment.LOCAL.value):
         self.configs = {}
@@ -29,7 +29,7 @@ class Mysql:
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         if self.is_replica_required:
-            run_playbook("mysql_replica_server.yml", self.environment)
+            run_playbook(MysqlFile.MYSQL_REPLICA_SERVER_PLAYBOOK.value, self.environment)
         else:
-            run_playbook("mysql_server.yml", self.environment)
+            run_playbook(MysqlFile.MYSQL_SERVER_PLAYBOOK.value, self.environment)
 

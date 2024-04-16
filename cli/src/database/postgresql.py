@@ -1,12 +1,12 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, PostgresqlFile
 from constants import VARIABLE_DIR_PATH
 
 
 class Postgresql:
-    config_files = ["postgresmainserver.yml"]
+    config_files = [PostgresqlFile.POSTGRESQL_MAIN_SERVER.value]
     configs = {}
 
     def __init__(self, is_replica_required=False, environment=Environment.LOCAL.value):
@@ -14,7 +14,7 @@ class Postgresql:
         self.environment = environment
         self.is_replica_required = is_replica_required
         if is_replica_required:
-            self.config_files.append("postgresreplicaservers.yml")
+            self.config_files.append(PostgresqlFile.POSTGRESQL_REPLICA_SERVER.value)
         for config_file in self.config_files:
             self.configs[config_file] = self.file_manager.read_from_file(
                 VARIABLE_DIR_PATH, config_file
@@ -28,7 +28,7 @@ class Postgresql:
             self.file_manager.write_to_file(
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
-        run_playbook("postgres_server.yml", self.environment)
+        run_playbook(PostgresqlFile.POSTGRESQL_SERVER_PLAYBOOK.value, self.environment)
         if self.is_replica_required:
-            run_playbook("postgres_replica_server.yml", self.environment)
+            run_playbook(PostgresqlFile.POSTGRESQL_REPLICA_SERVER_PLAYBOOK.value, self.environment)
 
