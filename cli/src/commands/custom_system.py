@@ -12,7 +12,7 @@ from src.webserver.nodejs import Nodejs
 from src.database.mysql import Mysql
 from src.webserver.ruby import Ruby
 from src.caching_tools.redis import Redis
-from constants import DIRECTORY_PATH
+from constants import DIRECTORY_PATH, VARIABLE_DIR_PATH
 from src.utils.constants.prompt import Prompt
 from src.utils.constants.enum import Environment
 
@@ -42,7 +42,7 @@ REPLICA_CONFIG = {
             'ansible_user': 'vagrant',
         }
 
-config_dir = "playbooks/group_vars"
+config_dir = VARIABLE_DIR_PATH
 
 
 class CustomSystem:

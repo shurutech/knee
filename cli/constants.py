@@ -3,6 +3,8 @@ LOCAL_HOSTS_DIR = "inventories/local"
 STAGING_HOSTS_DIR = "inventories/staging"
 PRODUCTION_HOSTS_DIR = "inventories/production"
 
+VARIABLE_DIR_PATH = "playbooks/group_vars"
+
 DIRECTORY_PATH = {
     "staging": STAGING_HOSTS_DIR,
     "local": LOCAL_HOSTS_DIR,

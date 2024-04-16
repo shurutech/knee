@@ -2,9 +2,10 @@ from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
 from src.utils.constants.enum import Environment
+from constants import VARIABLE_DIR_PATH
 
 
-config_dir = "playbooks/group_vars"
+config_dir = VARIABLE_DIR_PATH
 
 class Mysql:
     CONFIG_FILES = ["mysqlmainserver.yml"]
