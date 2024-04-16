@@ -6,13 +6,13 @@ from constants import VARIABLE_DIR_PATH
 
 
 class Golang:
-    config_files = [GolangFile.GOLANG_WEBSERVERS.value]
+    CONFIG_FILES = [GolangFile.GOLANG_WEBSERVERS.value]
 
     def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
         self.environment = environment
         self.file_manager = FileManager()
-        for config_file in self.config_files:
+        for config_file in self.CONFIG_FILES:
             self.configs[config_file] = self.file_manager.read_from_file(
                 VARIABLE_DIR_PATH, config_file
             )
@@ -21,7 +21,7 @@ class Golang:
         self.configs = load_configuration(self.configs)
 
     def apply_configuration(self):
-        for config_file in self.config_files:
+        for config_file in self.CONFIG_FILES:
             self.file_manager.write_to_file(
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
