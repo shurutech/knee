@@ -125,7 +125,7 @@ class CustomSystem:
         if self.caching_tool:
             self.caching_tool_obj.apply_configuration()
 
-    def check_defaults(self):
+    def set_and_execute_configurations(self):
         self.set_configs()
         self.set_hosts()
         configuration_acceptance = inquirer.confirm(

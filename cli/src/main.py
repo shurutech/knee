@@ -47,7 +47,7 @@ def execute():
 
     environment = get_environment()
     custom_system = CustomSystem(environment=environment, user_selections=user_selections)
-    custom_system.check_defaults()
+    custom_system.set_and_execute_configurations()
     typer.echo("Done!")
 
 if __name__ == "__main__":

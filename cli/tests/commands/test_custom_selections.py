@@ -194,7 +194,7 @@ class TestCustomSelections(unittest.TestCase):
     @patch("src.commands.custom_system.Postgresql.update_configuration")
     @patch("src.commands.custom_system.Ruby.update_configuration")
     @patch("src.commands.custom_system.Redis.update_configuration")
-    def test_check_defaults(self,mock_redis_parameter_configuration, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
+    def test_set_and_execute_configurations(self,mock_redis_parameter_configuration, mock_ruby_parameter_configuration, mock_postgresql_parameter_configuration, mock_python_parameter_configuration, mock_load_configuration, mock_confirm, mock_read_from_file):
         mock_confirm.side_effect = [MagicMock(execute=lambda: False), MagicMock(execute=lambda: False)]
         user_selection = {
             "database": "postgresql",
@@ -202,7 +202,7 @@ class TestCustomSelections(unittest.TestCase):
             "caching_tool": "redis"
         }
         custom_system = CustomSystem(user_selection)
-        custom_system.check_defaults()
+        custom_system.set_and_execute_configurations()
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_postgresql_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
