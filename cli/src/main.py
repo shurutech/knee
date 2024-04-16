@@ -1,7 +1,7 @@
 import typer
 from InquirerPy import inquirer
 from commands.custom_system import CustomSystem
-from constants import SUBCOMMAND_DESCRIPTION_MAP, COMMAND_SERVICE_MAP
+from constants import COMMAND_SERVICE_MAP
 from input_selection import custom_selections, get_environment, initial_input_selection
 from callback import version_callback, help_callback, command_callback
 from utils.constants.prompt import Prompt
