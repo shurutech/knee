@@ -25,14 +25,14 @@ class TestGolang(unittest.TestCase):
         self, mock_run_playbook, mock_write_to_file
     ):
         golang = Golang("local")
-        Golang.configs = {"golangwebservers.yml": {"golang_version": "1.21.3"}}
+        golang.configs = {"golangwebservers.yml": {"golang_version": "1.21.3"}}
         golang.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",
             "golangwebservers.yml",
             {
-                "golang_version": Golang.configs["golangwebservers.yml"][
+                "golang_version": golang.configs["golangwebservers.yml"][
                     "golang_version"
                 ]
             },

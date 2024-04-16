@@ -7,9 +7,9 @@ from constants import VARIABLE_DIR_PATH
 
 class Golang:
     config_files = [GolangFile.GOLANG_WEBSERVERS.value]
-    configs = {}
 
     def __init__(self, environment=Environment.LOCAL.value):
+        self.configs = {}
         self.environment = environment
         self.file_manager = FileManager()
         for config_file in self.config_files:
