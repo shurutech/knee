@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 from src.database.mysql import Mysql
 
+
 class TestMysql(unittest.TestCase):
     @patch("src.database.mysql.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):

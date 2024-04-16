@@ -5,7 +5,6 @@ from src.utils.constants.enum import Environment, MongodbFile
 from constants import VARIABLE_DIR_PATH
 
 
-
 class Mongodb:
     CONFIG_FILES = [MongodbFile.MONGODB_MAIN_SERVER.value]
     REPLICA_CONFIG_FILES = [MongodbFile.MONGODB_MAIN_SERVER.value, MongodbFile.MONGODB_REPLICA_SERVER.value]

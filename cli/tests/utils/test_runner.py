@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from src.utils.runner import run_playbook
 
+
 class TestRunner(unittest.TestCase):
     @patch("ansible_runner.run")
     def test_run_playbook_success(self, mock_run):
