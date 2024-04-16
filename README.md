@@ -16,7 +16,7 @@ Before you start using Knee, it's important to ensure you have the following pre
     - This requires a suitable operating system and sufficient hardware capabilities for your tasks.
 
     - Target System should be Ubuntu for the intended installation.
-
+    - For replication, MongoDB requires 2 additional hosts, MySQL and PostgreSQL require 1 additional host each.
 ## Getting Started
 
 - Ensure Python is Installed:  
@@ -29,13 +29,13 @@ Before you start using Knee, it's important to ensure you have the following pre
     git clone https://github.com/shurutech/knee.git
     ```
 
-- Create virtualenv
+- Create virtualenv:
   
   ```bash
   virtualenv -p python3.12.x venv
   ```
 
-- Activate Virtualenv
+- Activate Virtualenv:
 
     ```bash
     source venv/bin/activate
@@ -46,11 +46,11 @@ Before you start using Knee, it's important to ensure you have the following pre
     ```bash
     pip install -r requirements.txt
     ```
-
-- Execute the Command:
+- Execute command to initialize and run setup:
     ```bash
     ./knee execute
     ```
+
 
 **Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
 
@@ -96,6 +96,8 @@ We plan to continue building after the initial release and look forward to the f
   - **Adaptation to Trends:** Staying updated with emerging technologies to meet the changing needs of users.
 
   - **Interactive Input:** Enable users to input configuration details directly via command-line.
+
+  - **Flexible replica count:** Option for the users to input number of replica host.
     
 ## Contribution Guidelines
 We value the contributions of each developer and encourage you to share your ideas, improvements, and fixes with us. To ensure a smooth collaboration process, please follow these guidelines.
