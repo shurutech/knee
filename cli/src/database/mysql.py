@@ -1,15 +1,16 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
+from src.utils.constants.enum import Environment
+
 
 config_dir = "playbooks/group_vars"
-
 
 class Mysql:
     CONFIG_FILES = ["mysqlmainserver.yml"]
     REPLICA_CONFIG_FILES = ["mysqlmainserver.yml", "mysqlreplicaservers.yml"]
 
-    def __init__(self, is_replica_required=False, environment="local"):
+    def __init__(self, is_replica_required=False, environment=Environment.LOCAL.value):
         self.configs = {}
         self.is_replica_required = is_replica_required
         self.config_files = self.CONFIG_FILES if not is_replica_required else self.REPLICA_CONFIG_FILES
@@ -32,4 +33,4 @@ class Mysql:
             run_playbook("mysql_replica_server.yml", self.environment)
         else:
             run_playbook("mysql_server.yml", self.environment)
-        
+

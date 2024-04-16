@@ -1,12 +1,13 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
+from src.utils.constants.enum import Environment
+
 
 config_dir = "playbooks/group_vars"
 
-
 class Mongodb:
-    def __init__(self, is_replica_required=False, environment="local"):
+    def __init__(self, is_replica_required=False, environment=Environment.LOCAL.value):
         self.config_files = ["mongodbmainserver.yml"]
         self.configs = {}
         self.environment = environment

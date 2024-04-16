@@ -1,14 +1,15 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
+from src.utils.constants.enum import Environment
+
 
 config_dir = "playbooks/group_vars"
-
 
 class Python:
     CONFIG_FILES = ["pythonwebservers.yml"]
 
-    def __init__(self, environment="local"):
+    def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
         self.environment = environment
         self.file_manager = FileManager()
@@ -27,3 +28,4 @@ class Python:
             )
         run_playbook("webserver_base.yml", self.environment)
         run_playbook("python_webservers.yml", self.environment)
+

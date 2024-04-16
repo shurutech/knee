@@ -1,13 +1,14 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
+from src.utils.constants.enum import Environment
+
 
 config_dir = "playbooks/group_vars"
 
-
 class Ruby:
     CONFIG_FILES = ["rubywebservers.yml"]
-    def __init__(self, environment="local"):
+    def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
         self.file_manager = FileManager()
         self.environment = environment
@@ -26,3 +27,4 @@ class Ruby:
             )
         run_playbook("webserver_base.yml", self.environment)    
         run_playbook("ruby_webservers.yml", self.environment)
+

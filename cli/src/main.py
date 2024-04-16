@@ -7,6 +7,7 @@ from callback import version_callback, help_callback, command_callback
 from utils.constants.prompt import Prompt
 from utils.constants.enum import InitialOption
 
+
 app = typer.Typer()
 
 @app.callback(invoke_without_command=True)

@@ -1,15 +1,16 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
+from src.utils.constants.enum import Environment
+
 
 config_dir = "playbooks/group_vars"
-
 
 class Golang:
     config_files = ["golangwebservers.yml"]
     configs = {}
 
-    def __init__(self, environment="local"):
+    def __init__(self, environment=Environment.LOCAL.value):
         self.environment = environment
         self.file_manager = FileManager()
         for config_file in self.config_files:
@@ -26,3 +27,4 @@ class Golang:
                 config_dir, config_file, self.configs[config_file]
             )
         run_playbook("golang_server.yml", self.environment)
+
