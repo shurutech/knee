@@ -5,8 +5,6 @@ from src.utils.constants.enum import Environment
 from constants import VARIABLE_DIR_PATH
 
 
-config_dir = VARIABLE_DIR_PATH
-
 class Golang:
     config_files = ["golangwebservers.yml"]
     configs = {}
@@ -16,7 +14,7 @@ class Golang:
         self.file_manager = FileManager()
         for config_file in self.config_files:
             self.configs[config_file] = self.file_manager.read_from_file(
-                config_dir, config_file
+                VARIABLE_DIR_PATH, config_file
             )
 
     def update_configuration(self):
@@ -25,7 +23,7 @@ class Golang:
     def apply_configuration(self):
         for config_file in self.config_files:
             self.file_manager.write_to_file(
-                config_dir, config_file, self.configs[config_file]
+                VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         run_playbook("golang_server.yml", self.environment)
 

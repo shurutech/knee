@@ -5,8 +5,6 @@ from src.utils.constants.enum import Environment
 from constants import VARIABLE_DIR_PATH
 
 
-config_dir = VARIABLE_DIR_PATH
-
 class Postgresql:
     config_files = ["postgresmainserver.yml"]
     configs = {}
@@ -19,7 +17,7 @@ class Postgresql:
             self.config_files.append("postgresreplicaservers.yml")
         for config_file in self.config_files:
             self.configs[config_file] = self.file_manager.read_from_file(
-                config_dir, config_file
+                VARIABLE_DIR_PATH, config_file
             )
 
     def update_configuration(self):
@@ -28,7 +26,7 @@ class Postgresql:
     def apply_configuration(self):
         for config_file in self.config_files:
             self.file_manager.write_to_file(
-                config_dir, config_file, self.configs[config_file]
+                VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         run_playbook("postgres_server.yml", self.environment)
         if self.is_replica_required:

@@ -5,8 +5,6 @@ from src.utils.constants.enum import Environment
 from constants import VARIABLE_DIR_PATH
 
 
-config_dir = VARIABLE_DIR_PATH
-
 class Ruby:
     CONFIG_FILES = ["rubywebservers.yml"]
     def __init__(self, environment=Environment.LOCAL.value):
@@ -15,7 +13,7 @@ class Ruby:
         self.environment = environment
         for config_file in self.CONFIG_FILES:
             self.configs[config_file] = self.file_manager.read_from_file(
-                config_dir, config_file
+                VARIABLE_DIR_PATH, config_file
             )
 
     def update_configuration(self):
@@ -24,7 +22,7 @@ class Ruby:
     def apply_configuration(self):
         for config_file in self.CONFIG_FILES:
             self.file_manager.write_to_file(
-                config_dir, config_file, self.configs[config_file]
+                VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         run_playbook("webserver_base.yml", self.environment)    
         run_playbook("ruby_webservers.yml", self.environment)

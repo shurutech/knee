@@ -5,8 +5,6 @@ from src.utils.constants.enum import Environment
 from constants import VARIABLE_DIR_PATH
 
 
-config_dir = VARIABLE_DIR_PATH
-
 class Python:
     CONFIG_FILES = ["pythonwebservers.yml"]
 
@@ -16,7 +14,7 @@ class Python:
         self.file_manager = FileManager()
         for config_file in self.CONFIG_FILES:
             self.configs[config_file] = self.file_manager.read_from_file(
-                config_dir, config_file
+                VARIABLE_DIR_PATH, config_file
             )
 
     def update_configuration(self):
@@ -25,7 +23,7 @@ class Python:
     def apply_configuration(self):
         for config_file in self.CONFIG_FILES:
             self.file_manager.write_to_file(
-                config_dir, config_file, self.configs[config_file]
+                VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         run_playbook("webserver_base.yml", self.environment)
         run_playbook("python_webservers.yml", self.environment)

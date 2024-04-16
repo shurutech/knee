@@ -14,7 +14,7 @@ from src.webserver.ruby import Ruby
 from src.caching_tools.redis import Redis
 from constants import DIRECTORY_PATH, VARIABLE_DIR_PATH
 from src.utils.constants.prompt import Prompt
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, HostGroup
 
 
 class_map = {
@@ -41,9 +41,6 @@ REPLICA_CONFIG = {
             'ansible_ssh_private_key_file': '.vagrant/machines/vm2/vmware_fusion/private_key',
             'ansible_user': 'vagrant',
         }
-
-config_dir = VARIABLE_DIR_PATH
-
 
 class CustomSystem:
     CONFIG_FILES = ["all.yml"]
@@ -81,26 +78,26 @@ class CustomSystem:
         for replica_count in range(1, num_of_replica + 1):
            replica_name = f"replica{replica_count}"
            replicas[replica_name] = dict(REPLICA_CONFIG)
-        self.default_hosts['databasereplicaservers'] = {
+        self.default_hosts[HostGroup.DATABASE_REPLICA_SERVER.value] = {
             'hosts': replicas
         }
 
     def get_selected_host_groups(self):
         host_groups = []
         if self.is_replica_required:
-            host_groups.append("databasereplicaservers")
+            host_groups.append(HostGroup.DATABASE_REPLICA_SERVER.value)
         if self.database:
-            host_groups.append("databasemainserver")
+            host_groups.append(HostGroup.DATABASE_MAIN_SERVER.value)
         if self.webserver:
-            host_groups.append("webservers")
+            host_groups.append(HostGroup.WEB_SERVER.value)
         if self.caching_tool:
-            host_groups.append("redisservers")
+            host_groups.append(HostGroup.REDIS_SERVER.value)
         return host_groups
 
     def load_generic_configuration(self):
         configs = {}
         for config_file in self.CONFIG_FILES:
-            configs[config_file] = self.file_manager.read_from_file(config_dir, config_file)
+            configs[config_file] = self.file_manager.read_from_file(VARIABLE_DIR_PATH, config_file)
         return configs
 
     def set_hosts(self):
@@ -119,7 +116,7 @@ class CustomSystem:
         self.file_manager.write_to_file(DIRECTORY_PATH[self.environment], "hosts.yml", self.default_hosts)
         for config_file in self.configs:
             self.file_manager.write_to_file(
-                config_dir, config_file, self.configs[config_file]
+                VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         if self.database:
             self.database_obj.apply_configuration()
