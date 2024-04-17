@@ -77,12 +77,4 @@
       name: "{{ mongodb_database_user}}"
       password: "{{ mongodb_database_password }}"
       roles: "root"
-
-
       
-        
-      
-
-    
-
-    

@@ -50,5 +50,3 @@
       service:
         name: mysql
         state: restarted
-
-      

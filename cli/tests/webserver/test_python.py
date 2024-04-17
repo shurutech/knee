@@ -72,5 +72,4 @@ class TestPython(unittest.TestCase):
         python = Python()
         with self.assertRaises(Exception) as context:
             python.apply_configuration()
-
         self.assertTrue("An error occurred" in str(context.exception))

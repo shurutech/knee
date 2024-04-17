@@ -70,3 +70,4 @@
 
     - name: Create a virtual environment
       command: /home/{{ user_name }}/.pyenv/versions/{{ python_version }}/bin/python -m venv "/var/opt/{{ project_name }}/venv"
+      

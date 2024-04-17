@@ -44,3 +44,4 @@
       ansible.builtin.service:
         name: redis-server
         state: restarted
+        

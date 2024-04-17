@@ -88,3 +88,4 @@
       environment:
         PATH: "/home/{{ user_name }}/.rbenv/bin:{{ ansible_env.PATH }}"
       become: yes
+      

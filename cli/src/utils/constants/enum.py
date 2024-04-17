@@ -65,5 +65,3 @@ class RubyFile(Enum):
 
 class WebserverBaseFile(Enum):
     WEBSERVER_BASE_PLAYBOOK = "webserver_base.yml"               
-
-

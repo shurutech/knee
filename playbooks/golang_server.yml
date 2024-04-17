@@ -40,3 +40,4 @@
       shell: . /home/{{ ansible_user }}/.profile && go version
       args:
         executable: /bin/bash
+        
