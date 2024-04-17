@@ -1,7 +1,7 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment, PythonFile
+from src.utils.constants.enum import Environment, PythonFile, WebserverBaseFile
 from src.utils.constants.constants import VARIABLE_DIR_PATH
 
 
@@ -25,5 +25,5 @@ class Python:
             self.file_manager.write_to_file(
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
-        run_playbook("webserver_base.yml", self.environment)
+        run_playbook(WebserverBaseFile.WEBSERVER_BASE_PLAYBOOK.value, self.environment)
         run_playbook(PythonFile.PYTHON_SERVER_PLAYBOOK.value, self.environment)
