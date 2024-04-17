@@ -109,3 +109,4 @@ class TestMysql(unittest.TestCase):
         mysql.apply_configuration()
         if not mysql.is_replica_required:
             mock_run_playbook.assert_called_once_with("mysql_server.yml", "local")
+            

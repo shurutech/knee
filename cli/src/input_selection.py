@@ -38,4 +38,3 @@ def get_user_input():
         message=Prompt.SELECT_OPTION.value,
         choices=[InitialOption.KNEE_DEFAULTS.value, InitialOption.CUSTOM_SELECTIONS.value],
     ).execute()
-

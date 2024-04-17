@@ -31,4 +31,3 @@ class Postgresql:
         run_playbook(PostgresqlFile.POSTGRESQL_SERVER_PLAYBOOK.value, self.environment)
         if self.is_replica_required:
             run_playbook(PostgresqlFile.POSTGRESQL_REPLICA_SERVER_PLAYBOOK.value, self.environment)
-

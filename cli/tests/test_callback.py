@@ -10,5 +10,3 @@ class TestHelpCommand(unittest.TestCase):
         with self.assertRaises(typer.Exit):
             version_callback(True)
         mock_echo.assert_called_once_with("Knee 1.0.0")
-
-

@@ -26,7 +26,4 @@ class Redis:
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         run_playbook("redis_server.yml", self.environment)
-
-
-   
     

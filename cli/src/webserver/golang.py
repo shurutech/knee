@@ -26,4 +26,3 @@ class Golang:
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
         run_playbook(GolangFile.GOLANG_SERVER_PLAYBOOK.value, self.environment)
-

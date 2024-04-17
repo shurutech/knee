@@ -206,15 +206,4 @@ class TestCustomSelections(unittest.TestCase):
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_postgresql_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
-
-
-
-
-
-
     
-
-    
-
-        
-        

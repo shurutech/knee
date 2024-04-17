@@ -27,4 +27,3 @@ class Ruby:
             )
         run_playbook(WebserverBaseFile.WEBSERVER_BASE_PLAYBOOK.value, self.environment)    
         run_playbook(RubyFile.RUBY_SERVER_PLAYBOOK.value, self.environment)
-

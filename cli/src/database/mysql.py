@@ -32,4 +32,3 @@ class Mysql:
             run_playbook(MysqlFile.MYSQL_REPLICA_SERVER_PLAYBOOK.value, self.environment)
         else:
             run_playbook(MysqlFile.MYSQL_SERVER_PLAYBOOK.value, self.environment)
-

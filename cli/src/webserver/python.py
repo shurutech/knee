@@ -27,4 +27,3 @@ class Python:
             )
         run_playbook("webserver_base.yml", self.environment)
         run_playbook(PythonFile.PYTHON_SERVER_PLAYBOOK.value, self.environment)
-

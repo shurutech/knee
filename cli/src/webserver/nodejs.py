@@ -22,4 +22,3 @@ class Nodejs:
         for config_file in self.CONFIG_FILES:
             self.file_manager.write_to_file(VARIABLE_DIR_PATH, config_file, self.configs[config_file])
         run_playbook(NodejsFile.NODEJS_SERVER_PLAYBOOK.value, self.environment)
-
