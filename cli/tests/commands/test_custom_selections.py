@@ -202,7 +202,7 @@ class TestCustomSelections(unittest.TestCase):
             "caching_tool": "redis"
         }
         custom_system = CustomSystem(user_selection)
-        custom_system.set_and_execute_configurations()
+        custom_system.init()
         self.assertTrue(mock_ruby_parameter_configuration.called)
         self.assertTrue(mock_postgresql_parameter_configuration.called)
         self.assertTrue(mock_load_configuration.called)
