@@ -42,7 +42,7 @@ REPLICA_CONFIG = {
             'ansible_user': 'vagrant',
         }
 
-class CustomSystem:
+class SystemFramework:
     CONFIG_FILES = ["all.yml"]
     
     def __init__(self, user_selections, environment=Environment.LOCAL.value):
@@ -83,16 +83,14 @@ class CustomSystem:
         }
 
     def get_selected_host_groups(self):
-        host_groups = []
-        if self.is_replica_required:
-            host_groups.append(HostGroup.DATABASE_REPLICA_SERVER.value)
-        if self.database:
-            host_groups.append(HostGroup.DATABASE_MAIN_SERVER.value)
-        if self.webserver:
-            host_groups.append(HostGroup.WEB_SERVER.value)
-        if self.caching_tool:
-            host_groups.append(HostGroup.REDIS_SERVER.value)
-        return host_groups
+        host_group_mapping = {
+            self.is_replica_required: HostGroup.DATABASE_REPLICA_SERVER,
+            self.database: HostGroup.DATABASE_MAIN_SERVER,
+            self.webserver: HostGroup.WEB_SERVER,
+            self.caching_tool: HostGroup.REDIS_SERVER
+        }
+        selected_host_groups = [host_group.value for selected_option, host_group in host_group_mapping.items() if selected_option]
+        return selected_host_groups
 
     def load_generic_configuration(self):
         configs = {}

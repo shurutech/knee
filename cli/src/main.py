@@ -1,6 +1,6 @@
 import typer
 from InquirerPy import inquirer
-from commands.custom_system import CustomSystem
+from framework.system_framework import SystemFramework
 from utils.constants.constants import COMMAND_SERVICE_MAP
 from input_selection import custom_selections, get_environment, get_user_input
 from callback import version_callback, help_callback, command_callback
@@ -46,8 +46,8 @@ def execute():
             typer.secho(Prompt.COMMAND_NOT_AVAILABLE.value, bg=typer.colors.YELLOW, fg=typer.colors.WHITE, bold=True)
 
     environment = get_environment()
-    custom_system = CustomSystem(environment=environment, user_selections=user_selections)
-    if custom_system.init():
+    system_framework = SystemFramework(environment=environment, user_selections=user_selections)
+    if system_framework.init():
         typer.echo("Done!")
 
 if __name__ == "__main__":
