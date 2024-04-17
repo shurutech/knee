@@ -7,7 +7,7 @@ from constants import VARIABLE_DIR_PATH
 
 class Mysql:
     CONFIG_FILES = [MysqlFile.MYSQL_MAIN_SERVER.value]
-    REPLICA_CONFIG_FILES = [MysqlFile.MYSQL_MAIN_SERVER, MysqlFile.MYSQL_REPLICA_SERVER.value]
+    REPLICA_CONFIG_FILES = [MysqlFile.MYSQL_MAIN_SERVER.value, MysqlFile.MYSQL_REPLICA_SERVER.value]
 
     def __init__(self, is_replica_required=False, environment=Environment.LOCAL.value):
         self.configs = {}
