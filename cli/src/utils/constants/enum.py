@@ -64,4 +64,8 @@ class RubyFile(Enum):
     RUBY_SERVER_PLAYBOOK = "ruby_webservers.yml" 
 
 class WebserverBaseFile(Enum):
-    WEBSERVER_BASE_PLAYBOOK = "webserver_base.yml"               
+    WEBSERVER_BASE_PLAYBOOK = "webserver_base.yml"   
+
+class RedisFile(Enum):
+    REDIS_WEBSERVERS = "redisserver.yml"
+    REDIS_SERVER_PLAYBOOK = "redis_server.yml"    

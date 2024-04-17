@@ -1,12 +1,12 @@
 from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
-from src.utils.constants.enum import Environment
+from src.utils.constants.enum import Environment, RedisFile
 from src.utils.constants.constants import VARIABLE_DIR_PATH
 
 
 class Redis:
-    CONFIG_FILES = ["redisserver.yml"]
+    CONFIG_FILES = [RedisFile.REDIS_WEBSERVERS.value]
 
     def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
@@ -25,5 +25,5 @@ class Redis:
             self.file_manager.write_to_file(
                 VARIABLE_DIR_PATH, config_file, self.configs[config_file]
             )
-        run_playbook("redis_server.yml", self.environment)
+        run_playbook(RedisFile.REDIS_SERVER_PLAYBOOK.value, self.environment)
     
