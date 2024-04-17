@@ -12,7 +12,7 @@ class Mysql:
     def __init__(self, is_replica_required=False, environment=Environment.LOCAL.value):
         self.configs = {}
         self.is_replica_required = is_replica_required
-        self.config_files = self.CONFIG_FILES if not is_replica_required else self.REPLICA_CONFIG_FILES
+        self.config_files = self.REPLICA_CONFIG_FILES if is_replica_required else self.CONFIG_FILES
         self.file_manager = FileManager()
         self.environment = environment
         for config_file in self.config_files:
