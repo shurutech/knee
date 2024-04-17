@@ -3,7 +3,7 @@ from utils.constants.prompt import Prompt
 from utils.constants.enum import Database, Webserver, CachingTool, Environment, InitialOption
 
 
-def custom_selections():
+def get_custom_selections():
     db = inquirer.select(
         message=Prompt.SELECT_DATABASE.value,
         choices=[Database.POSTGRESQL.value, Database.MONGODB.value, Database.MYSQL.value, None],

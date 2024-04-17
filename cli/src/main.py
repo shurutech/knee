@@ -2,7 +2,7 @@ import typer
 from InquirerPy import inquirer
 from framework.system_framework import SystemFramework
 from utils.constants.constants import COMMAND_SERVICE_MAP
-from input_selection import custom_selections, get_environment, get_user_input
+from input_selection import get_custom_selections, get_environment, get_user_input
 from callback import version_callback, help_callback, command_callback
 from utils.constants.prompt import Prompt
 from utils.constants.enum import InitialOption
@@ -38,7 +38,7 @@ def execute():
                     "webserver": COMMAND_SERVICE_MAP[command]["server"]
                 }
         case InitialOption.CUSTOM_SELECTIONS.value:
-            user_selections = custom_selections()
+            user_selections = get_custom_selections()
             if all(value is None for value in user_selections.values()):
                 typer.secho(Prompt.SELECT_VALID_OPTION.value, bg=typer.colors.RED, fg=typer.colors.WHITE, bold=True)
                 raise typer.Abort()
