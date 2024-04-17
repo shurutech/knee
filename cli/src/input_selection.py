@@ -33,7 +33,7 @@ def get_environment():
         default=Environment.LOCAL.value,
     ).execute()
 
-def initial_input_selection():
+def get_user_input():
     return inquirer.select(
         message=Prompt.SELECT_OPTION.value,
         choices=[InitialOption.KNEE_DEFAULTS.value, InitialOption.CUSTOM_SELECTIONS.value],

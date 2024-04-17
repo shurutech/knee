@@ -2,7 +2,7 @@ import typer
 from InquirerPy import inquirer
 from commands.custom_system import CustomSystem
 from constants import COMMAND_SERVICE_MAP
-from input_selection import custom_selections, get_environment, initial_input_selection
+from input_selection import custom_selections, get_environment, get_user_input
 from callback import version_callback, help_callback, command_callback
 from utils.constants.prompt import Prompt
 from utils.constants.enum import InitialOption
@@ -24,8 +24,8 @@ def help_command(
 @app.command()
 def execute():
     user_selections = {}
-    option = initial_input_selection()
-    match option:
+    user_input = get_user_input()
+    match user_input:
         case InitialOption.KNEE_DEFAULTS.value:
             command = inquirer.select(
                 message=Prompt.SELECT_COMMAND.value,
