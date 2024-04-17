@@ -12,7 +12,7 @@ from src.webserver.nodejs import Nodejs
 from src.database.mysql import Mysql
 from src.webserver.ruby import Ruby
 from src.caching_tools.redis import Redis
-from constants import DIRECTORY_PATH, VARIABLE_DIR_PATH
+from src.utils.constants.constants import DIRECTORY_PATH, VARIABLE_DIR_PATH
 from src.utils.constants.prompt import Prompt
 from src.utils.constants.enum import Environment, HostGroup
 

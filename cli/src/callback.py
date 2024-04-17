@@ -1,5 +1,5 @@
 import typer
-from constants import SUBCOMMAND_DESCRIPTION_MAP, COMMANDS_DESCRIPTION_MAP, KNEE_VERSION
+from src.utils.constants.constants import SUBCOMMAND_DESCRIPTION_MAP, COMMANDS_DESCRIPTION_MAP, KNEE_VERSION
 from src.utils.constants.prompt import Prompt
 
 

@@ -2,7 +2,7 @@ from src.utils.utils import load_configuration
 from src.utils.file_manager import FileManager
 from src.utils.runner import run_playbook
 from src.utils.constants.enum import Environment, MongodbFile
-from constants import VARIABLE_DIR_PATH
+from src.utils.constants.constants import VARIABLE_DIR_PATH
 
 
 class Mongodb:
