@@ -10,12 +10,12 @@ class TestCustomSelections(unittest.TestCase):
             "webserver": "python",
         } 
         custom_system = CustomSystem(user_selections)
-        self.assertIn('webservers', custom_system.impacted_host_groups)
+        self.assertIn('webservers', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     def test_init_when_server_class_is_none(self, mock_read_from_file):
         custom_system = CustomSystem({})
-        self.assertNotIn('webservers', custom_system.impacted_host_groups)
+        self.assertNotIn('webservers', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
@@ -25,13 +25,13 @@ class TestCustomSelections(unittest.TestCase):
         } 
         mock_confirm.return_value.execute.return_value = False
         custom_system = CustomSystem(user_selections) 
-        self.assertIn('databasemainserver', custom_system.impacted_host_groups)
+        self.assertIn('databasemainserver', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     def test_init_when_db_class_is_none(self, mock_confirm, mock_read_from_file):
         custom_system = CustomSystem({})
-        self.assertNotIn('databasemainserver', custom_system.impacted_host_groups)
+        self.assertNotIn('databasemainserver', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
@@ -41,13 +41,13 @@ class TestCustomSelections(unittest.TestCase):
         } 
         mock_confirm.return_value.execute.return_value = False
         custom_system = CustomSystem(user_selections)
-        self.assertIn('redisservers', custom_system.impacted_host_groups)
+        self.assertIn('redisservers', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
     def test_init_when_caching_tool_is_none(self, mock_confirm, mock_read_from_file):
         custom_system = CustomSystem({})
-        self.assertNotIn('redisservers', custom_system.impacted_host_groups)
+        self.assertNotIn('redisservers', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
@@ -57,7 +57,7 @@ class TestCustomSelections(unittest.TestCase):
             "database": "postgresql"
         }
         custom_system = CustomSystem(user_selection)
-        self.assertIn('databasereplicaservers', custom_system.impacted_host_groups)
+        self.assertIn('databasereplicaservers', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
@@ -67,11 +67,11 @@ class TestCustomSelections(unittest.TestCase):
             "database": "postgresql"
         }
         custom_system = CustomSystem(user_selection)
-        self.assertNotIn('databasereplicaservers', custom_system.impacted_host_groups)
+        self.assertNotIn('databasereplicaservers', custom_system.selected_host_groups)
 
     @patch("src.webserver.python.FileManager.read_from_file")
     @patch("src.commands.custom_system.inquirer.confirm")
-    @patch("src.commands.custom_system.hosts_configuration_parameters")
+    @patch("src.commands.custom_system.get_hosts_configuration_parameters")
     def test_set_hosts(self, mock_hosts_configurations_parameters, mock_confirm, mock_read_from_file):
         mock_confirm.return_value.execute.return_value = False
         custom_system = CustomSystem({})
@@ -80,7 +80,7 @@ class TestCustomSelections(unittest.TestCase):
         }
         custom_system.set_hosts()
         expected_args = (
-            custom_system.impacted_host_groups,
+            custom_system.selected_host_groups,
             {
                 "webservers": {
                     "hosts": {"webserver1": {"ansible_host": "10.10.12.1/23"}}

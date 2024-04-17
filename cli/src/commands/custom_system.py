@@ -1,7 +1,7 @@
 from InquirerPy import inquirer
 from src.utils.file_manager import FileManager
 from src.utils.utils import (
-    hosts_configuration_parameters,
+    get_hosts_configuration_parameters,
     load_configuration,
 )
 from src.webserver.python import Python
@@ -54,7 +54,7 @@ class CustomSystem:
         self.is_replica_required = self.get_replica_setup_confirmation() if self.database else False
         self.default_hosts = self.load_hosts()
         self.replica_host_group = self.get_replica_host_group(user_selections.get('database')) if self.is_replica_required else None
-        self.impacted_host_groups = self.get_selected_host_groups()
+        self.selected_host_groups = self.get_selected_host_groups()
         self.configs = self.load_generic_configuration()
         self.database_obj = self.database(self.is_replica_required, self.environment) if self.database else None
         self.webserver_obj = self.webserver(self.environment) if self.webserver else None
@@ -101,7 +101,7 @@ class CustomSystem:
         return configs
 
     def set_hosts(self):
-        self.default_hosts = hosts_configuration_parameters(self.impacted_host_groups, self.default_hosts)
+        self.default_hosts = get_hosts_configuration_parameters(self.selected_host_groups, self.default_hosts)
 
     def set_configs(self):
         self.configs = load_configuration(self.configs)
