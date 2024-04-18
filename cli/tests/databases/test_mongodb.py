@@ -1,4 +1,4 @@
-from src.database.mongodb import Mongodb
+from src.databases.mongodb import Mongodb
 from src.utils.utils import load_configuration
 import unittest
 from unittest.mock import patch, call
@@ -23,7 +23,7 @@ class TestMongodb(unittest.TestCase):
             mongodb.configs["mongodbmainserver.yml"]["mongodb_port"], "27018"
         )
 
-    def test_update_configuration_with_replica_server_acceptance(self):
+    def test_update_configuration_when_is_replica_required_true(self):
         mongodb = Mongodb(True)
         mongodb.configs = {
             "mongodbwebservers.yml": {"mongodb_port": "27017"},
@@ -38,8 +38,8 @@ class TestMongodb(unittest.TestCase):
             mongodb.configs["mongodbreplicaservers.yml"]["mongodb_port"], "27019"
         )
 
-    @patch("src.database.mongodb.FileManager.write_to_file")
-    @patch("src.database.mongodb.run_playbook")
+    @patch("src.databases.mongodb.FileManager.write_to_file")
+    @patch("src.databases.mongodb.run_playbook")
     def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):

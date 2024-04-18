@@ -1,11 +1,11 @@
-from src.webserver.ruby import Ruby
+from src.webservers.ruby import Ruby
 from src.utils.utils import load_configuration
 import unittest
 from unittest.mock import patch
 
 
 class TestRuby(unittest.TestCase):
-    @patch("src.webserver.ruby.FileManager.read_from_file")
+    @patch("src.webservers.ruby.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):
         mock_read_from_file.return_value = {
             "ruby_port": "3307"
@@ -16,7 +16,7 @@ class TestRuby(unittest.TestCase):
             "3307",
         )
 
-    @patch("src.webserver.ruby.load_configuration")
+    @patch("src.webservers.ruby.load_configuration")
     def test_update_configuration(self, mock_load_configuration):
         ruby = Ruby()
         ruby.configs = {
@@ -34,7 +34,7 @@ class TestRuby(unittest.TestCase):
               "3307",
          )
 
-    @patch("src.webserver.ruby.load_configuration")
+    @patch("src.webservers.ruby.load_configuration")
     def test_update_configuration_raises_error(self, mock_load_configuration):
         ruby = Ruby()
         ruby.configs = {
@@ -45,8 +45,8 @@ class TestRuby(unittest.TestCase):
             ruby.update_configuration()
         self.assertTrue('Error' in str(context.exception))
 
-    @patch("src.webserver.ruby.FileManager.write_to_file")
-    @patch("src.webserver.ruby.run_playbook")
+    @patch("src.webservers.ruby.FileManager.write_to_file")
+    @patch("src.webservers.ruby.run_playbook")
     def test_apply_configuration(self, mock_run_playbook, mock_write_to_file):
         ruby = Ruby()
         ruby.CONFIG_FILES = ["rubyserver.yml"]
@@ -61,8 +61,8 @@ class TestRuby(unittest.TestCase):
         mock_run_playbook.assert_any_call("ruby_webservers.yml", "local")
         assert mock_run_playbook.call_count == 2
 
-    @patch("src.webserver.ruby.FileManager.write_to_file")
-    @patch("src.webserver.ruby.run_playbook")
+    @patch("src.webservers.ruby.FileManager.write_to_file")
+    @patch("src.webservers.ruby.run_playbook")
     def test_apply_configuration_when_write_to_file_raises_error(self, mock_run_playbook, mock_write_to_file):
         ruby = Ruby()
         ruby.CONFIG_FILES = ["rubyserver.yml"]
@@ -75,8 +75,8 @@ class TestRuby(unittest.TestCase):
         self.assertTrue('Error' in str(context.exception))  
         mock_run_playbook.assert_not_called()
 
-    @patch("src.webserver.ruby.FileManager.write_to_file")
-    @patch("src.webserver.ruby.run_playbook")
+    @patch("src.webservers.ruby.FileManager.write_to_file")
+    @patch("src.webservers.ruby.run_playbook")
     def test_apply_configuration_when_run_playbook_raises_error(self, mock_run_playbook, mock_write_to_file):
         ruby = Ruby()
         ruby.CONFIG_FILES = ["rubyserver.yml"]

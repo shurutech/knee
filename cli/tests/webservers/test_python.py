@@ -1,10 +1,10 @@
-from src.webserver.python import Python
+from src.webservers.python import Python
 import unittest
 from unittest.mock import patch, call
 
 
 class TestPython(unittest.TestCase):
-    @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.webservers.python.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):
         mock_read_from_file.return_value = {
             "pythonwebservers.yml": {"python_port": "5555"}
@@ -17,7 +17,7 @@ class TestPython(unittest.TestCase):
             "5555",
         )
 
-    @patch("src.webserver.python.load_configuration")
+    @patch("src.webservers.python.load_configuration")
     def test_update_configuration(self, mock_load_configuration):
         python = Python()
         mock_load_configuration.return_value = {
@@ -26,9 +26,9 @@ class TestPython(unittest.TestCase):
         python.update_configuration()
         self.assertEqual(python.configs["pythonwebservers.yml"]["python_port"], "5434")
 
-    @patch("src.webserver.python.FileManager.write_to_file")
-    @patch("src.webserver.python.FileManager.read_from_file")
-    @patch("src.webserver.python.run_playbook")
+    @patch("src.webservers.python.FileManager.write_to_file")
+    @patch("src.webservers.python.FileManager.read_from_file")
+    @patch("src.webservers.python.run_playbook")
     def test_apply_configuration_called_with_expected_arguments(
         self,
         mock_run_playbook,
@@ -50,9 +50,9 @@ class TestPython(unittest.TestCase):
         )
         self.assertEqual(actual_call, expected_call)
 
-    @patch("src.webserver.python.run_playbook")
-    @patch("src.webserver.python.FileManager.write_to_file")
-    @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.webservers.python.run_playbook")
+    @patch("src.webservers.python.FileManager.write_to_file")
+    @patch("src.webservers.python.FileManager.read_from_file")
     def test_apply_configuration_when_it_is_called(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
@@ -61,9 +61,9 @@ class TestPython(unittest.TestCase):
         python.apply_configuration()
         mock_run_playbook.assert_called()
 
-    @patch("src.webserver.python.run_playbook")
-    @patch("src.webserver.python.FileManager.write_to_file")
-    @patch("src.webserver.python.FileManager.read_from_file")
+    @patch("src.webservers.python.run_playbook")
+    @patch("src.webservers.python.FileManager.write_to_file")
+    @patch("src.webservers.python.FileManager.read_from_file")
     def test_apply_configuration_when_it_is_not_called(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):

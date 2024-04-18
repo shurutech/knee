@@ -1,4 +1,4 @@
-from src.webserver.nodejs import Nodejs
+from src.webservers.nodejs import Nodejs
 import unittest
 from unittest.mock import patch, call
 from src.utils.utils import load_configuration
@@ -19,8 +19,8 @@ class TestNodejs(unittest.TestCase):
             nodejs.configs = load_configuration(nodejs.configs)
         self.assertEqual(nodejs.configs["nodejswebservers.yml"]["nodejs_port"], "8081")
 
-    @patch("src.webserver.nodejs.FileManager.write_to_file")
-    @patch("src.webserver.nodejs.run_playbook")
+    @patch("src.webservers.nodejs.FileManager.write_to_file")
+    @patch("src.webservers.nodejs.run_playbook")
     def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):

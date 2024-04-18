@@ -4,13 +4,13 @@ from src.utils.utils import (
     get_hosts_configuration_parameters,
     load_configuration,
 )
-from src.webserver.python import Python
-from src.database.postgresql import Postgresql
-from src.webserver.golang import Golang
-from src.database.mongodb import Mongodb
-from src.webserver.nodejs import Nodejs
-from src.database.mysql import Mysql
-from src.webserver.ruby import Ruby
+from src.webservers.python import Python
+from src.databases.postgresql import Postgresql
+from src.webservers.golang import Golang
+from src.databases.mongodb import Mongodb
+from src.webservers.nodejs import Nodejs
+from src.databases.mysql import Mysql
+from src.webservers.ruby import Ruby
 from src.caching_tools.redis import Redis
 from src.utils.constants.constants import DIRECTORY_PATH, VARIABLE_DIR_PATH
 from src.utils.constants.prompt import Prompt
@@ -123,15 +123,15 @@ class SystemFramework:
         if self.caching_tool:
             self.caching_tool_obj.apply_configuration()
 
-    def init(self):
+    def setup(self):
         try:
             self.set_configs()
             self.set_hosts()
-            configuration_acceptance = inquirer.confirm(
+            configuration_confirmation = inquirer.confirm(
                 message=Prompt.CONFIGURATION_SETUP_CHANGE.value,
                 default=True,
             ).execute()
-            if configuration_acceptance:
+            if configuration_confirmation:
                 self.apply_configuration()
             return True
         except Exception as e:

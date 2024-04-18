@@ -16,7 +16,7 @@ class TestRedis(unittest.TestCase):
         )
 
     @patch("src.caching_tools.redis.load_configuration")
-    def test_parameter_configuration(self, mock_load_configuration):
+    def test_update_configuration_success(self, mock_load_configuration):
         redis = Redis()
         redis.configs = {
             "rediswebservers.yml": {"redis_port": "6379"}
@@ -34,7 +34,7 @@ class TestRedis(unittest.TestCase):
           )
 
     @patch("src.caching_tools.redis.load_configuration")
-    def test_parameter_configuration_raises_error(self, mock_load_configuration):
+    def test_update_configuration_raises_error(self, mock_load_configuration):
         redis = Redis()
         redis.configs = {
             "redis.yml": {"redis_port": "6379"}
@@ -46,7 +46,7 @@ class TestRedis(unittest.TestCase):
 
     @patch("src.caching_tools.redis.FileManager.write_to_file")
     @patch("src.caching_tools.redis.run_playbook")
-    def test_write_configuration_and_run_playbook(self, mock_run_playbook, mock_write_to_file):
+    def test_apply_configuration_success(self, mock_run_playbook, mock_write_to_file):
         redis = Redis()
         redis.CONFIG_FILES = ["redisserver.yml"]
         redis.configs = {
@@ -61,7 +61,7 @@ class TestRedis(unittest.TestCase):
     @patch("src.caching_tools.redis.run_playbook")
     @patch("src.caching_tools.redis.FileManager.write_to_file")
     @patch("src.caching_tools.redis.FileManager.read_from_file")
-    def test_write_configuration_and_run_playbook_when_it_is_called(
+    def test_apply_configuration_when_it_is_called(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
         mock_read_from_file.return_value = {"redis_port": "6379"}
@@ -72,7 +72,7 @@ class TestRedis(unittest.TestCase):
     @patch("src.caching_tools.redis.run_playbook")
     @patch("src.caching_tools.redis.FileManager.write_to_file")
     @patch("src.caching_tools.redis.FileManager.read_from_file")
-    def test_write_configuration_and_run_playbook_raises_error(
+    def test_apply_configuration_raises_error(
         self, mock_read_from_file, mock_write_to_file, mock_run_playbook
     ):
         mock_read_from_file.return_value = {"redis_port": "6379"}
@@ -80,5 +80,4 @@ class TestRedis(unittest.TestCase):
         redis = Redis()
         with self.assertRaises(Exception) as context:
             redis.apply_configuration()
-
         self.assertTrue("An error occurred" in str(context.exception))

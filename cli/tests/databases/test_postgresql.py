@@ -1,4 +1,4 @@
-from src.database.postgresql import Postgresql
+from src.databases.postgresql import Postgresql
 from src.utils.utils import load_configuration
 import unittest
 from unittest.mock import patch, call
@@ -23,7 +23,7 @@ class TestPostgresql(unittest.TestCase):
             postgresql.configs["mainserver.yml"]["postgresql_port"], "5434"
         )
 
-    def test_update_configuration_with_replica_server_acceptance(self):
+    def test_update_configuration_when_is_replica_required_acceptance(self):
         python = Postgresql(True)
         python.configs = {
             "postgresmainrvers.yml": {"python_port": "5432"},
@@ -36,8 +36,8 @@ class TestPostgresql(unittest.TestCase):
             python.configs["postgresreplicaservers.yml"]["python_port"], "5000"
         )
 
-    @patch("src.database.postgresql.FileManager.write_to_file")
-    @patch("src.database.postgresql.run_playbook")
+    @patch("src.databases.postgresql.FileManager.write_to_file")
+    @patch("src.databases.postgresql.run_playbook")
     def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):

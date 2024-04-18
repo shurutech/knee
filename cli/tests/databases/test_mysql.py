@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch
-from src.database.mysql import Mysql
+from src.databases.mysql import Mysql
 
 
 class TestMysql(unittest.TestCase):
-    @patch("src.database.mysql.FileManager.read_from_file")
+    @patch("src.databases.mysql.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):
         mock_read_from_file.return_value = {
             "mysqlmainserver.yml": {"mysql_port": "3307"}
@@ -15,7 +15,7 @@ class TestMysql(unittest.TestCase):
             "3307",
         )
 
-    @patch("src.database.mysql.load_configuration")
+    @patch("src.databases.mysql.load_configuration")
     def test_update_configuration(self, mock_load_configuration):
         mysql = Mysql()
         mysql.configs = {
@@ -33,7 +33,7 @@ class TestMysql(unittest.TestCase):
               "3307",
          )
 
-    @patch("src.database.mysql.load_configuration")
+    @patch("src.databases.mysql.load_configuration")
     def test_update_configuration_raises_error(self, mock_load_configuration):
         mysql = Mysql()
         mysql.configs = {
@@ -44,8 +44,8 @@ class TestMysql(unittest.TestCase):
             mysql.update_configuration()
         self.assertTrue('Error' in str(context.exception))
 
-    @patch("src.database.mysql.FileManager.write_to_file")
-    @patch("src.database.mysql.run_playbook")
+    @patch("src.databases.mysql.FileManager.write_to_file")
+    @patch("src.databases.mysql.run_playbook")
     def test_apply_configuration(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.configs = {
@@ -57,8 +57,8 @@ class TestMysql(unittest.TestCase):
         )
         mock_run_playbook.assert_called_once_with("mysql_server.yml", "local")
 
-    @patch("src.database.mysql.FileManager.write_to_file")
-    @patch("src.database.mysql.run_playbook")
+    @patch("src.databases.mysql.FileManager.write_to_file")
+    @patch("src.databases.mysql.run_playbook")
     def test_apply_configuration_when_write_to_file_raises_error(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.configs = {
@@ -70,8 +70,8 @@ class TestMysql(unittest.TestCase):
         self.assertTrue('Error' in str(context.exception))
         mock_run_playbook.assert_not_called()
     
-    @patch("src.database.mysql.FileManager.write_to_file")
-    @patch("src.database.mysql.run_playbook")
+    @patch("src.databases.mysql.FileManager.write_to_file")
+    @patch("src.databases.mysql.run_playbook")
     def test_apply_configuration_when_run_playbook_raises_error(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.configs = {
@@ -85,9 +85,9 @@ class TestMysql(unittest.TestCase):
             "playbooks/group_vars", "mysqlmainserver.yml", {"mysql_port": "3305"}
         )
 
-    @patch("src.database.mysql.FileManager.write_to_file")
-    @patch("src.database.mysql.run_playbook")
-    def test_apply_configuration_when_replica_server_acceptance_is_true(self, mock_run_playbook, mock_write_to_file):
+    @patch("src.databases.mysql.FileManager.write_to_file")
+    @patch("src.databases.mysql.run_playbook")
+    def test_apply_configuration_when_is_replica_required_is_true(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.is_replica_required = True
         mysql.configs = {
@@ -98,9 +98,9 @@ class TestMysql(unittest.TestCase):
         if mysql.is_replica_required:
             mock_run_playbook.assert_called_once_with("mysql_replica_server.yml", "local")
 
-    @patch("src.database.mysql.FileManager.write_to_file")
-    @patch("src.database.mysql.run_playbook")
-    def test_apply_configuration_when_replica_server_acceptance_is_false(self, mock_run_playbook, mock_write_to_file):
+    @patch("src.databases.mysql.FileManager.write_to_file")
+    @patch("src.databases.mysql.run_playbook")
+    def test_apply_configuration_when_is_replica_required_is_false(self, mock_run_playbook, mock_write_to_file):
         mysql = Mysql()
         mysql.is_replica_required = False
         mysql.configs = {
@@ -109,4 +109,3 @@ class TestMysql(unittest.TestCase):
         mysql.apply_configuration()
         if not mysql.is_replica_required:
             mock_run_playbook.assert_called_once_with("mysql_server.yml", "local")
-            

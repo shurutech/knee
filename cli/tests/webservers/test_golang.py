@@ -1,4 +1,4 @@
-from src.webserver.golang import Golang
+from src.webservers.golang import Golang
 import unittest
 from unittest.mock import patch, call
 from src.utils.utils import load_configuration
@@ -19,8 +19,8 @@ class TestGolang(unittest.TestCase):
             golang.configs = load_configuration(golang.configs)
         self.assertEqual(golang.configs["golangwebservers.yml"]["golang_port"], "8081")
 
-    @patch("src.webserver.golang.FileManager.write_to_file")
-    @patch("src.webserver.golang.run_playbook")
+    @patch("src.webservers.golang.FileManager.write_to_file")
+    @patch("src.webservers.golang.run_playbook")
     def test_apply_configuration_called_with_expected_arguments(
         self, mock_run_playbook, mock_write_to_file
     ):
