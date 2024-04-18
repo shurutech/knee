@@ -37,10 +37,7 @@
       shell: 
           cmd: "curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash"
           chdir: "/home/{{ user_name }}"
-      
-    - debug:
-        msg: "{{ ansible_env.HOME }}"
-
+   
     - name: Set rbenv path
       lineinfile:
         path: ~/.bashrc
@@ -62,9 +59,6 @@
         executable: /bin/bash
       become: yes
 
-    - debug:
-        msg: "{{ ansible_env.HOME }}"
-
     - name: Check if Ruby is installed
       command: "rbenv versions --bare"
       environment:
@@ -80,7 +74,6 @@
         PATH: "/home/{{ user_name }}/.rbenv/bin:{{ ansible_env.PATH }}"
       when : "ruby_version not in ruby_versions.stdout"  
       become: yes
-
 
     - name: Set ruby {{ ruby_version }} as global
       ansible.builtin.shell: 
