@@ -12,7 +12,7 @@ class TestRuby(unittest.TestCase):
         }
         ruby = Ruby()
         self.assertEqual(
-            ruby.configs["rubywebservers.yml"]["ruby_port"],
+            ruby.configs["ruby_webserver.yml"]["ruby_port"],
             "3307",
         )
 
@@ -58,7 +58,7 @@ class TestRuby(unittest.TestCase):
             "playbooks/group_vars", "rubyserver.yml", {"ruby_port": "3305"}
         )
         mock_run_playbook.assert_any_call("webserver_base.yml", "local")
-        mock_run_playbook.assert_any_call("ruby_webservers.yml", "local")
+        mock_run_playbook.assert_any_call("ruby_webserver.yml", "local")
         assert mock_run_playbook.call_count == 2
 
     @patch("src.webservers.ruby.FileManager.write_to_file")

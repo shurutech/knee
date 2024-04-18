@@ -6,7 +6,7 @@ from src.utils.constants.constants import VARIABLE_DIR_PATH
 
 
 class Python:
-    CONFIG_FILES = [PythonFile.PYTHON_WEBSERVERS.value]
+    CONFIG_FILES = [PythonFile.PYTHON_WEBSERVER.value]
 
     def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}

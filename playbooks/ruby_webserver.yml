@@ -3,7 +3,7 @@
   hosts: webservers
   vars_files:
     - group_vars/all.yml
-    - group_vars/rubywebservers.yml
+    - group_vars/ruby_webserver.yml
   become: yes
   become_user: "{{ user_name }}"
   tasks:

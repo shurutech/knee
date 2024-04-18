@@ -1,7 +1,7 @@
 ---
 - name: Install Mongodb
   vars_files:
-    - group_vars/mongodbmainserver.yml
+    - group_vars/mongodb_server.yml
   hosts: databasemainserver
   become: true
   tasks:

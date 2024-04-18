@@ -3,8 +3,8 @@
   become: yes
   vars_files:
     - group_vars/all.yml
-    - group_vars/postgresmainserver.yml
-    - group_vars/postgresreplicaservers.yml
+    - group_vars/postgres_server.yml
+    - group_vars/postgres_replica_server.yml
   vars:
     replica_host: "{{ hostvars[groups['databasereplicaservers'][0]]['ansible_host'] }}"
   tasks:
@@ -52,8 +52,8 @@
   become: yes
   vars_files:
     - group_vars/all.yml
-    - group_vars/postgresmainserver.yml
-    - group_vars/postgresreplicaservers.yml
+    - group_vars/postgres_server.yml
+    - group_vars/postgres_replica_server.yml
   vars:
     database_cidr_address: 0.0.0.0/0
     master_host: "{{ hostvars[groups['databasemainserver'][0]]['ansible_host'] }}"

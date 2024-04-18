@@ -25,13 +25,13 @@ class TestNodejs(unittest.TestCase):
         self, mock_run_playbook, mock_write_to_file
     ):
         nodejs = Nodejs("local")
-        nodejs.configs = {"nodewebservers.yml": {"nodejs_version": "1.21.3"}}
+        nodejs.configs = {"node_server.yml": {"nodejs_version": "1.21.3"}}
         nodejs.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",
-            "nodewebservers.yml",
-            nodejs.configs["nodewebservers.yml"],
+            "node_server.yml",
+            nodejs.configs["node_server.yml"],
         )
         self.assertEqual(actual_call, expected_call)
         mock_run_playbook.assert_called_once_with("node_server.yml", "local")

@@ -2,7 +2,7 @@
 - name: Setup Mysql
   hosts: webservers
   vars_files:
-    - group_vars/mysqlmainserver.yml
+    - group_vars/mysql_server.yml
   become: true
 
   tasks:
@@ -50,3 +50,4 @@
       service:
         name: mysql
         state: restarted
+        

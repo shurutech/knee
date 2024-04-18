@@ -7,11 +7,11 @@ class TestPython(unittest.TestCase):
     @patch("src.webservers.python.FileManager.read_from_file")
     def test_initialiser_with_file(self, mock_read_from_file):
         mock_read_from_file.return_value = {
-            "pythonwebservers.yml": {"python_port": "5555"}
+            "python_webserver.yml": {"python_port": "5555"}
         }
         python = Python()
         self.assertEqual(
-            python.configs["pythonwebservers.yml"]["pythonwebservers.yml"][
+            python.configs["python_webserver.yml"]["python_webserver.yml"][
                 "python_port"
             ],
             "5555",
@@ -21,10 +21,10 @@ class TestPython(unittest.TestCase):
     def test_update_configuration(self, mock_load_configuration):
         python = Python()
         mock_load_configuration.return_value = {
-            "pythonwebservers.yml": {"python_port": "5434"}
+            "python_webserver.yml": {"python_port": "5434"}
         }
         python.update_configuration()
-        self.assertEqual(python.configs["pythonwebservers.yml"]["python_port"], "5434")
+        self.assertEqual(python.configs["python_webserver.yml"]["python_port"], "5434")
 
     @patch("src.webservers.python.FileManager.write_to_file")
     @patch("src.webservers.python.FileManager.read_from_file")
@@ -41,9 +41,9 @@ class TestPython(unittest.TestCase):
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",
-            "pythonwebservers.yml",
+            "python_webserver.yml",
             {
-                "python_version": python.configs["pythonwebservers.yml"][
+                "python_version": python.configs["python_webserver.yml"][
                     "python_version"
                 ]
             },

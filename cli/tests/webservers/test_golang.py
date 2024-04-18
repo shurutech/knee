@@ -7,17 +7,17 @@ from src.utils.utils import load_configuration
 class TestGolang(unittest.TestCase):
     def test_update_configuration_with_default_values(self):
         golang = Golang()
-        golang.configs = {"golangwebservers.yml": {"golang_port": "8080"}}
+        golang.configs = {"golang_server.yml": {"golang_port": "8080"}}
         with patch("builtins.input", return_value=""):
             golang.configs = load_configuration(golang.configs)
-        self.assertEqual(golang.configs["golangwebservers.yml"]["golang_port"], "8080")
+        self.assertEqual(golang.configs["golang_server.yml"]["golang_port"], "8080")
 
     def test_update_configuration_with_user_input(self):
         golang = Golang()
-        golang.configs = {"golangwebservers.yml": {"golang_port": "8080"}}
+        golang.configs = {"golang_server.yml": {"golang_port": "8080"}}
         with patch("builtins.input", return_value="8081"):
             golang.configs = load_configuration(golang.configs)
-        self.assertEqual(golang.configs["golangwebservers.yml"]["golang_port"], "8081")
+        self.assertEqual(golang.configs["golang_server.yml"]["golang_port"], "8081")
 
     @patch("src.webservers.golang.FileManager.write_to_file")
     @patch("src.webservers.golang.run_playbook")
@@ -25,14 +25,14 @@ class TestGolang(unittest.TestCase):
         self, mock_run_playbook, mock_write_to_file
     ):
         golang = Golang("local")
-        golang.configs = {"golangwebservers.yml": {"golang_version": "1.21.3"}}
+        golang.configs = {"golang_server.yml": {"golang_version": "1.21.3"}}
         golang.apply_configuration()
         actual_call = mock_write_to_file.call_args
         expected_call = call(
             "playbooks/group_vars",
-            "golangwebservers.yml",
+            "golang_server.yml",
             {
-                "golang_version": golang.configs["golangwebservers.yml"][
+                "golang_version": golang.configs["golang_server.yml"][
                     "golang_version"
                 ]
             },

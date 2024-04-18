@@ -30,42 +30,42 @@ class HostGroup(Enum):
     WEB_SERVER = "webservers"
 
 class MongodbFile(Enum):
-    MONGODB_MAIN_SERVER = "mongodbmainserver.yml"
-    MONGODB_REPLICA_SERVER = "mongodbreplicaservers.yml"
+    MONGODB_MAIN_SERVER = "mongodb_server.yml"
+    MONGODB_REPLICA_SERVER = "mongodb_replica_server.yml"
     MONGODB_REPLICA_SERVER_PLAYBOOK = "mongodb_replica_server.yml"
     MONGODB_SERVER_PLAYBOOK = "mongodb_server.yml"
 
 class MysqlFile(Enum):
-    MYSQL_MAIN_SERVER = "mysqlmainserver.yml"
-    MYSQL_REPLICA_SERVER = "mysqlreplicaservers.yml"
+    MYSQL_MAIN_SERVER = "mysql_server.yml"
+    MYSQL_REPLICA_SERVER = "mysql_replica_server.yml"
     MYSQL_REPLICA_SERVER_PLAYBOOK = "mysql_replica_server.yml"
     MYSQL_SERVER_PLAYBOOK = "mysql_server.yml"
 
 class PostgresqlFile(Enum):
-    POSTGRESQL_MAIN_SERVER = "postgresmainserver.yml"
-    POSTGRESQL_REPLICA_SERVER = "postgresreplicaservers.yml"
+    POSTGRESQL_MAIN_SERVER = "postgres_server.yml"
+    POSTGRESQL_REPLICA_SERVER = "postgres_replica_server.yml"
     POSTGRESQL_REPLICA_SERVER_PLAYBOOK = "postgres_replica_server.yml"
     POSTGRESQL_SERVER_PLAYBOOK = "postgres_server.yml"
 
 class GolangFile(Enum):
-    GOLANG_WEBSERVERS = "golangwebservers.yml"
+    GOLANG_WEBSERVERS = "golang_server.yml"
     GOLANG_SERVER_PLAYBOOK = "golang_server.yml"
 
 class NodejsFile(Enum):
-    NODEJS_WEBSERVERS = "nodewebservers.yml"
+    NODEJS_WEBSERVERS = "node_server.yml"
     NODEJS_SERVER_PLAYBOOK = "node_server.yml"
 
 class PythonFile(Enum):
-    PYTHON_WEBSERVERS = "pythonwebservers.yml"
-    PYTHON_SERVER_PLAYBOOK = "python_webservers.yml"
+    PYTHON_WEBSERVER = "python_webserver.yml"
+    PYTHON_SERVER_PLAYBOOK = "python_webserver.yml"
 
 class RubyFile(Enum): 
-    RUBY_WEBSERVERS = "rubywebservers.yml"
-    RUBY_SERVER_PLAYBOOK = "ruby_webservers.yml" 
+    RUBY_WEBSERVER = "ruby_webserver.yml"
+    RUBY_SERVER_PLAYBOOK = "ruby_webserver.yml" 
 
 class WebserverBaseFile(Enum):
     WEBSERVER_BASE_PLAYBOOK = "webserver_base.yml"   
 
 class RedisFile(Enum):
-    REDIS_WEBSERVERS = "redisserver.yml"
+    REDIS_WEBSERVERS = "redis_server.yml"
     REDIS_SERVER_PLAYBOOK = "redis_server.yml"    

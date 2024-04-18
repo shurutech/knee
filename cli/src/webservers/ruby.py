@@ -6,7 +6,7 @@ from src.utils.constants.constants import VARIABLE_DIR_PATH
 
 
 class Ruby:
-    CONFIG_FILES = [RubyFile.RUBY_WEBSERVERS.value]
+    CONFIG_FILES = [RubyFile.RUBY_WEBSERVER.value]
     
     def __init__(self, environment=Environment.LOCAL.value):
         self.configs = {}
