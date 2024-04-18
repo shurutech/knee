@@ -1,5 +1,4 @@
 from src.webservers.ruby import Ruby
-from src.utils.utils import load_configuration
 import unittest
 from unittest.mock import patch
 

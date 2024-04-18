@@ -1,6 +1,6 @@
 from src.caching_tools.redis import Redis
 import unittest
-from unittest.mock import patch, call
+from unittest.mock import patch
 
 
 class TestRedis(unittest.TestCase):

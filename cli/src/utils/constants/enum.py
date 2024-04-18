@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Database(Enum):
     POSTGRESQL = "postgresql"
     MONGODB = "mongodb"

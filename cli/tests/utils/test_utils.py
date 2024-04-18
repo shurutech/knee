@@ -1,13 +1,10 @@
-import tempfile
 from src.utils.utils import (
     get_user_input,
     get_user_confirmation,
     get_hosts_configuration_parameters,
 )
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, MagicMock
 import unittest
-import yaml
-import os
 
 
 class TestUtils(unittest.TestCase):

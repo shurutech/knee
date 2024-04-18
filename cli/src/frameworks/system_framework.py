@@ -134,6 +134,6 @@ class SystemFramework:
             if configuration_confirmation:
                 self.apply_configuration()
             return True
-        except Exception as e:
+        except Exception:
             return False
             

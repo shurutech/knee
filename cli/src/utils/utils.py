@@ -4,13 +4,11 @@ from InquirerPy import inquirer
 def get_user_input(key, default_value):
     return input(f"💼 Enter {key}: (Default: {default_value}) :: ") or default_value
 
-
 def get_user_confirmation(key):
     user_confirmation = inquirer.confirm(
         message=f"Do you want to keep the default value for {key}?", default=True
     ).execute()
     return user_confirmation is False
-
 
 def get_hosts_configuration_parameters(selected_host_groups, hosts_config):
     for group, group_info in hosts_config.items():
@@ -22,7 +20,6 @@ def get_hosts_configuration_parameters(selected_host_groups, hosts_config):
                         key, value
                     )
     return hosts_config
-
 
 def load_configuration(configs):
     for group, group_values in configs.items():
