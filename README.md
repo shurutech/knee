@@ -50,9 +50,13 @@ Before you start using Knee, it's important to ensure you have the following pre
     ```bash
     ./knee execute
     ```
-
-
+- To run tests
+   ```bash
+   pytest cli/tests
+   ```
 **Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
+
+
 
 ## Usage 
 
