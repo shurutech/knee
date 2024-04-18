@@ -1,5 +1,9 @@
 from InquirerPy import inquirer
+import logging
 
+
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
 
 def get_user_input(key, default_value):
     return input(f"💼 Enter {key}: (Default: {default_value}) :: ") or default_value
@@ -14,7 +18,7 @@ def get_hosts_configuration_parameters(selected_host_groups, hosts_config):
     for group, group_info in hosts_config.items():
         if group in selected_host_groups:
             for hosts, host_info in group_info["hosts"].items():
-                print(f"-------{group}------->")
+                logger.info(f"-------{group}------->")
                 for key, value in host_info.items():
                     hosts_config[group]["hosts"][hosts][key] = get_user_input(
                         key, value
