@@ -23,7 +23,7 @@ Before you start using Knee, it's important to ensure you have the following pre
 
     - Before running the tool, the details of the target system, such as the IP address and SSH key, are required. Alternatively, refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
 
-## Currently Supported Systems
+## Supported Systems
 
 | Databases | Webservers | Caching Tools |
 |-----------|------------|---------------|
