@@ -1,7 +1,7 @@
 ---
 - name: Install Mongodb
   vars_files:
-    - group_vars/mongodbmainserver.yml
+    - group_vars/mongodb_server.yml
   hosts: databasemainserver
   become: true
   tasks:
@@ -77,12 +77,4 @@
       name: "{{ mongodb_database_user}}"
       password: "{{ mongodb_database_password }}"
       roles: "root"
-
-
       
-        
-      
-
-    
-
-    

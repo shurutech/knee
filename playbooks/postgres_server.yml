@@ -2,7 +2,7 @@
 - hosts: databasemainserver
   become: yes
   vars_files:
-    - group_vars/postgresmainserver.yml
+    - group_vars/postgres_server.yml
   tasks:
     - name: Install psycopg2 for Python 3
       ansible.builtin.apt:
@@ -92,3 +92,4 @@
         privs: ALL
         type: table
         state: present
+        

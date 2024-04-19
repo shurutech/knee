@@ -1,0 +1,3 @@
+mysql_database_name: myproject
+mysql_database_password: dummy_password
+mysql_database_user: myuser

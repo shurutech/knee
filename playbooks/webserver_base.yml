@@ -1,9 +1,4 @@
 ---
-- name: Print variable
-  hosts: all
-  tasks:
-    - debug:
-        var: user_name
 - hosts: webservers
   become: yes
   tasks:
@@ -74,3 +69,4 @@
       systemd:
         name: "{{ project_name }}"
         state: started
+        

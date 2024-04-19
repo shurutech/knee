@@ -2,7 +2,7 @@
 - name: Setup Nodejs
   hosts: webservers
   vars_files:
-    - group_vars/nodewebservers.yml
+    - group_vars/node_server.yml
   become: yes
   tasks:
     - name: Update package cache
@@ -32,3 +32,4 @@
       apt:
         name: nodejs
         state: latest
+        

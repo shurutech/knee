@@ -53,21 +53,3 @@ vagrant plugin install vagrant-vmware-desktop
     ```
     vagrant destroy
     ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

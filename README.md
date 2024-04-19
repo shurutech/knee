@@ -1,6 +1,11 @@
 # Knee
-## Introduction
-Welcome to Knee, the streamlined Ansible playbook for developers! Our mission is simple: to make the setup and deployment of various services like Python servers, PostgreSQL databases, and more, as easy and efficient as possible. Designed with both novice and seasoned developers in mind, Knee not only offers current solutions for server setup and database management but is also evolving to include technologies like Docker, Ruby, and Node.js. Dive into Knee for a smoother, more efficient development experience!
+## Overview
+Welcome to Knee, an interactive CLI tool built on top of Ansible, used to automate infrastructure setup, leading to increased efficiency and reduced human error.
+
+## How it works
+Given access(including SSH key, IP address, security group/firewall rules etc) to cloud platform(like AWS, GCP, Azure, etc) on your current system, you will be able to set up the entire infrastructure using Ansible playbook.
+
+https://github.com/shurutech/knee/assets/158024046/c95a9dd3-bd7f-46e5-9f24-ae8d90a050e5
 
 ## Prerequisites
 Before you start using Knee, it's important to ensure you have the following prerequisites covered:
@@ -11,11 +16,22 @@ Before you start using Knee, it's important to ensure you have the following pre
 
 3. **System Requirements**:  
     
-    - Your system should meet the minimum requirements for running Ansible.
+    - Your system should meet the minimum requirements for running [Ansible](https://www.ansible.com/).
 
-    - This requires a suitable operating system and sufficient hardware capabilities for your tasks.
+    - Target System should be Debian based Linux for the intended installation.
 
-    - Target System should be Ubuntu for the intended installation.
+    - For replication, MongoDB requires 2 additional hosts, MySQL and PostgreSQL require 1 additional host each.
+
+    - Before running the tool, the details of the target system, such as the IP address and SSH key, are required. To try out Knee locally, set up a virtual machine. Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
+  
+## Supported Systems
+
+| Databases | Webservers | Caching Tools |
+|-----------|------------|---------------|
+| MySQL     | Nodejs     | Redis         |
+| PostgreSQL| Python     |               |
+| MongoDB   | Golang     |               |
+|           | Ruby       |               |
 
 ## Getting Started
 
@@ -29,13 +45,13 @@ Before you start using Knee, it's important to ensure you have the following pre
     git clone https://github.com/shurutech/knee.git
     ```
 
-- Create virtualenv
+- Create virtualenv:
   
   ```bash
   virtualenv -p python3.12.x venv
   ```
 
-- Activate Virtualenv
+- Activate Virtualenv:
 
     ```bash
     source venv/bin/activate
@@ -46,13 +62,16 @@ Before you start using Knee, it's important to ensure you have the following pre
     ```bash
     pip install -r requirements.txt
     ```
-
-- Execute the Command:
+- To run tests
+  
+   ```bash
+   pytest cli/tests
+   ```
+- Execute command to initialize and run setup: Refer to the [Usage Examples](#usage-examples) for more details.
+  
     ```bash
     ./knee execute
     ```
-
-**Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
 
 ## Usage 
 
@@ -62,11 +81,12 @@ When you run the application, you'll be presented with two main options:
 
 - **Knee Defaults**: This option provides a set of predefined configurations that automate the installation and setup of commonly used software combinations. If you're not sure what software to install, or if you want to quickly set up a popular software combination, this is a good option to choose.
 
-- **Custom Selection**: This option allows you to customize the setup according to your needs. You can select the server, database, additional services, or any combination of these. You can also choose not to select any of these options if you prefer.
+- **Custom Selection**: This option allows you to customize the setup according to your needs. You can select the server, database, caching tool, or any combination of these. You can also choose not to select any of these options if you prefer.
 
 Choose the option that best suits your needs and follow the prompts to complete the setup.
 
 - For a comprehensive list of all available commands and options, you can use the help command:
+  
     ```bash
     ./knee --help
     ```
@@ -78,15 +98,11 @@ Choose the option that best suits your needs and follow the prompts to complete 
 
 ## Usage Examples
 
-1. **Setting Up a Python Server:** If you're a Python developer looking to quickly set up a server for your application, you can use Knee. Simply run `./knee execute` and choose the server option in the custom selection.
+1. **Setting Up a Nodejs-Postgresql-Redis Infrastructure:** Knee quickly sets up a server for your application. Run `./knee execute`, then choose 'Nodejs' for the server option, 'Postgresql' for the database option, and 'Redis' for the caching tool option in the custom selection.
 
-2. **Deploying a PostgreSQL Database:** If you need to deploy a PostgreSQL database, Knee can help streamline the process. Run `./knee execute` and select the database option in the custom selection.
+2. **Quickly Setting Up a Common Software Stack:** If you're not sure what software to install, or if you want to quickly set up a popular software combinations`(golang-mongo, python-postgres etc.)`, you can use the Knee defaults option. Run `./knee execute` and choose the Knee defaults option.
 
-3. **Quickly Setting Up a Common Software Stack:** If you're not sure what software to install, or if you want to quickly set up a popular software combination, you can use the Knee defaults option. Run `./knee execute` and choose the Knee defaults option.
-
-4. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run `./knee execute` and use the custom selection option to choose the server, database, and additional services that fit your needs
-
-https://github.com/shurutech/knee/assets/158024046/e5e1bafc-f92f-4bd8-922b-6aa8cc608331
+3. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run `./knee execute` and use the custom selection option to choose the server, database, and additional services that fit your needs
 
 ## Next Steps/Features
 We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
@@ -96,14 +112,11 @@ We plan to continue building after the initial release and look forward to the f
   - **Adaptation to Trends:** Staying updated with emerging technologies to meet the changing needs of users.
 
   - **Interactive Input:** Enable users to input configuration details directly via command-line.
+
+  - **Flexible replica count:** Option for the users to input number of replica host.
     
 ## Contribution Guidelines
-We value the contributions of each developer and encourage you to share your ideas, improvements, and fixes with us. To ensure a smooth collaboration process, please follow these guidelines.
-
-Before you begin:
-
- - Make sure you have a GitHub account.
- - Familiarize yourself with the project by reading the README, exploring the issues, and understanding the tool's architecture and coding standards.
+Knee welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!
 
 ## How to Contribute
 **Reporting Bugs**
@@ -135,4 +148,3 @@ Ready to contribute code? Follow these steps:
 
 **Conduct**
 We are committed to providing a welcoming and inspiring community for all. By participating in this project, you are expected to uphold our Code of Conduct, which promotes respect and collaboration.
-
