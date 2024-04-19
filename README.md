@@ -3,6 +3,7 @@
 Welcome to Knee, an interactive CLI tool built on top of Ansible, used to automate infrastructure setup, leading to increased efficiency and reduced human error.
 
 ## How it works
+Given access(including SSH key and IP address) to cloud platform(like AWS, GCP, Azure, etc) on your current system, you will be able to set up the entire infrastructure using Ansible playbook.
 
 https://github.com/shurutech/knee/assets/158024046/c95a9dd3-bd7f-46e5-9f24-ae8d90a050e5
 
@@ -21,8 +22,8 @@ Before you start using Knee, it's important to ensure you have the following pre
 
     - For replication, MongoDB requires 2 additional hosts, MySQL and PostgreSQL require 1 additional host each.
 
-    - Before running the tool, the details of the target system, such as the IP address and SSH key, are required. Alternatively, refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
-
+    - Before running the tool, the details of the target system, such as the IP address and SSH key, are required. To try out Knee locally, set up a virtual machine. Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
+  
 ## Supported Systems
 
 | Databases | Webservers | Caching Tools |
@@ -31,6 +32,7 @@ Before you start using Knee, it's important to ensure you have the following pre
 | PostgreSQL| Python     |               |
 | MongoDB   | Golang     |               |
 |           | Ruby       |               |
+
 ## Getting Started
 
 - Ensure Python is Installed:  
@@ -61,15 +63,16 @@ Before you start using Knee, it's important to ensure you have the following pre
     pip install -r requirements.txt
     ```
 - To run tests
+  
    ```bash
    pytest cli/tests
    ```
 - Execute command to initialize and run setup: Refer to the [Usage Examples](#usage-examples) for more details.
+  
     ```bash
     ./knee execute
     ```
 **Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
-
 
 
 ## Usage 
@@ -80,11 +83,12 @@ When you run the application, you'll be presented with two main options:
 
 - **Knee Defaults**: This option provides a set of predefined configurations that automate the installation and setup of commonly used software combinations. If you're not sure what software to install, or if you want to quickly set up a popular software combination, this is a good option to choose.
 
-- **Custom Selection**: This option allows you to customize the setup according to your needs. You can select the server, database, additional services, or any combination of these. You can also choose not to select any of these options if you prefer.
+- **Custom Selection**: This option allows you to customize the setup according to your needs. You can select the server, database, caching tool, or any combination of these. You can also choose not to select any of these options if you prefer.
 
 Choose the option that best suits your needs and follow the prompts to complete the setup.
 
 - For a comprehensive list of all available commands and options, you can use the help command:
+  
     ```bash
     ./knee --help
     ```
