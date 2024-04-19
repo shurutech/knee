@@ -64,7 +64,7 @@ Before you start using Knee, it's important to ensure you have the following pre
    ```bash
    pytest cli/tests
    ```
-- Execute command to initialize and run setup: Refer [Usage Example](#usage-example) for more details
+- Execute command to initialize and run setup: Refer to the [Usage Examples](#usage-examples) for more details.
     ```bash
     ./knee execute
     ```
@@ -94,7 +94,7 @@ Choose the option that best suits your needs and follow the prompts to complete 
     ./knee -h
     ```
 
-## Usage Examples <a name=" "></a>
+## Usage Examples
 
 1. **Setting Up a Nodejs-Postgresql-Redis Infrastructure:** Knee quickly sets up a server for your application. Run `./knee execute`, then choose 'Nodejs' for the server option, 'Postgresql' for the database option, and 'Redis' for the caching tool option in the custom selection.
 
