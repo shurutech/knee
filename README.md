@@ -1,6 +1,9 @@
 # Knee
-## Introduction
-Welcome to Knee, the streamlined Ansible playbook for developers! Our mission is simple: to make the setup and deployment of various services like Python servers, PostgreSQL databases, and more, as easy and efficient as possible. Designed with both novice and seasoned developers in mind, Knee not only offers current solutions for server setup and database management but is also evolving to include technologies like Docker, Ruby, and Node.js. Dive into Knee for a smoother, more efficient development experience!
+## Overview
+Welcome to Knee, the streamlined tool for developers! Our mission is simple: to make the setup and deployment of various services like Python servers, PostgreSQL databases, and more, as easy and efficient as possible. Designed with both novice and seasoned developers in mind. Dive into Knee for a smoother, more efficient development experience!
+
+## How it works
+
 
 ## Prerequisites
 Before you start using Knee, it's important to ensure you have the following prerequisites covered:
@@ -9,14 +12,22 @@ Before you start using Knee, it's important to ensure you have the following pre
 
 2. **Infrastructure Fundamentals**: Knowledge of key infrastructure concepts such as virtual machines, networking, and cloud services will greatly aid in the deployment and management of services with Knee.
 
+
 3. **System Requirements**:  
     
-    - Your system should meet the minimum requirements for running Ansible.
+    - Your system should meet the minimum requirements for running [Ansible](https://www.ansible.com/).
 
-    - This requires a suitable operating system and sufficient hardware capabilities for your tasks.
+    - Target System should be Debian based Linux for the intended installation.
 
-    - Target System should be Ubuntu for the intended installation.
     - For replication, MongoDB requires 2 additional hosts, MySQL and PostgreSQL require 1 additional host each.
+## Currently Supported Systems
+
+| Databases | Webservers | Caching Tools |
+|-----------|------------|---------------|
+| MySQL     | Nodejs     | Redis         |
+| PostgreSQL| Python     |               |
+| MongoDB   | Golang     |               |
+|           | Ruby       |               |
 ## Getting Started
 
 - Ensure Python is Installed:  
@@ -46,14 +57,14 @@ Before you start using Knee, it's important to ensure you have the following pre
     ```bash
     pip install -r requirements.txt
     ```
-- Execute command to initialize and run setup:
-    ```bash
-    ./knee execute
-    ```
 - To run tests
    ```bash
    pytest cli/tests
    ```
+- Execute command to initialize and run setup:
+    ```bash
+    ./knee execute
+    ```
 **Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
 
 
@@ -90,8 +101,6 @@ Choose the option that best suits your needs and follow the prompts to complete 
 
 4. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run `./knee execute` and use the custom selection option to choose the server, database, and additional services that fit your needs
 
-https://github.com/shurutech/knee/assets/158024046/e5e1bafc-f92f-4bd8-922b-6aa8cc608331
-
 ## Next Steps/Features
 We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
 
@@ -104,12 +113,7 @@ We plan to continue building after the initial release and look forward to the f
   - **Flexible replica count:** Option for the users to input number of replica host.
     
 ## Contribution Guidelines
-We value the contributions of each developer and encourage you to share your ideas, improvements, and fixes with us. To ensure a smooth collaboration process, please follow these guidelines.
-
-Before you begin:
-
- - Make sure you have a GitHub account.
- - Familiarize yourself with the project by reading the README, exploring the issues, and understanding the tool's architecture and coding standards.
+Knee welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!
 
 ## How to Contribute
 **Reporting Bugs**
