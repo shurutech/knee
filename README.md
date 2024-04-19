@@ -4,6 +4,7 @@ Welcome to Knee, the streamlined tool for developers! Our mission is simple: to 
 
 ## How it works
 
+https://github.com/shurutech/knee/assets/158024046/c95a9dd3-bd7f-46e5-9f24-ae8d90a050e5
 
 ## Prerequisites
 Before you start using Knee, it's important to ensure you have the following prerequisites covered:
