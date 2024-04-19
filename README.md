@@ -3,7 +3,7 @@
 Welcome to Knee, an interactive CLI tool built on top of Ansible, used to automate infrastructure setup, leading to increased efficiency and reduced human error.
 
 ## How it works
-Given access(including SSH key and IP address) to cloud platform(like AWS, GCP, Azure, etc) on your current system, you will be able to set up the entire infrastructure using Ansible playbook.
+Given access(including SSH key, IP address, security group/firewall rules etc) to cloud platform(like AWS, GCP, Azure, etc) on your current system, you will be able to set up the entire infrastructure using Ansible playbook.
 
 https://github.com/shurutech/knee/assets/158024046/c95a9dd3-bd7f-46e5-9f24-ae8d90a050e5
 
@@ -72,8 +72,6 @@ Before you start using Knee, it's important to ensure you have the following pre
     ```bash
     ./knee execute
     ```
-**Note:** Refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
-
 
 ## Usage 
 
