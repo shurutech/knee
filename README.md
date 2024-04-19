@@ -1,6 +1,6 @@
 # Knee
 ## Overview
-Welcome to Knee, the streamlined tool for developers! Our mission is simple: to make the setup and deployment of various services like Python servers, PostgreSQL databases, and more, as easy and efficient as possible. Designed with both novice and seasoned developers in mind. Dive into Knee for a smoother, more efficient development experience!
+Welcome to Knee, an interactive CLI tool built on top of Ansible, used to automate infrastructure setup, leading to increased efficiency and reduced human error.
 
 ## How it works
 
@@ -13,7 +13,6 @@ Before you start using Knee, it's important to ensure you have the following pre
 
 2. **Infrastructure Fundamentals**: Knowledge of key infrastructure concepts such as virtual machines, networking, and cloud services will greatly aid in the deployment and management of services with Knee.
 
-
 3. **System Requirements**:  
     
     - Your system should meet the minimum requirements for running [Ansible](https://www.ansible.com/).
@@ -21,6 +20,9 @@ Before you start using Knee, it's important to ensure you have the following pre
     - Target System should be Debian based Linux for the intended installation.
 
     - For replication, MongoDB requires 2 additional hosts, MySQL and PostgreSQL require 1 additional host each.
+
+    - Before running the tool, the details of the target system, such as the IP address and SSH key, are required. Alternatively, refer to [VIRTUAL_MACHINE.md](VIRTUAL_MACHINE.md) for instructions on setting up the virtual machine locally.
+
 ## Currently Supported Systems
 
 | Databases | Webservers | Caching Tools |
@@ -62,7 +64,7 @@ Before you start using Knee, it's important to ensure you have the following pre
    ```bash
    pytest cli/tests
    ```
-- Execute command to initialize and run setup:
+- Execute command to initialize and run setup: Refer [Usage Example](#usage-example) for more details
     ```bash
     ./knee execute
     ```
@@ -92,15 +94,13 @@ Choose the option that best suits your needs and follow the prompts to complete 
     ./knee -h
     ```
 
-## Usage Examples
+## Usage Examples <a name=" "></a>
 
-1. **Setting Up a Python Server:** If you're a Python developer looking to quickly set up a server for your application, you can use Knee. Simply run `./knee execute` and choose the server option in the custom selection.
+1. **Setting Up a Nodejs-Postgresql-Redis Infrastructure:** Knee quickly sets up a server for your application. Run `./knee execute`, then choose 'Nodejs' for the server option, 'Postgresql' for the database option, and 'Redis' for the caching tool option in the custom selection.
 
-2. **Deploying a PostgreSQL Database:** If you need to deploy a PostgreSQL database, Knee can help streamline the process. Run `./knee execute` and select the database option in the custom selection.
+2. **Quickly Setting Up a Common Software Stack:** If you're not sure what software to install, or if you want to quickly set up a popular software combinations`(golang-mongo, python-postgres etc.)`, you can use the Knee defaults option. Run `./knee execute` and choose the Knee defaults option.
 
-3. **Quickly Setting Up a Common Software Stack:** If you're not sure what software to install, or if you want to quickly set up a popular software combination, you can use the Knee defaults option. Run `./knee execute` and choose the Knee defaults option.
-
-4. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run `./knee execute` and use the custom selection option to choose the server, database, and additional services that fit your needs
+3. **Customizing Your Setup:** If you have specific needs for your project, you can customize your setup with Knee. Run `./knee execute` and use the custom selection option to choose the server, database, and additional services that fit your needs
 
 ## Next Steps/Features
 We plan to continue building after the initial release and look forward to the feedback from the community. As of now we have following features planned out for next releases.
