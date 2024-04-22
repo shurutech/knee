@@ -1,7 +1,7 @@
 ---
 - name: Setup Golang
   vars_files:
-    - group_vars/golangwebservers.yml
+    - group_vars/golang_server.yml
   hosts: webservers
   become: true
   vars:
@@ -40,3 +40,4 @@
       shell: . /home/{{ ansible_user }}/.profile && go version
       args:
         executable: /bin/bash
+        

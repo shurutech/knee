@@ -27,3 +27,4 @@
         state: present
         key: "{{ lookup('file', item.ssh_key) }}"
       loop: "{{ users }}"
+      

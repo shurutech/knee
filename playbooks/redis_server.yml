@@ -3,7 +3,7 @@
   hosts: redisservers
   become: yes
   vars_files:
-    - group_vars/redisserver.yml
+    - group_vars/redis_server.yml
   tasks:
     - name: Install Redis
       apt:
@@ -44,3 +44,4 @@
       ansible.builtin.service:
         name: redis-server
         state: restarted
+        

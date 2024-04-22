@@ -1,34 +1,40 @@
 from InquirerPy import inquirer
-from constants import INITIAL_OPTION_KNEE_DEFAULTS, INITIAL_OPTION_CUSTOM_SELECTIONS
+from utils.constants.prompt import Prompt
+from utils.constants.enum import Database, Webserver, CachingTool, Environment, InitialOption
 
 
-def custom_selections():
+def get_custom_selections():
     db = inquirer.select(
-        message="Select database:",
-        choices=["postgresql", "mongodb", "mysql",None],
-        default="postgres",
+        message=Prompt.SELECT_DATABASE.value,
+        choices=[Database.POSTGRESQL.value, Database.MONGODB.value, Database.MYSQL.value, None],
+        default=Database.POSTGRESQL.value,
     ).execute()
-    server = inquirer.select(
-        message="Select backend:",
-        choices=["python", "nodejs", "golang","ruby",None],
-        default="python",
+    webserver = inquirer.select(
+        message=Prompt.SELECT_WEBSERVER.value,
+        choices=[Webserver.PYTHON.value, Webserver.NODEJS.value, Webserver.RUBY.value, Webserver.GOLANG.value, None],
+        default=Webserver.PYTHON.value,
     ).execute()
-    additional_services = inquirer.select(
-        message="Select additional services:",
-        choices=["redis",None],
-        default="redis",
+    caching_tool = inquirer.select(
+        message=Prompt.SELECT_CACHING_TOOL.value,
+        choices=[CachingTool.REDIS.value, None],
+        default=CachingTool.REDIS.value,
     ).execute()
-    return db, server, additional_services
+    user_selections = {
+        "database": db,
+        "webserver": webserver,
+        "caching_tool": caching_tool
+    }
+    return user_selections
 
 def get_environment():
     return inquirer.select(
-        message="Select environment to execute command:",
-        choices=["local","staging", "production"],
-        default="staging",
+        message=Prompt.SELECT_ENVIRONMENT.value,
+        choices=[Environment.LOCAL.value, Environment.STAGING.value, Environment.PRODUCTION.value],
+        default=Environment.LOCAL.value,
     ).execute()
 
-def initial_input_selection():
+def get_user_input():
     return inquirer.select(
-        message="Please select an option:",
-        choices=[INITIAL_OPTION_KNEE_DEFAULTS, INITIAL_OPTION_CUSTOM_SELECTIONS],
+        message=Prompt.SELECT_OPTION.value,
+        choices=[InitialOption.KNEE_DEFAULTS.value, InitialOption.CUSTOM_SELECTIONS.value],
     ).execute()

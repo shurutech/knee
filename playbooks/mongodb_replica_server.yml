@@ -60,8 +60,8 @@
 - hosts: databasemainserver
   become: true
   vars_files:
-    - group_vars/mongodbmainserver.yml
-    - group_vars/mongodbreplicaservers.yml
+    - group_vars/mongodb_server.yml
+    - group_vars/mongodb_replica_server.yml
   tasks:
   - name: Create MongoDB admin user
     community.mongodb.mongodb_user:
@@ -105,8 +105,8 @@
 
 - hosts: databasemainserver
   vars_files:
-    - group_vars/mongodbmainserver.yml
-    - group_vars/mongodbreplicaservers.yml
+    - group_vars/mongodb_server.yml
+    - group_vars/mongodb_replica_server.yml
   become: true
   tasks:
   - name: Create MongoDB replica set
