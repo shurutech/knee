@@ -1,4 +1,9 @@
-# Knee
+#  <p align="center">Knee </p>
+
+<p align="center">
+  <img src="https://github.com/shurutech/knee/assets/127201055/3b235ddd-dd7e-4fbf-b9a2-9a7a4522f8e5" alt="Knee" width="100" height="100">
+</p>
+
 ## Overview
 Welcome to Knee, an interactive CLI tool built on top of Ansible, used to automate infrastructure setup, leading to increased efficiency and reduced human error.
 
